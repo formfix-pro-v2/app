@@ -10,7 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    # Ovo je ključno: govori GitHub-u da uđe u "app" folder pre izvršavanja komandi
     defaults:
       run:
         working-directory: ./app
@@ -23,15 +22,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '24'
-          # Cache ubrzava build, ali mu treba tačna putanja do lock fajla
-          cache: 'npm'
-          cache-dependency-path: ./app/package-lock.json
-
+          # Privremeno izbacujemo cache linije da bismo prošli build
+          
       - name: Install dependencies
         run: npm install
 
       - name: Build project
         run: npm run build
-
-      # Ovde bi išao tvoj deploy korak (npr. za Vercel, Firebase ili GitHub Pages)
-      # Ako imaš specifičnu platformu gde šalješ kod, dodaj taj korak ispod.
