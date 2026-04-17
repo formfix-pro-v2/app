@@ -22,7 +22,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '24'
-          # Isključili smo keširanje jer ti fajlovi nisu tamo gde ih on traži
 
       - name: Install dependencies
         run: npm install
@@ -33,7 +32,6 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Next.js će napraviti 'out' u glavnom folderu jer je package.json tu
           path: ./out
 
   deploy:
