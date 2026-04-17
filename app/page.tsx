@@ -1,72 +1,74 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 
-// Tipovi za bolju stabilnost koda
-type SubGoal = { id: string, label: string };
-type Category = { label: string, icon: string, subGoals: SubGoal[] };
+// --- DATA TYPES ---
+type Exercise = { name: string; img: string; desc: string };
+type Plan = { title: string; description: string; exercises: Exercise[] };
 
-const categories: Record<string, Category> = {
-  "menopause": {
-    label: "Menopause",
-    icon: "🌸",
-    subGoals: [
-      { id: "bone-density", label: "Bone Density" },
-      { id: "hot-flashes", label: "Hot Flashes" },
-      { id: "pelvic-health", label: "Pelvic Floor & Core" },
-      { id: "mood-sleep", label: "Mood & Sleep" }
+// --- DATABASE (10 EXERCISES PER CATEGORY) ---
+const fitnessDatabase: Record<string, Plan> = {
+  "pelvic-health": {
+    title: "PELVIC FLOOR & CORE STABILITY",
+    description: "Deep core engagement protocol for stability and bladder control.",
+    exercises: [
+      { name: "Pelvic Tilts", img: "/exercises/pelvic-tilts.jpg", desc: "Tilt your pelvis back and press lower back into the floor." },
+      { name: "Glute Bridge", img: "/exercises/glute-bridge.jpg", desc: "Lift hips toward the ceiling, squeeze glutes at the top." },
+      { name: "Dead Bug", img: "/exercises/dead-bug.jpg", desc: "Lower opposite arm and leg while keeping back flat." },
+      { name: "Bird-Dog", img: "/exercises/bird-dog.jpg", desc: "Extend opposite arm and leg, maintain a neutral spine." },
+      { name: "Bridge Marching", img: "/exercises/bridge-march.jpg", desc: "In bridge position, lift one knee then the other." },
+      { name: "Clamshells", img: "/exercises/clamshells.jpg", desc: "On your side, lift top knee while keeping feet together." },
+      { name: "Superman", img: "/exercises/superman.jpg", desc: "On your stomach, lift chest and legs simultaneously." },
+      { name: "Knee Fall-Outs", img: "/exercises/knee-fallout.jpg", desc: "Lying on back, slowly drop one knee to the side." },
+      { name: "Plank on Knees", img: "/exercises/plank.jpg", desc: "Hold a straight line from head to knees, engage core." },
+      { name: "Child's Pose", img: "/exercises/childs-pose.jpg", desc: "Rest hips on heels and stretch arms forward." }
     ]
   },
-  "office recovery": {
-    label: "Office Recovery",
-    icon: "💻",
-    subGoals: [
-      { id: "sciatica-relief", label: "Sciatica Relief" },
-      { id: "neck-shoulders", label: "Neck & Shoulders" },
-      { id: "lower-back", label: "Lower Back Relief" },
-      { id: "wrist-care", label: "Wrist & Forearm" }
+  "sciatica-relief": {
+    title: "SCIATICA & NERVE RELIEF",
+    description: "Decompression and nerve gliding to eliminate shooting leg pain.",
+    exercises: [
+      { name: "Nerve Flossing", img: "/exercises/nerve-flossing.jpg", desc: "Seated, extend leg and flex foot to glide the nerve." },
+      { name: "Pigeon Stretch", img: "/exercises/pigeon-stretch.jpg", desc: "Lower your torso over a folded front leg to open hips." },
+      { name: "Figure 4 Stretch", img: "/exercises/figure-4.jpg", desc: "Cross ankle over knee and pull the bottom leg in." },
+      { name: "Cat-Cow", img: "/exercises/cat-cow.jpg", desc: "Arch and round your back to mobilize the spine." },
+      { name: "Cobra Pose", img: "/exercises/cobra.jpg", desc: "Press chest up while keeping hips on the floor." },
+      { name: "Knees-to-Chest", img: "/exercises/knees-to-chest.jpg", desc: "Hug knees to chest to decompress lower back." },
+      { name: "Spinal Twist", img: "/exercises/spinal-twist.jpg", desc: "Lying down, drop knees to one side, look to the other." },
+      { name: "Hamstring Stretch", img: "/exercises/hamstring-stretch.jpg", desc: "Keep leg straight and pull gently toward you." },
+      { name: "Pelvic Tilts", img: "/exercises/pelvic-tilts.jpg", desc: "Subtle pelvic rotation to loosen the SI joint." },
+      { name: "Child's Pose", img: "/exercises/childs-pose.jpg", desc: "Final relaxation to release all spinal tension." }
     ]
   },
-  "injury rehab": {
-    label: "Injury Rehab",
-    icon: "🩹",
-    subGoals: [
-      { id: "knee-stability", label: "Knee Stability" },
-      { id: "shoulder-mobility", label: "Shoulder Mobility" },
-      { id: "ankle-strength", label: "Ankle Strength" },
-      { id: "core-stability", label: "Core Stability" }
+  "knee-stability": {
+    title: "KNEE REHAB & STRENGTH",
+    description: "Focusing on joint stability and quadriceps engagement.",
+    exercises: [
+      { name: "Knee Extension", img: "/exercises/knee-stability.jpg", desc: "Straighten knee against a towel roll or resistance." },
+      { name: "Straight Leg Raise", img: "/exercises/leg-raise.jpg", desc: "Keep leg locked and lift to the height of other knee." },
+      { name: "Glute Bridge", img: "/exercises/glute-bridge.jpg", desc: "Strong glutes reduce the load on your knees." },
+      { name: "Wall Sit", img: "/exercises/wall-sit.jpg", desc: "Lean against wall, slide down slightly, and hold." },
+      { name: "Calf Raises", img: "/exercises/ankle-strength.jpg", desc: "Rise on toes to strengthen the lower leg chain." },
+      { name: "Side Clamshells", img: "/exercises/clamshells.jpg", desc: "Hip strength is vital for proper knee tracking." },
+      { name: "Isometric Quads", img: "/exercises/quad-set.jpg", desc: "Squeeze thigh muscle hard and hold for 5 seconds." },
+      { name: "Step-Ups", img: "/exercises/step-ups.jpg", desc: "Slow, controlled step onto a low, stable surface." },
+      { name: "Plank Stability", img: "/exercises/plank.jpg", desc: "Core strength prevents knee-collapsing movements." },
+      { name: "Quad Stretch", img: "/exercises/quad-stretch.jpg", desc: "Gently pull heel to glute to release the thigh." }
     ]
   }
 };
 
-const fitnessDatabase: Record<string, string[][]> = {
-  "pelvic-health": [["PELVIC FLOOR & CORE STABILITY", "WARM-UP: Diaphragmatic breathing.", "1. Pelvic Tilts - [https://www.youtube.com/results?search_query=pelvic+tilts]", "2. Glute Bridge - [https://www.youtube.com/results?search_query=glute+bridge]", "3. Dead Bug - [https://www.youtube.com/results?search_query=dead+bug+exercise]", "4. Bird-Dog - [https://www.youtube.com/results?search_query=bird+dog+exercise]", "5. Child's Pose - [https://www.youtube.com/results?search_query=childs+pose]", "ADVICE: Consistent light practice beats heavy rare sessions."]],
-  "sciatica-relief": [["SCIATICA & NERVE RELIEF", "WARM-UP: Gentle hip circles.", "1. Pigeon Stretch - [https://www.youtube.com/results?search_query=pigeon+stretch]", "2. Nerve Flossing - [https://www.youtube.com/results?search_query=sciatic+nerve+flossing]", "3. Cat-Cow - [https://www.youtube.com/results?search_query=cat+cow+stretch]", "4. Figure 4 Stretch - [https://www.youtube.com/results?search_query=figure+4+stretch]", "5. Child's Pose - [https://www.youtube.com/results?search_query=childs+pose]", "ADVICE: Stop if you feel sharp electric pain."]]
-};
-
 export default function FormFixPro() {
   const [loading, setLoading] = useState(false);
-  const [selectedGoal, setSelectedGoal] = useState("office recovery");
-  const [selectedSubGoal, setSelectedSubGoal] = useState("sciatica-relief");
-  const [activePlan, setActivePlan] = useState<string[] | null>(null);
-  
-  // Tajmer state
+  const [selectedSubGoal, setSelectedSubGoal] = useState("pelvic-health");
+  const [activePlan, setActivePlan] = useState<Plan | null>(null);
   const [timerActive, setTimerActive] = useState(false);
   const [seconds, setSeconds] = useState(0);
 
-  // Menjanje subgoal-a kada se promeni kategorija
   useEffect(() => {
-    const firstSub = categories[selectedGoal].subGoals[0].id;
-    setSelectedSubGoal(firstSub);
-  }, [selectedGoal]);
-
-  // Štoperica logika
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: any = null;
     if (timerActive) {
-      interval = setInterval(() => {
-        setSeconds((prev) => prev + 1);
-      }, 1000);
+      interval = setInterval(() => setSeconds((s) => s + 1), 1000);
     }
     return () => clearInterval(interval);
   }, [timerActive]);
@@ -84,118 +86,96 @@ export default function FormFixPro() {
     setTimerActive(false);
 
     setTimeout(() => {
-      const categoryPlans = fitnessDatabase[selectedSubGoal] || fitnessDatabase["pelvic-health"];
-      const randomPlan = categoryPlans[Math.floor(Math.random() * categoryPlans.length)];
-      setActivePlan(randomPlan);
+      setActivePlan(fitnessDatabase[selectedSubGoal]);
       setLoading(false);
-    }, 1000);
+    }, 1500);
   };
 
   return (
-    <main className="min-h-screen bg-black text-white p-6 font-sans">
-      <section className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 items-center py-12">
-        {/* LEVA STRANA: Odabir */}
-        <div className="space-y-12">
-          <div>
-            <div className="text-xs uppercase tracking-[0.4em] text-fuchsia-500 mb-6 font-bold">FormFix Pro v2</div>
-            <h1 className="text-6xl md:text-7xl font-black leading-tight bg-gradient-to-r from-violet-500 via-fuchsia-500 to-orange-400 text-transparent bg-clip-text">
-              Tailored For You.
+    <main className="min-h-screen bg-black text-white p-6">
+      <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 py-10">
+        
+        {/* LEFT: SELECTION */}
+        <div className="space-y-8">
+          <header>
+            <p className="text-fuchsia-500 font-bold tracking-widest text-xs mb-2 uppercase">FormFix Pro v2</p>
+            <h1 className="text-6xl font-black bg-gradient-to-r from-white to-zinc-500 bg-clip-text text-transparent">
+              Tailored Training.
             </h1>
-          </div>
-          
-          <div className="space-y-8">
-            <div>
-              <p className="text-zinc-500 text-xs font-mono mb-4 uppercase tracking-widest">Step 1: Focus Area</p>
-              <div className="flex flex-wrap gap-3">
-                {Object.entries(categories).map(([id, cat]) => (
-                  <button key={id} onClick={() => setSelectedGoal(id)} className={`px-5 py-3 rounded-2xl border transition-all flex items-center gap-2 ${selectedGoal === id ? "border-fuchsia-500 bg-fuchsia-500/10 text-white" : "border-zinc-800 text-zinc-500 hover:border-zinc-700"}`}>
-                    <span>{cat.icon}</span> {cat.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+          </header>
 
-            <div>
-              <p className="text-zinc-500 text-xs font-mono mb-4 uppercase tracking-widest">Step 2: Specific Goal</p>
-              <div className="flex flex-wrap gap-2">
-                {categories[selectedGoal].subGoals.map((sub) => (
-                  <button key={sub.id} onClick={() => setSelectedSubGoal(sub.id)} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${selectedSubGoal === sub.id ? "bg-white text-black" : "bg-zinc-900 text-zinc-500 hover:bg-zinc-800"}`}>
-                    {sub.label}
-                  </button>
-                ))}
-              </div>
+          <div className="space-y-4">
+            <p className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest">Select Your Goal</p>
+            <div className="grid grid-cols-1 gap-3">
+              {Object.keys(fitnessDatabase).map((key) => (
+                <button
+                  key={key}
+                  onClick={() => setSelectedSubGoal(key)}
+                  className={`p-4 rounded-2xl border text-left transition-all ${selectedSubGoal === key ? "border-fuchsia-500 bg-fuchsia-500/10" : "border-zinc-800 bg-zinc-900/50 hover:border-zinc-700"}`}
+                >
+                  <p className="font-bold text-sm uppercase">{key.replace("-", " ")}</p>
+                </button>
+              ))}
             </div>
+            <button 
+              onClick={generatePlan} 
+              className="w-full py-4 bg-white text-black font-black rounded-2xl hover:bg-fuchsia-400 transition-colors uppercase tracking-tighter"
+            >
+              Generate 10-Step Plan
+            </button>
           </div>
         </div>
 
-        {/* DESNA STRANA: Prikaz plana i Tajmera */}
-        <div className="relative group">
-          <div className="absolute -inset-1 bg-gradient-to-r from-fuchsia-600 to-violet-600 rounded-3xl blur opacity-20"></div>
-          <div className="relative rounded-3xl border border-zinc-800 bg-zinc-950 p-6 md:p-8 shadow-2xl">
-            <div className="space-y-6">
-              {/* Header sa tajmerom u vrhu kartice */}
-              <div className="flex justify-between items-center bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
-                <div>
-                  <p className="text-[10px] text-zinc-500 uppercase font-mono">Current Session</p>
-                  <p className="text-2xl font-black text-white">{formatTime(seconds)}</p>
-                </div>
-                <button 
-                  onClick={() => setTimerActive(!timerActive)}
-                  className={`px-4 py-2 rounded-lg font-bold text-xs transition-all ${timerActive ? "bg-red-500/20 text-red-500 border border-red-500/50" : "bg-green-500/20 text-green-500 border border-green-500/50"}`}
-                >
-                  {timerActive ? "PAUSE" : "START WORKOUT"}
-                </button>
+        {/* RIGHT: DISPLAY */}
+        <div className="relative">
+          <div className="sticky top-10 bg-zinc-950 border border-zinc-900 rounded-3xl overflow-hidden shadow-2xl">
+            {/* TIMER HEADER */}
+            <div className="p-6 bg-zinc-900/50 border-b border-zinc-900 flex justify-between items-center">
+              <div>
+                <p className="text-[10px] text-zinc-500 font-mono uppercase">Workout Time</p>
+                <p className="text-3xl font-black">{formatTime(seconds)}</p>
               </div>
-
-              {/* Display polje */}
-              <div className="rounded-2xl bg-black border border-zinc-900 p-6 min-h-[380px] overflow-y-auto max-h-[480px]">
-                {loading ? (
-                  <div className="flex flex-col items-center justify-center py-24 space-y-4">
-                    <div className="animate-spin h-10 w-10 border-2 border-fuchsia-500 border-t-transparent rounded-full"></div>
-                    <span className="text-[10px] font-mono text-fuchsia-400 animate-pulse uppercase">Building routine...</span>
-                  </div>
-                ) : activePlan ? (
-                  <div className="space-y-3">
-                    {activePlan.map((line, index) => {
-                      const linkMatch = line.match(/\[(.*?)\]/);
-                      if (linkMatch) {
-                        const textBeforeLink = line.split(" - [")[0];
-                        return (
-                          <div key={index} className="flex justify-between items-center border-b border-zinc-900 pb-2 group/line">
-                            <span className="text-sm text-zinc-300">{textBeforeLink}</span>
-                            <a 
-                              href={linkMatch[1]} 
-                              target="_blank" 
-                              rel="noopener noreferrer" 
-                              onClick={() => setTimerActive(true)}
-                              className="text-[10px] text-fuchsia-400 font-bold border border-fuchsia-400/30 px-2 py-1 rounded hover:bg-fuchsia-400 hover:text-black transition-all"
-                            >
-                              PLAY 🎬
-                            </a>
-                          </div>
-                        );
-                      }
-                      return (
-                        <p key={index} className={index === 0 ? "font-bold text-fuchsia-400 mb-4 text-center border-b border-fuchsia-400/20 pb-2 uppercase tracking-tight" : "text-sm text-zinc-400"}>
-                          {line}
-                        </p>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <div className="text-center py-24 px-4">
-                    <p className="text-zinc-600 italic text-sm">Select your goal and hit generate.</p>
-                  </div>
-                )}
-              </div>
-
-              <button onClick={generatePlan} disabled={loading} className="w-full py-5 rounded-2xl bg-white text-black font-black hover:bg-fuchsia-50 transition-all active:scale-95 disabled:opacity-50 uppercase tracking-tighter text-lg">
-                {loading ? "PROCESSING..." : "GENERATE CUSTOM PLAN"}
+              <button 
+                onClick={() => setTimerActive(!timerActive)}
+                className={`px-6 py-2 rounded-xl font-bold text-xs ${timerActive ? "bg-red-500/20 text-red-500 border border-red-500/50" : "bg-green-500/20 text-green-500 border border-green-500/50"}`}
+              >
+                {timerActive ? "PAUSE" : "START"}
               </button>
             </div>
+
+            {/* CONTENT */}
+            <div className="p-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
+              {loading ? (
+                <div className="text-center py-20">
+                  <div className="animate-spin h-8 w-8 border-2 border-fuchsia-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+                  <p className="text-xs font-mono text-zinc-500 animate-pulse">OPTIMIZING ROUTINE...</p>
+                </div>
+              ) : activePlan ? (
+                <div className="space-y-12">
+                  <div className="text-center">
+                    <h2 className="text-xl font-black text-fuchsia-400 mb-2 uppercase">{activePlan.title}</h2>
+                    <p className="text-xs text-zinc-500 italic">{activePlan.description}</p>
+                  </div>
+                  {activePlan.exercises.map((ex, i) => (
+                    <div key={i} className="space-y-4 group">
+                      <div className="flex items-center gap-3">
+                        <span className="text-[10px] font-mono text-fuchsia-500">0{i+1}</span>
+                        <h3 className="font-bold text-sm tracking-wide uppercase">{ex.name}</h3>
+                      </div>
+                      <img src={ex.img} alt={ex.name} className="w-full rounded-2xl border border-zinc-800 grayscale group-hover:grayscale-0 transition-all duration-500" />
+                      <p className="text-xs text-zinc-400 leading-relaxed">{ex.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-20 text-zinc-700">
+                  <p className="text-sm italic">Select a category to begin your session.</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </section>
+      </div>
     </main>
   );
 }
