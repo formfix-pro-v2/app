@@ -7,9 +7,23 @@ export default function FormFixPro() {
   const [aiResponse, setAiResponse] = useState("");
 
   // FUNKCIJA ZA LOGIN (Supabase priprema)
-  const handleLogin = () => {
-    alert("Preusmeravam na Supabase Login...");
-    // Ovde će ići: supabase.auth.signInWithOAuth({ provider: 'google' })
+  const handleLogin = async () => {
+    const email = prompt("Unesite vaš email:");
+    if (!email) return;
+
+    const { error } = await supabase.auth.signInWithOtp({
+      email: email,
+      options: {
+        // Ovo vraća korisnika na tvoj sajt nakon klika na link u mejlu
+        emailRedirectTo: 'https://formfix-pro-v2.github.io/app/',
+      },
+    });
+
+    if (error) {
+      alert("Greška: " + error.message);
+    } else {
+      alert("Proveri email! Poslali smo ti link za prijavu.");
+    }
   };
 
   // FUNKCIJA ZA AI GENERATOR (OpenAI priprema)
