@@ -1,12 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
-  basePath: '/app',
-  // Uklonili smo assetPrefix jer .nojekyll radi posao za stilove
-  // a prefix nekad blokira JS skripte
+  output: 'export', // Obavezno za GitHub Pages
   images: {
-    unoptimized: true,
+    unoptimized: true, // Obavezno da bi slike radile besplatno
   },
+  // Ako ti je ime repozitorijuma "app", dodaj ovo:
+  basePath: '/app', 
+  assetPrefix: '/app',
 };
 
 export default nextConfig;
