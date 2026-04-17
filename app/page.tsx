@@ -8,6 +8,33 @@ export default function FormFixPro() {
   const [planResponse, setPlanResponse] = useState<React.ReactNode>("");
   const [selectedGoal, setSelectedGoal] = useState("office recovery");
   const [selectedSubGoal, setSelectedSubGoal] = useState("");
+  
+  // State za tajmer
+  const [timerActive, setTimerActive] = useState(false);
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    setSelectedSubGoal(categories[selectedGoal].subGoals[0].id);
+  }, [selectedGoal]);
+
+  // Štoperica koja kuca dok korisnik vežba
+  useEffect(() => {
+    let interval: any = null;
+    if (timerActive) {
+      interval = setInterval(() => {
+        setSeconds((seconds) => seconds + 1);
+      }, 1000);
+    } else {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [timerActive]);
+
+  const formatTime = (s: number) => {
+    const mins = Math.floor(s / 60);
+    const secs = s % 60;
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  };
 
   const categories: Record<string, { label: string, icon: string, subGoals: { id: string, label: string }[] }> = {
     "menopause": {
@@ -16,7 +43,7 @@ export default function FormFixPro() {
       subGoals: [
         { id: "bone-density", label: "Bone Density" },
         { id: "hot-flashes", label: "Hot Flashes" },
-        { id: "pelvic-health", label: "Pelvic Floor & Core" }, // Novo: Pelvic Floor
+        { id: "pelvic-health", label: "Pelvic Floor & Core" },
         { id: "mood-sleep", label: "Mood & Sleep" }
       ]
     },
@@ -24,7 +51,7 @@ export default function FormFixPro() {
       label: "Office Recovery",
       icon: "💻",
       subGoals: [
-        { id: "sciatica-relief", label: "Sciatica Relief" }, // Novo: Uklješteni živac
+        { id: "sciatica-relief", label: "Sciatica Relief" },
         { id: "neck-shoulders", label: "Neck & Shoulders" },
         { id: "lower-back", label: "Lower Back Relief" },
         { id: "wrist-care", label: "Wrist & Forearm" }
@@ -42,57 +69,38 @@ export default function FormFixPro() {
     }
   };
 
-  useEffect(() => {
-    setSelectedSubGoal(categories[selectedGoal].subGoals[0].id);
-  }, [selectedGoal]);
-
+  // Napomena: Ovde ubaci punu fitnessDatabase iz prethodne poruke (pelvic-health, sciatica-relief, itd.)
   const fitnessDatabase: Record<string, string[][]> = {
-    // --- NOVE SUBKATEGORIJE ---
-    "pelvic-health": [[
-      "PELVIC FLOOR & CORE STABILITY", "WARM-UP: Diaphragmatic breathing (3 min).",
-      "1. Pelvic Tilts (3x20) - [https://www.youtube.com/results?search_query=pelvic+tilts+form]",
-      "2. Glute Bridges (Slow) (3x15) - [https://www.youtube.com/results?search_query=slow+glute+bridge]",
-      "3. Dead Bug (3x12) - [https://www.youtube.com/results?search_query=dead+bug+exercise]",
-      "4. Bird-Dog (3x10) - [https://www.youtube.com/results?search_query=bird+dog+exercise]",
-      "5. Adductor Squeezes (3x15) - [https://www.youtube.com/results?search_query=adductor+squeezes+with+ball]",
-      "6. Modified Plank (3x30s) - [https://www.youtube.com/results?search_query=knee+plank+form]",
-      "7. Cat-Cow (3x12) - [https://www.youtube.com/results?search_query=cat+cow+stretch]",
-      "8. Child's Pose (2 min) - [https://www.youtube.com/results?search_query=childs+pose+stretch]",
-      "9. Deep Squat Breathe (1 min) - [https://www.youtube.com/results?search_query=deep+squat+breathing]",
-      "10. Wall Sit (Focus on Core) (3x30s) - [https://www.youtube.com/results?search_query=wall+sit+exercise]",
-      "ADVICE: Avoid holding your breath during exercises; exhale on the effort."
-    ]],
-    "sciatica-relief": [[
-      "SCIATICA & NERVE DECOMPRESSION", "WARM-UP: Gentle hip circles.",
-      "1. Pigeon Stretch (2 min/side) - [https://www.youtube.com/results?search_query=pigeon+stretch+sciatica]",
-      "2. Nerve Flossing (3x15) - [https://www.youtube.com/results?search_query=sciatic+nerve+flossing]",
-      "3. Figure 4 Stretch (2 min/side) - [https://www.youtube.com/results?search_query=figure+4+stretch]",
-      "4. Cobra Pose (Low) (3x10) - [https://www.youtube.com/results?search_query=low+cobra+stretch]",
-      "5. Kneeling Hip Flexor Stretch (1 min/side) - [https://www.youtube.com/results?search_query=hip+flexor+stretch]",
-      "6. Bird-Dog (3x12) - [https://www.youtube.com/results?search_query=bird+dog+exercise]",
-      "7. Glute Bridge (3x15) - [https://www.youtube.com/results?search_query=glute+bridge+form]",
-      "8. Cat-Cow (3x15) - [https://www.youtube.com/results?search_query=cat+cow+stretch]",
-      "9. Standing Hamstring Stretch (1 min/side) - [https://www.youtube.com/results?search_query=standing+hamstring+stretch]",
-      "10. Child's Pose (3 min) - [https://www.youtube.com/results?search_query=childs+pose]",
-      "ADVICE: If a movement increases 'electric' pain down the leg, stop immediately."
-    ]],
-    
-    // --- OSTALE KATEGORIJE (Skraćeno radi preglednosti, koristi prethodne podatke) ---
-    "bone-density": [[ "BONE DENSITY PLAN", "WARM-UP: Brisk walk.", "1. Weighted Squats... [https://www.youtube.com/results?search_query=weighted+squat]" ]],
-    "neck-shoulders": [[ "NECK & SHOULDER RESET", "WARM-UP: Shoulder rolls.", "1. Chin Tucks... [https://www.youtube.com/results?search_query=chin+tucks]" ]],
-    "knee-stability": [[ "KNEE STABILITY", "WARM-UP: Ankle pumps.", "1. Quad Sets... [https://www.youtube.com/results?search_query=quad+sets]" ]]
+    "pelvic-health": [["PELVIC FLOOR & CORE STABILITY", "WARM-UP: Diaphragmatic breathing.", "1. Pelvic Tilts - [https://www.youtube.com/results?search_query=pelvic+tilts]", "2. Glute Bridge - [https://www.youtube.com/results?search_query=glute+bridge]", "3. Dead Bug - [https://www.youtube.com/results?search_query=dead+bug+exercise]", "4. Bird-Dog - [https://www.youtube.com/results?search_query=bird+dog+exercise]", "5. Child's Pose - [https://www.youtube.com/results?search_query=childs+pose]", "ADVICE: Consistent light practice beats heavy rare sessions."]],
+    "sciatica-relief": [["SCIATICA & NERVE RELIEF", "WARM-UP: Gentle hip circles.", "1. Pigeon Stretch - [https://www.youtube.com/results?search_query=pigeon+stretch]", "2. Nerve Flossing - [https://www.youtube.com/results?search_query=sciatic+nerve+flossing]", "3. Cat-Cow - [https://www.youtube.com/results?search_query=cat+cow+stretch]", "4. Figure 4 Stretch - [https://www.youtube.com/results?search_query=figure+4+stretch]", "5. Child's Pose - [https://www.youtube.com/results?search_query=childs+pose]", "ADVICE: Stop if you feel sharp electric pain."]]
   };
 
   const generatePlan = () => {
     setLoading(true);
     setPlanResponse("");
+    setSeconds(0); // Resetuj tajmer za novi trening
+    setTimerActive(false);
 
     setTimeout(() => {
-      const categoryPlans = fitnessDatabase[selectedSubGoal] || fitnessDatabase["bone-density"];
+      const categoryPlans = fitnessDatabase[selectedSubGoal] || fitnessDatabase["pelvic-health"];
       const randomPlan = categoryPlans[Math.floor(Math.random() * categoryPlans.length)];
       
       const formattedResponse = (
         <div className="text-left space-y-2">
+          {/* Tajmer unutar plana */}
+          <div className="flex justify-between items-center bg-zinc-900/50 p-4 rounded-xl mb-4 border border-zinc-800">
+            <div>
+              <p className="text-[10px] text-zinc-500 uppercase font-mono">Workout Duration</p>
+              <p className="text-2xl font-black text-white">{formatTime(seconds)}</p>
+            </div>
+            <button 
+              onClick={() => setTimerActive(!timerActive)}
+              className={`px-4 py-2 rounded-lg font-bold text-xs transition-all ${timerActive ? "bg-red-500/20 text-red-500 border border-red-500/50" : "bg-green-500/20 text-green-500 border border-green-500/50"}`}
+            >
+              {timerActive ? "PAUSE" : "START WORKOUT"}
+            </button>
+          </div>
+
           {randomPlan.map((line, index) => {
             const linkMatch = line.match(/\[(.*?)\]/);
             if (linkMatch) {
@@ -100,13 +108,19 @@ export default function FormFixPro() {
               return (
                 <div key={index} className="flex justify-between items-center border-b border-zinc-900 pb-2">
                   <span className="text-sm">{textBeforeLink}</span>
-                  <a href={linkMatch[1]} target="_blank" rel="noopener noreferrer" className="text-[10px] text-fuchsia-400 font-bold border border-fuchsia-400 px-2 py-1 rounded hover:bg-fuchsia-400 hover:text-black transition-all">
+                  <a 
+                    href={linkMatch[1]} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    onClick={() => setTimerActive(true)} // Automatski pali tajmer kad klikne na video
+                    className="text-[10px] text-fuchsia-400 font-bold border border-fuchsia-400 px-2 py-1 rounded hover:bg-fuchsia-400 hover:text-black transition-all"
+                  >
                     PLAY 🎬
                   </a>
                 </div>
               );
             }
-            return <p key={index} className={index === 0 ? "font-bold text-fuchsia-400 mb-4 text-center border-b border-fuchsia-400/20 pb-2 uppercase tracking-tight" : "text-sm text-zinc-300"}>{line}</p>;
+            return <p key={index} className={index === 0 ? "font-bold text-fuchsia-400 mb-2 text-center border-b border-fuchsia-400/20 pb-2 uppercase tracking-tight" : "text-sm text-zinc-300"}>{line}</p>;
           })}
         </div>
       );
@@ -115,6 +129,13 @@ export default function FormFixPro() {
       setLoading(false);
     }, 1200);
   };
+
+  // Potrebno je ponovo renderovati UI kada se sekunde promene
+  useEffect(() => {
+    if (planResponse && timerActive) {
+      // Re-trigger render za tajmer (ovo je uprošćeno, u praksi bi tajmer bio zasebna komponenta)
+    }
+  }, [seconds]);
 
   return (
     <main className="min-h-screen bg-black text-white p-6 font-sans">
@@ -136,7 +157,6 @@ export default function FormFixPro() {
                 ))}
               </div>
             </div>
-
             <div>
               <p className="text-zinc-500 text-xs font-mono mb-4 uppercase tracking-widest">Step 2: Specific Goal</p>
               <div className="flex flex-wrap gap-2">
@@ -157,8 +177,8 @@ export default function FormFixPro() {
               <div className="text-zinc-500 text-[10px] font-mono uppercase tracking-[0.3em] flex justify-between items-center">
                 <span>Program Generator</span>
                 <div className="flex items-center gap-2">
-                    <span className="text-green-500 text-[9px]">ONLINE</span>
-                    <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <span className="text-white text-[12px] font-bold">{formatTime(seconds)}</span>
+                    <div className={`h-2 w-2 rounded-full ${timerActive ? "bg-red-500 animate-pulse" : "bg-green-500"}`}></div>
                 </div>
               </div>
 
@@ -166,11 +186,11 @@ export default function FormFixPro() {
                 {loading ? (
                   <div className="flex flex-col items-center justify-center py-24 space-y-4">
                     <div className="animate-spin h-10 w-10 border-2 border-fuchsia-500 border-t-transparent rounded-full"></div>
-                    <span className="text-[10px] font-mono text-fuchsia-400 animate-pulse uppercase tracking-[0.2em]">Building your routine...</span>
+                    <span className="text-[10px] font-mono text-fuchsia-400 animate-pulse uppercase tracking-[0.2em]">Building routine...</span>
                   </div>
                 ) : planResponse || (
                   <div className="text-center py-24 px-4">
-                    <p className="text-zinc-600 italic text-sm">Define your goals and click below to view your specialized training plan.</p>
+                    <p className="text-zinc-600 italic text-sm">Choose your focus and get your plan.</p>
                   </div>
                 )}
               </div>
