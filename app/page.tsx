@@ -25,17 +25,23 @@ export default function FormFixPro() {
     else alert("Check your inbox for the magic link!");
   };
 
-  // PRAVI POZIV KA OPENAI
   const generatePlan = async () => {
     setLoading(true);
     setAiResponse("");
 
     try {
+      // Provera da li ključ uopšte postoji pre nego što pošaljemo zahtev
+      const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+      
+      if (!apiKey) {
+        throw new Error("Ključ (API KEY) nije pronađen. Proveri GitHub Secrets i deploy.yml!");
+      }
+
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`
+          'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify({
           model: "gpt-3.5-turbo",
@@ -54,15 +60,23 @@ export default function FormFixPro() {
       });
 
       const data = await response.json();
+
+      if (response.status === 401) {
+        throw new Error("Neispravan OpenAI ključ (401 Unauthorized).");
+      }
+      
+      if (response.status === 429) {
+        throw new Error("Nemaš dovoljno kredita na OpenAI nalogu ili šalješ previše zahteva (429 Rate Limit).");
+      }
       
       if (data.choices && data.choices[0]) {
         setAiResponse(data.choices[0].message.content);
       } else {
-        throw new Error("API Limit reached or invalid key");
+        throw new Error(data.error?.message || "Nepoznata greška sa OpenAI.");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      setAiResponse("Sorry, I couldn't connect to the AI brain. Check your OpenAI credits or GitHub Secrets.");
+      setAiResponse("Greška: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -112,9 +126,9 @@ export default function FormFixPro() {
               </div>
 
               <div className="rounded-2xl bg-black border border-zinc-800 p-8 min-h-[160px] flex items-center justify-center">
-                <div className="text-zinc-300 text-center leading-relaxed whitespace-pre-wrap">
+                <div className="text-zinc-300 text-center leading-relaxed whitespace-pre-wrap font-medium">
                   {loading ? (
-                    <div className="animate-pulse">Thinking... 🧠</div>
+                    <div className="animate-pulse italic">Thinking... 🧠</div>
                   ) : aiResponse || "Choose a category and click generate."}
                 </div>
               </div>
