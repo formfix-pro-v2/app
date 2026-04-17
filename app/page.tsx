@@ -1,6 +1,13 @@
+"use client";
+
+import React, { useState, useEffect } from 'react';
+
+// --- TIPOVI ---
+type Exercise = { name: string; img: string; desc: string; duration: number };
+type Plan = { category: string; title: string; description: string; exercises: Exercise[] };
+
 // --- PUNA BAZA PODATAKA (SVAKI PROGRAM IMA 10 VEŽBI) ---
 const fitnessDatabase: Record<string, Plan> = {
-  // --- MENOPAUSE CATEGORY ---
   "pelvic-health": {
     category: "MENOPAUSE",
     title: "Pelvic Floor & Core",
@@ -42,7 +49,7 @@ const fitnessDatabase: Record<string, Plan> = {
     exercises: [
       { name: "Cat-Cow", img: "exercises/cat-cow.jpg", desc: "Move with your breath to mobilize the spine.", duration: 60 },
       { name: "Child's Pose", img: "exercises/childs-pose.jpg", desc: "Deep breathing focus for stress reduction.", duration: 90 },
-      { name: "Pigeon Stretch", img: "exercises/pigeon-stretch.jpg", desc: "Release hip tension where cortisol 'hides'.", duration: 60 },
+      { name: "Pigeon Stretch", img: "exercises/pigeon-stretch.jpg", desc: "Release hip tension.", duration: 60 },
       { name: "Spinal Twist", img: "exercises/spinal-twist.jpg", desc: "Improve digestive and hormonal flow.", duration: 60 },
       { name: "Knees-to-Chest", img: "exercises/knees-to-chest.jpg", desc: "Lower back decompression.", duration: 60 },
       { name: "Pelvic Tilts", img: "exercises/pelvic-tilts.jpg", desc: "Foundational pelvic circulation.", duration: 45 },
@@ -52,8 +59,6 @@ const fitnessDatabase: Record<string, Plan> = {
       { name: "Knee Fall-Outs", img: "exercises/knee-fallout.jpg", desc: "Gentle hip mobility.", duration: 45 }
     ]
   },
-
-  // --- OFFICE RECOVERY CATEGORY ---
   "sciatica-relief": {
     category: "OFFICE RECOVERY",
     title: "Sciatica & Nerve Relief",
@@ -77,7 +82,7 @@ const fitnessDatabase: Record<string, Plan> = {
     description: "Correct tech-neck and open the thoracic spine.",
     exercises: [
       { name: "Wall Slides", img: "exercises/shoulder-mobility.jpg", desc: "Slide arms up wall to open the chest.", duration: 60 },
-      { name: "Cat-Cow", img: "exercises/cat-cow.jpg", desc: "Focus on upper back (thoracic) movement.", duration: 60 },
+      { name: "Cat-Cow", img: "exercises/cat-cow.jpg", desc: "Focus on upper back movement.", duration: 60 },
       { name: "Bird-Dog", img: "exercises/bird-dog.jpg", desc: "Stabilize scapula and core.", duration: 45 },
       { name: "Superman", img: "exercises/superman.jpg", desc: "Strengthen upper back extensors.", duration: 45 },
       { name: "Plank", img: "exercises/plank.jpg", desc: "Shoulder girdle stability.", duration: 60 },
@@ -105,8 +110,6 @@ const fitnessDatabase: Record<string, Plan> = {
       { name: "Hamstring Stretch", img: "exercises/hamstring-stretch.jpg", desc: "Release posterior tension.", duration: 60 }
     ]
   },
-
-  // --- INJURY REHAB CATEGORY ---
   "knee-stability": {
     category: "INJURY REHAB",
     title: "Knee Stability",
@@ -159,3 +162,175 @@ const fitnessDatabase: Record<string, Plan> = {
     ]
   }
 };
+
+export default function FormFixPro() {
+  const [selectedKey, setSelectedKey] = useState("pelvic-health");
+  const [activePlan, setActivePlan] = useState<Plan | null>(null);
+  const [totalSeconds, setTotalSeconds] = useState(0);
+  const [exerciseSeconds, setExerciseSeconds] = useState(0);
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [isPaused, setIsPaused] = useState(true);
+
+  const imgPrefix = "/app/";
+
+  const startWorkout = () => {
+    const plan = fitnessDatabase[selectedKey];
+    const total = plan.exercises.reduce((acc, ex) => acc + ex.duration, 0);
+    setActivePlan(plan);
+    setCurrentIdx(0);
+    setExerciseSeconds(plan.exercises[0].duration);
+    setTotalSeconds(total);
+    setIsPaused(false);
+  };
+
+  useEffect(() => {
+    let interval: any;
+    if (!isPaused && activePlan) {
+      interval = setInterval(() => {
+        setTotalSeconds(prev => (prev > 0 ? prev - 1 : 0));
+        setExerciseSeconds(prev => {
+          if (prev > 1) return prev - 1;
+          if (currentIdx < activePlan.exercises.length - 1) {
+            const nextIdx = currentIdx + 1;
+            setCurrentIdx(nextIdx);
+            return activePlan.exercises[nextIdx].duration;
+          } else {
+            setIsPaused(true);
+            return 0;
+          }
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isPaused, activePlan, currentIdx]);
+
+  const goToNext = () => {
+    if (!activePlan || currentIdx >= activePlan.exercises.length - 1) return;
+    const nextIdx = currentIdx + 1;
+    setTotalSeconds(prev => prev - exerciseSeconds + activePlan.exercises[nextIdx].duration);
+    setCurrentIdx(nextIdx);
+    setExerciseSeconds(activePlan.exercises[nextIdx].duration);
+  };
+
+  const goToPrev = () => {
+    if (!activePlan || currentIdx <= 0) return;
+    const prevIdx = currentIdx - 1;
+    setTotalSeconds(prev => prev - exerciseSeconds + activePlan.exercises[prevIdx].duration);
+    setCurrentIdx(prevIdx);
+    setExerciseSeconds(activePlan.exercises[prevIdx].duration);
+  };
+
+  const formatTime = (s: number) => {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${m}:${sec < 10 ? '0' : ''}${sec}`;
+  };
+
+  const categories = ["MENOPAUSE", "OFFICE RECOVERY", "INJURY REHAB"];
+
+  return (
+    <main className="min-h-screen bg-[#050505] text-white p-4 font-sans selection:bg-fuchsia-500">
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-8 py-6">
+        {/* LEVA STRANA: MENI */}
+        <div className="lg:col-span-4 space-y-6">
+          <div className="p-6 bg-zinc-900/30 border border-zinc-800 rounded-3xl backdrop-blur-md">
+            <h1 className="text-3xl font-black bg-gradient-to-r from-fuchsia-500 to-orange-500 bg-clip-text text-transparent mb-6 uppercase tracking-tighter italic">FormFix Premium</h1>
+            <div className="space-y-6 overflow-y-auto max-h-[65vh] pr-2 custom-scrollbar">
+              {categories.map(cat => (
+                <div key={cat} className="space-y-2">
+                  <p className="text-[10px] font-mono text-zinc-600 tracking-[0.2em] uppercase">{cat}</p>
+                  <div className="grid gap-2">
+                    {Object.entries(fitnessDatabase)
+                      .filter(([_, p]) => p.category === cat)
+                      .map(([key, p]) => (
+                        <button
+                          key={key}
+                          onClick={() => setSelectedKey(key)}
+                          className={`p-4 rounded-2xl border-2 text-left transition-all ${selectedKey === key ? "border-fuchsia-600 bg-fuchsia-600/10 shadow-[0_0_15px_rgba(192,38,211,0.2)]" : "border-zinc-800 bg-zinc-900/20 hover:border-zinc-700"}`}
+                        >
+                          <p className="font-bold text-xs uppercase tracking-tight">{p.title}</p>
+                        </button>
+                      ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button 
+              onClick={startWorkout}
+              className="w-full mt-6 py-5 bg-gradient-to-r from-fuchsia-600 to-orange-500 text-white font-black rounded-2xl hover:scale-[1.02] active:scale-95 transition-all uppercase text-xs tracking-widest shadow-lg shadow-fuchsia-500/20"
+            >
+              Start Selected Protocol
+            </button>
+          </div>
+        </div>
+
+        {/* DESNA STRANA: PLAYER */}
+        <div className="lg:col-span-8">
+          {activePlan ? (
+            <div className="bg-zinc-900/20 border border-zinc-800 rounded-[2.5rem] overflow-hidden backdrop-blur-3xl shadow-2xl">
+              <div className="p-8 border-b border-zinc-800 flex justify-between items-center bg-black/40">
+                <div>
+                  <p className="text-zinc-500 text-[10px] font-mono uppercase">Remaining Session</p>
+                  <p className="text-2xl font-black text-white">{formatTime(totalSeconds)}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-fuchsia-500 text-[10px] font-mono uppercase">Current Exercise</p>
+                  <p className="text-6xl font-black text-fuchsia-500 tabular-nums drop-shadow-[0_0_15px_rgba(217,70,239,0.3)]">
+                    {formatTime(exerciseSeconds)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-8">
+                <div className="grid md:grid-cols-2 gap-10 items-center">
+                  <div className="relative aspect-square bg-zinc-950 rounded-3xl border border-zinc-800 flex items-center justify-center p-4 overflow-hidden group">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-fuchsia-500 to-orange-500 rounded-2xl blur opacity-10 group-hover:opacity-25 transition"></div>
+                    <img 
+                      src={`${imgPrefix}${activePlan.exercises[currentIdx].img}`}
+                      className="relative max-w-full max-h-full object-contain"
+                      alt={activePlan.exercises[currentIdx].name}
+                      onError={(e) => { e.currentTarget.src = "https://via.placeholder.com/500?text=FormFix+Exercise"; }}
+                    />
+                  </div>
+
+                  <div className="space-y-6">
+                    <span className="px-3 py-1 bg-fuchsia-500/10 border border-fuchsia-500/20 rounded-full text-fuchsia-500 text-[10px] font-bold uppercase tracking-widest">
+                      Exercise {currentIdx + 1}/{activePlan.exercises.length}
+                    </span>
+                    <h2 className="text-4xl font-black uppercase italic leading-none tracking-tighter">{activePlan.exercises[currentIdx].name}</h2>
+                    <p className="text-zinc-400 text-sm leading-relaxed italic">{activePlan.exercises[currentIdx].desc}</p>
+                    
+                    <div className="flex gap-4 pt-4">
+                      <button onClick={goToPrev} className="flex-1 py-4 rounded-2xl border border-zinc-700 bg-zinc-900/50 font-bold text-[10px] hover:bg-zinc-800 transition-all uppercase tracking-widest">Back</button>
+                      <button onClick={() => setIsPaused(!isPaused)} className={`flex-[2] py-4 rounded-2xl font-black text-[10px] transition-all uppercase tracking-widest ${isPaused ? "bg-fuchsia-600 text-white shadow-lg shadow-fuchsia-500/20" : "bg-white text-black"}`}>
+                        {isPaused ? "Resume" : "Pause"}
+                      </button>
+                      <button onClick={goToNext} className="flex-1 py-4 rounded-2xl border border-zinc-700 bg-zinc-900/50 font-bold text-[10px] hover:bg-zinc-800 transition-all uppercase tracking-widest">Next</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="h-2 bg-zinc-800 w-full">
+                <div 
+                  className="h-full bg-gradient-to-r from-fuchsia-500 to-orange-500 transition-all duration-700"
+                  style={{ width: `${((currentIdx + 1) / activePlan.exercises.length) * 100}%` }}
+                ></div>
+              </div>
+            </div>
+          ) : (
+            <div className="h-full min-h-[550px] border-2 border-dashed border-zinc-800 rounded-[3rem] flex items-center justify-center p-12 text-center">
+              <div className="max-w-xs space-y-4">
+                <div className="w-16 h-16 border-2 border-zinc-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="w-2 h-2 bg-fuchsia-500 rounded-full animate-ping"></div>
+                </div>
+                <h3 className="text-zinc-400 font-bold uppercase tracking-widest">Select Protocol</h3>
+                <p className="text-zinc-600 italic text-sm font-mono leading-relaxed">Choose a specialized routine from the sidebar to initialize the premium playback system.</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </main>
+  );
+}
