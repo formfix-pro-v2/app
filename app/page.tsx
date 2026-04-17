@@ -1,5 +1,17 @@
 "use client";
+
+import React from 'react';
+
 export default function FormFixPro() {
+  // Funkcije za interakciju
+  const handleStart = () => {
+    alert("Krenuli smo! Ovde bi se otvorila registracija.");
+  };
+
+  const handleDemo = () => {
+    window.open("https://youtube.com", "_blank"); // Primer za demo video
+  };
+
   const plans = [
     {
       name: "Free",
@@ -37,18 +49,24 @@ export default function FormFixPro() {
           </p>
 
           <div className="mt-8 flex gap-4">
-            <button className="px-6 py-3 rounded-2xl bg-fuchsia-600 font-bold">
+            <button 
+              onClick={handleStart}
+              className="px-6 py-3 rounded-2xl bg-fuchsia-600 font-bold hover:scale-105 transition-transform active:bg-fuchsia-700"
+            >
               Start Free
             </button>
 
-            <button className="px-6 py-3 rounded-2xl border border-zinc-700">
+            <button 
+              onClick={handleDemo}
+              className="px-6 py-3 rounded-2xl border border-zinc-700 hover:bg-zinc-800 transition-colors"
+            >
               Watch Demo
             </button>
           </div>
         </div>
 
         {/* DASHBOARD CARD */}
-        <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6 shadow-2xl">
+        <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6 shadow-2xl hover:border-fuchsia-500/50 transition-colors cursor-default">
           <div className="grid grid-cols-2 gap-4">
             <div className="rounded-2xl bg-zinc-900 p-4">
               <div className="text-zinc-400 text-sm">Current Streak</div>
@@ -75,7 +93,7 @@ export default function FormFixPro() {
         {["AI Plans", "Progress Tracking", "Premium Coaching"].map((x) => (
           <div
             key={x}
-            className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6"
+            className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6 hover:bg-zinc-900 transition-colors"
           >
             <h3 className="text-xl font-bold">{x}</h3>
             <p className="text-zinc-400 mt-2">
@@ -87,24 +105,29 @@ export default function FormFixPro() {
 
       {/* PRICING */}
       <section className="max-w-6xl mx-auto py-12">
-        <h2 className="text-4xl font-black mb-6">Pricing</h2>
+        <h2 className="text-4xl font-black mb-6 text-center md:text-left">Pricing</h2>
 
         <div className="grid md:grid-cols-3 gap-5">
           {plans.map((p) => (
             <div
               key={p.name}
-              className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6"
+              className="rounded-3xl border border-zinc-800 bg-zinc-950 p-6 flex flex-col hover:scale-[1.02] transition-transform"
             >
               <div className="text-2xl font-black">{p.name}</div>
-              <div className="text-4xl font-black mt-3">{p.price}</div>
+              <div className="text-4xl font-black mt-3 text-fuchsia-400">{p.price}</div>
 
-              <ul className="mt-4 space-y-2 text-zinc-400">
+              <ul className="mt-4 space-y-2 text-zinc-400 flex-grow">
                 {p.features.map((f) => (
-                  <li key={f}>✓ {f}</li>
+                  <li key={f} className="flex items-center gap-2">
+                    <span className="text-fuchsia-500">✓</span> {f}
+                  </li>
                 ))}
               </ul>
 
-              <button className="mt-6 w-full rounded-2xl bg-fuchsia-600 py-3 font-bold">
+              <button 
+                onClick={() => alert(`Izabrali ste ${p.name} plan!`)}
+                className="mt-6 w-full rounded-2xl bg-fuchsia-600 py-3 font-bold hover:bg-fuchsia-700 active:scale-95 transition-all"
+              >
                 Choose Plan
               </button>
             </div>
