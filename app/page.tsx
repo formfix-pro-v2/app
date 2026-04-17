@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 export default function FormFixPro() {
   const [loading, setLoading] = useState(false);
   const [aiResponse, setAiResponse] = useState("");
-  const [selectedGoal, setSelectedGoal] = useState("office recovery"); // Defaultna vrednost
+  const [selectedGoal, setSelectedGoal] = useState("office recovery");
 
   const goals = [
     { id: "menopause", label: "Menopause", icon: "🌸" },
@@ -14,7 +14,6 @@ export default function FormFixPro() {
     { id: "injury rehab", label: "Injury Rehab", icon: "🩹" }
   ];
 
-  // LOGIN FUNCTION
   const handleLogin = async () => {
     const email = prompt("Enter your email to sign in:");
     if (!email) return;
@@ -26,24 +25,47 @@ export default function FormFixPro() {
     else alert("Check your inbox for the magic link!");
   };
 
-  // UPDATED AI GENERATOR
-  const generatePlan = () => {
+  // PRAVI POZIV KA OPENAI
+  const generatePlan = async () => {
     setLoading(true);
-    
-    // Simuliramo različite odgovore na osnovu izabrane kategorije
-    setTimeout(() => {
-      let response = "";
-      if (selectedGoal === "menopause") {
-        response = "AI Plan: Focus on resistance training for bone density and cooling breathwork for symptom management.";
-      } else if (selectedGoal === "office recovery") {
-        response = "AI Plan: 15-minute routine focusing on thoracic mobility and hip flexor releases to reverse 'desk posture'.";
-      } else {
-        response = "AI Plan: Low-impact isometric holds and gradual eccentric loading for safe joint rehabilitation.";
-      }
+    setAiResponse("");
+
+    try {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [
+            { 
+              role: "system", 
+              content: "You are an expert fitness coach specializing in longevity, menopause, and rehabilitation. Provide short, actionable 3-step plans." 
+            },
+            { 
+              role: "user", 
+              content: `Create a quick 3-step workout plan for someone focusing on: ${selectedGoal}.` 
+            }
+          ],
+          temperature: 0.7,
+        })
+      });
+
+      const data = await response.json();
       
-      setAiResponse(response);
+      if (data.choices && data.choices[0]) {
+        setAiResponse(data.choices[0].message.content);
+      } else {
+        throw new Error("API Limit reached or invalid key");
+      }
+    } catch (error) {
+      console.error(error);
+      setAiResponse("Sorry, I couldn't connect to the AI brain. Check your OpenAI credits or GitHub Secrets.");
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -57,7 +79,6 @@ export default function FormFixPro() {
           
           <p className="mt-6 text-zinc-400 text-xl">Select your focus area:</p>
           
-          {/* CATEGORY SELECTOR */}
           <div className="mt-4 flex flex-wrap gap-3">
             {goals.map((goal) => (
               <button
@@ -81,7 +102,6 @@ export default function FormFixPro() {
           </div>
         </div>
 
-        {/* AI DASHBOARD */}
         <div className="relative group">
           <div className="absolute -inset-1 bg-gradient-to-r from-fuchsia-600 to-violet-600 rounded-3xl blur opacity-25"></div>
           <div className="relative rounded-3xl border border-zinc-800 bg-zinc-950 p-8 shadow-2xl">
@@ -92,16 +112,19 @@ export default function FormFixPro() {
               </div>
 
               <div className="rounded-2xl bg-black border border-zinc-800 p-8 min-h-[160px] flex items-center justify-center">
-                <p className="text-zinc-300 text-center leading-relaxed">
-                  {loading ? "AI is crafting your specific plan..." : aiResponse || "Choose a category and click generate."}
-                </p>
+                <div className="text-zinc-300 text-center leading-relaxed whitespace-pre-wrap">
+                  {loading ? (
+                    <div className="animate-pulse">Thinking... 🧠</div>
+                  ) : aiResponse || "Choose a category and click generate."}
+                </div>
               </div>
 
               <button 
                 onClick={generatePlan}
-                className="w-full py-5 rounded-2xl bg-white text-black font-black hover:bg-zinc-200 transition-all active:scale-95"
+                disabled={loading}
+                className="w-full py-5 rounded-2xl bg-white text-black font-black hover:bg-zinc-200 transition-all active:scale-95 disabled:opacity-50"
               >
-                {loading ? "PROCESSING..." : `GENERATE ${selectedGoal.toUpperCase()} PLAN`}
+                {loading ? "GENERATING..." : `GENERATE ${selectedGoal.toUpperCase()} PLAN`}
               </button>
             </div>
           </div>
