@@ -1,16 +1,16 @@
-import "./globals.css";
-export const metadata = {
-  title: "FormFix Pro",
-  description: "AI fitness platform"
-};
 // app/layout.tsx
-export const metadata = {
-  title: 'FormFix Pro v2',
-  description: 'Professional Tailored Fitness Plans',
+import "./globals.css";
+import type { Metadata } from "next";
+
+// SAMO JEDAN metadata objekat sme da postoji
+export const metadata: Metadata = {
+  title: "FormFix Pro v2",
+  description: "Professional Tailored Fitness Plans",
   icons: {
-    icon: 'https://cdn-icons-png.flaticon.com/512/2964/2964514.png', // Možeš zameniti link svojom ikonicom
+    icon: "/favicon.ico", // proveri da li imaš ovaj fajl u /public folderu
   },
-}
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -18,7 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="antialiased">
+        {children}
+      </body>
     </html>
   );
 }
