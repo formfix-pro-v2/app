@@ -12,3 +12,17 @@ body {
   color: rgb(var(--foreground-rgb));
   background: black;
 }
+```css id="xyv7bx"
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #09060f;
+  color: white;
+}
+
+* {
+  box-sizing: border-box;
+}
+
