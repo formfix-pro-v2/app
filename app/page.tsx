@@ -1,8 +1,8 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-// Izlazimo iz drugog app, pa iz prvog app foldera
-import PrimaryButton from "../../components/PrimaryButton";
+// Koristimo @/ da bismo gađali root folder direktno
+import PrimaryButton from "@/components/PrimaryButton";
 
 export default function Home() {
   return (
