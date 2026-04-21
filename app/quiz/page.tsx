@@ -1,10 +1,9 @@
 "use client";
 import React, { useState } from "react";
-import PrimaryButton from "../Components/primaryButton";
+import PrimaryButton from "@/components/PrimaryButton";
 
 export default function QuizPage() {
   const [step, setStep] = useState(1);
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8">
       <h1 className="text-2xl font-bold mb-6">Quiz Step {step}</h1>
