@@ -20,17 +20,18 @@ export default function Home() {
 
         <div className="flex flex-col gap-6 items-center">
           <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight">
-            Perfect Your Form, <br />
-            <span className="text-blue-500">Build Real Strength.</span>
+            Usavrši svoju formu, <br />
+            <span className="text-blue-500">Gradi pravu snagu.</span>
           </h1>
           <p className="text-gray-400 text-xl max-w-[600px] leading-relaxed font-light">
-            FormFix Pro uses AI-driven analysis to optimize your lifting technique. Take the assessment to start.
+            FormFix Pro koristi AI analizu za optimizaciju tvoje tehnike dizanja. 
+            Započni procenu da bi ostvario bolje rezultate.
           </p>
         </div>
         
         <div className="mt-4 scale-110">
           <Link href="/quiz">
-            <PrimaryButton text="Start Assessment" />
+            <PrimaryButton text="Započni kviz" />
           </Link>
         </div>
       </main>
