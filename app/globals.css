@@ -2,17 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 0, 0, 0;
-  --background-end-rgb: 0, 0, 0;
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: black;
-}
-```css id="xyv7bx"
 html {
   scroll-behavior: smooth;
 }
@@ -22,7 +11,21 @@ body {
   color: white;
 }
 
-* {
-  box-sizing: border-box;
+::selection {
+  background: #d946ef;
+  color: white;
 }
 
+@layer utilities {
+  .glass {
+    @apply bg-white/5 border border-white/10 backdrop-blur-xl;
+  }
+
+  .luxury-btn {
+    @apply px-8 py-4 rounded-2xl font-bold bg-gradient-to-r from-fuchsia-600 to-orange-500 hover:scale-105 transition;
+  }
+
+  .section-title {
+    @apply text-4xl md:text-5xl font-black;
+  }
+}
