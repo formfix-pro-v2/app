@@ -5,33 +5,42 @@ export default function ResultsPage() {
     <main className="min-h-screen bg-[#09060f] text-white px-6 py-20">
       <div className="max-w-5xl mx-auto text-center">
         <h1 className="text-6xl font-black mb-8">
-          Your Recovery Score: 72%
+          Recovery Potential: High
         </h1>
 
         <p className="text-xl text-zinc-300 mb-12">
-          You likely need posture correction + lower back mobility work.
+          Based on your answers, posture correction + mobility can strongly help.
         </p>
 
         <div className="grid md:grid-cols-3 gap-6 mb-12">
           <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
-            Day 1 Pain Relief Routine
+            Lower Back Relief
           </div>
 
           <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
-            Core Stability Program
+            Shoulder Reset
           </div>
 
           <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
-            Weekly Progress Plan
+            Daily Mobility
           </div>
         </div>
 
-        <Link
-          href="/pricing"
-          className="px-10 py-5 rounded-2xl font-bold bg-gradient-to-r from-blue-600 to-orange-500"
-        >
-          Unlock Full Program
-        </Link>
+        <div className="flex gap-4 justify-center flex-wrap">
+          <Link
+            href="/dashboard"
+            className="px-8 py-4 rounded-2xl bg-blue-600"
+          >
+            Continue Free
+          </Link>
+
+          <Link
+            href="/pricing"
+            className="px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-orange-500"
+          >
+            Unlock Premium
+          </Link>
+        </div>
       </div>
     </main>
   );
