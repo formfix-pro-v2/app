@@ -6,18 +6,18 @@ import PrimaryButton from "../../../components/PrimaryButton";
 const QUESTIONS = [
   {
     id: 1,
-    question: "What is your main fitness goal?",
-    options: ["Build Muscle", "Lose Weight", "Increase Power", "Joint Health"],
+    question: "Koji je vaš glavni fitnes cilj?",
+    options: ["Izgradnja mišića", "Gubitak kilograma", "Povećanje snage", "Zdravlje zglobova"],
   },
   {
     id: 2,
-    question: "How often do you train per week?",
-    options: ["1-2 times", "3-4 times", "5+ times", "I am a beginner"],
+    question: "Koliko često trenirate nedeljno?",
+    options: ["1-2 puta", "3-4 puta", "5+ puta", "Početnik sam"],
   },
   {
     id: 3,
-    question: "Which lift do you want to improve?",
-    options: ["Squat", "Deadlift", "Bench Press", "Clean & Jerk"],
+    question: "Koju vežbu želite prvo da popravite?",
+    options: ["Čučanj (Squat)", "Mrtvo dizanje (Deadlift)", "Potisak sa klupi (Bench Press)", "Trzaj i nabačaj (Clean & Jerk)"],
   },
 ];
 
@@ -39,8 +39,9 @@ export default function QuizPage() {
   if (finished) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-[#0a0a0a] text-white p-8 text-center">
-        <h1 className="text-4xl font-bold mb-6 text-blue-500">Analysis Complete!</h1>
-        <div className="bg-[#111] p-8 rounded-2xl border border-gray-800 mb-10 w-full max-w-md">
+        <h1 className="text-4xl font-bold mb-6 text-blue-500">Analiza završena!</h1>
+        <div className="bg-[#111] p-8 rounded-2xl border border-gray-800 mb-10 w-full max-w-md shadow-2xl">
+          <h2 className="text-lg font-semibold mb-4 text-white uppercase tracking-wider">Vaš profil:</h2>
           {QUESTIONS.map((q, i) => (
             <div key={q.id} className="mb-4 text-left border-b border-gray-900 pb-2">
               <p className="text-xs text-gray-500 uppercase">{q.question}</p>
@@ -49,7 +50,7 @@ export default function QuizPage() {
           ))}
         </div>
         <Link href="/">
-          <PrimaryButton text="Back to Home" />
+          <PrimaryButton text="Nazad na početnu" />
         </Link>
       </div>
     );
@@ -58,22 +59,28 @@ export default function QuizPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#0a0a0a] text-white p-8">
       <div className="w-full max-w-xl">
-        <div className="w-full bg-gray-900 h-1 rounded-full mb-12">
+        {/* Progress bar */}
+        <div className="w-full bg-gray-900 h-1.5 rounded-full mb-12 overflow-hidden">
           <div 
-            className="bg-blue-600 h-1 rounded-full transition-all duration-500" 
+            className="bg-blue-600 h-full transition-all duration-500" 
             style={{ width: `${((step + 1) / QUESTIONS.length) * 100}%` }}
           ></div>
         </div>
-        <p className="text-blue-500 font-bold text-xs uppercase tracking-widest mb-2">Step {step + 1} of {QUESTIONS.length}</p>
-        <h2 className="text-3xl font-bold mb-10 leading-tight">{QUESTIONS[step].question}</h2>
+
+        <p className="text-blue-500 font-bold text-xs uppercase tracking-widest mb-2">Korak {step + 1} od {QUESTIONS.length}</p>
+        <h2 className="text-3xl font-bold mb-10 leading-tight tracking-tight">{QUESTIONS[step].question}</h2>
+        
         <div className="grid grid-cols-1 gap-4">
           {QUESTIONS[step].options.map((opt) => (
             <button
               key={opt}
               onClick={() => handleSelect(opt)}
-              className="w-full text-left p-6 rounded-xl border border-gray-800 bg-[#0f0f0f] hover:border-blue-500 hover:bg-[#151515] transition-all"
+              className="w-full text-left p-6 rounded-xl border border-gray-800 bg-[#0f0f0f] hover:border-blue-500 hover:bg-[#151515] transition-all group active:scale-95"
             >
-              {opt}
+              <div className="flex items-center justify-between">
+                <span className="text-lg text-gray-300 group-hover:text-white">{opt}</span>
+                <div className="w-5 h-5 rounded-full border-2 border-gray-700 group-hover:border-blue-500 group-hover:bg-blue-500 transition-all"></div>
+              </div>
             </button>
           ))}
         </div>
