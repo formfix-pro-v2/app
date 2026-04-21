@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import PrimaryButton from "./components/PrimaryButton";
+import PrimaryButton from "./Components/primaryButton";
 
 export default function Home() {
   return (
