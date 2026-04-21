@@ -1,39 +1,22 @@
-import PrimaryButton from "@/components/PrimaryButton";
+import Link from "next/link";
+import PrimaryButton from "../components/PrimaryButton";
 
 export default function PricingPage() {
   return (
-    <main className="min-h-screen bg-[#09060f] text-white px-6 py-20">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-6xl font-black text-center mb-14">
-          Choose Your Plan
-        </h1>
-
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="rounded-3xl border border-white/10 p-8 bg-white/5">
-            <h2 className="text-3xl font-bold mb-4">Free</h2>
-            <p className="text-5xl font-black mb-6">€0</p>
-            <PrimaryButton href="/quiz" className="w-full">
-              Start
-            </PrimaryButton>
-          </div>
-
-          <div className="rounded-3xl border border-fuchsia-400/30 p-8 bg-white/10 scale-105">
-            <h2 className="text-3xl font-bold mb-4">Glow</h2>
-            <p className="text-5xl font-black mb-6">€19</p>
-            <PrimaryButton href="/contact" className="w-full">
-              Join Now
-            </PrimaryButton>
-          </div>
-
-          <div className="rounded-3xl border border-white/10 p-8 bg-white/5">
-            <h2 className="text-3xl font-bold mb-4">Elite</h2>
-            <p className="text-5xl font-black mb-6">€39</p>
-            <PrimaryButton href="/contact" className="w-full">
-              Upgrade
-            </PrimaryButton>
-          </div>
+    <div className="flex flex-col items-center justify-center min-h-screen p-8">
+      <h1 className="text-4xl font-bold mb-12">Pricing Plans</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="border p-8 rounded-lg shadow-sm flex flex-col items-center">
+          <h2 className="text-xl font-semibold mb-2">Basic</h2>
+          <p className="text-2xl font-bold mb-6">$0/mo</p>
+          <PrimaryButton text="Get Started" />
+        </div>
+        <div className="border p-8 rounded-lg shadow-sm border-blue-500 flex flex-col items-center">
+          <h2 className="text-xl font-semibold mb-2">Pro</h2>
+          <p className="text-2xl font-bold mb-6">$19/mo</p>
+          <PrimaryButton text="Upgrade Now" />
         </div>
       </div>
-    </main>
+    </div>
   );
 }
