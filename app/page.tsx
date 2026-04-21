@@ -1,4 +1,5 @@
 import Link from "next/link";
+import PrimaryButton from "@/components/PrimaryButton";
 
 export default function HomePage() {
   return (
@@ -8,9 +9,12 @@ export default function HomePage() {
 
       {/* NAVBAR */}
       <header className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
-        <div className="text-3xl font-black tracking-tight bg-gradient-to-r from-fuchsia-400 to-orange-300 text-transparent bg-clip-text">
+        <Link
+          href="/"
+          className="text-3xl font-black tracking-tight bg-gradient-to-r from-fuchsia-400 to-orange-300 text-transparent bg-clip-text"
+        >
           VIORA
-        </div>
+        </Link>
 
         <nav className="hidden md:flex gap-8 text-zinc-300">
           <a href="#features" className="hover:text-white transition">
@@ -54,19 +58,16 @@ export default function HomePage() {
           </p>
 
           <div className="mt-10 flex gap-4 flex-wrap">
-            <Link
-              href="/quiz"
-              className="px-8 py-4 rounded-2xl font-bold text-lg bg-gradient-to-r from-fuchsia-600 to-orange-500 hover:scale-105 transition shadow-2xl"
-            >
+            <PrimaryButton href="/quiz">
               Start Free Quiz
-            </Link>
+            </PrimaryButton>
 
-            <a
-              href="#features"
-              className="px-8 py-4 rounded-2xl border border-white/10 hover:bg-white/5 transition"
+            <PrimaryButton
+              href="/pricing"
+              className="bg-none bg-transparent border border-white/10 shadow-none hover:bg-white/5"
             >
-              Learn More
-            </a>
+              View Pricing
+            </PrimaryButton>
           </div>
 
           <div className="mt-8 text-zinc-400 text-sm">
@@ -92,9 +93,9 @@ export default function HomePage() {
             </div>
           </div>
 
-          <button className="mt-8 w-full rounded-2xl p-4 font-bold text-lg bg-gradient-to-r from-fuchsia-600 to-orange-500 hover:scale-[1.02] transition">
+          <PrimaryButton href="/pricing" className="mt-8 w-full">
             Unlock Premium
-          </button>
+          </PrimaryButton>
         </div>
       </section>
 
@@ -186,46 +187,61 @@ export default function HomePage() {
             <h3 className="text-2xl font-bold mb-4">Free</h3>
             <p className="text-4xl font-black mb-6">€0</p>
             <p className="text-zinc-300 mb-8">3 workouts + starter quiz</p>
-            <button className="w-full p-4 rounded-2xl border border-white/10">
+
+            <PrimaryButton href="/quiz" className="w-full">
               Start
-            </button>
+            </PrimaryButton>
           </div>
 
           <div className="rounded-3xl bg-gradient-to-b from-fuchsia-600/20 to-orange-500/20 border border-fuchsia-400/30 p-8 scale-105 shadow-2xl">
             <h3 className="text-2xl font-bold mb-4">Glow</h3>
             <p className="text-4xl font-black mb-6">€19</p>
             <p className="text-zinc-200 mb-8">Full workouts + tracking</p>
-            <button className="w-full p-4 rounded-2xl font-bold bg-gradient-to-r from-fuchsia-600 to-orange-500">
+
+            <PrimaryButton href="/pricing" className="w-full">
               Most Popular
-            </button>
+            </PrimaryButton>
           </div>
 
           <div className="rounded-3xl bg-white/5 border border-white/10 p-8">
             <h3 className="text-2xl font-bold mb-4">Elite</h3>
             <p className="text-4xl font-black mb-6">€39</p>
             <p className="text-zinc-300 mb-8">AI plans + nutrition coach</p>
-            <button className="w-full p-4 rounded-2xl border border-white/10">
+
+            <PrimaryButton href="/pricing" className="w-full">
               Upgrade
-            </button>
+            </PrimaryButton>
           </div>
         </div>
       </section>
 
       {/* FINAL CTA */}
       <section className="max-w-4xl mx-auto text-center px-6 pb-24">
-        <h2 className="text-5xl font-black mb-6">Ready To Transform?</h2>
+        <h2 className="text-5xl font-black mb-6">
+          Ready To Transform?
+        </h2>
 
         <p className="text-zinc-300 text-xl mb-10">
           Start your personalized glow-up today.
         </p>
 
-        <Link
-          href="/quiz"
-          className="inline-block px-10 py-5 rounded-2xl font-bold text-lg bg-gradient-to-r from-fuchsia-600 to-orange-500 hover:scale-105 transition"
-        >
+        <PrimaryButton href="/quiz">
           Start Free Quiz
-        </Link>
+        </PrimaryButton>
       </section>
+
+      {/* FOOTER */}
+      <footer className="border-t border-white/10 py-10 px-6">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6 justify-between text-zinc-400 text-sm">
+          <p>© 2026 VIORA. All rights reserved.</p>
+
+          <div className="flex gap-6">
+            <Link href="/privacy">Privacy</Link>
+            <Link href="/terms">Terms</Link>
+            <Link href="/contact">Contact</Link>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }
