@@ -1,7 +1,6 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-// Izlazimo dva nivoa gore da bismo došli do root components foldera
 import PrimaryButton from "../components/PrimaryButton";
 
 export default function Home() {
