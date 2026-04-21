@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import PrimaryButton from "@/components/PrimaryButton";
+import PrimaryButton from "../../components/PrimaryButton";
 
 export default function ResultsPage() {
   return (
