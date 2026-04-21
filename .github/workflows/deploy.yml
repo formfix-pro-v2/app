@@ -3,7 +3,7 @@ name: FormFix Deploy
 on:
   push:
     branches:
-      - main
+      - 21.4
   workflow_dispatch:
 
 permissions:
