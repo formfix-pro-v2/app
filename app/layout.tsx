@@ -2,32 +2,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Inter } from "next/font/google";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "VIORA | AI Wellness For Women 35+",
+  title: "FormFix Pro | AI Posture & Pain Relief",
   description:
-    "Personalized wellness plans for energy, posture, menopause support, pelvic floor and confidence.",
-  keywords: [
-    "women wellness app",
-    "menopause fitness",
-    "pelvic floor app",
-    "women over 40 health",
-    "AI fitness coach",
-  ],
-  openGraph: {
-    title: "VIORA",
-    description:
-      "Luxury AI wellness platform for women 35+.",
-    type: "website",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
+    "Fix posture, reduce pain and move better with personalized AI mobility programs.",
 };
 
 export default function RootLayout({
@@ -37,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans bg-[#09060f] text-white antialiased`}>
+      <body className={`${inter.className} bg-[#09060f] text-white`}>
         {children}
       </body>
     </html>
