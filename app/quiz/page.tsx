@@ -1,6 +1,6 @@
 "use client";
-import { useState } from "react";
-import PrimaryButton from "../components/PrimaryButton";
+import React, { useState } from "react";
+import PrimaryButton from "../Components/primaryButton";
 
 export default function QuizPage() {
   const [step, setStep] = useState(1);
