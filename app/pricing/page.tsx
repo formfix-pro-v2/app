@@ -1,5 +1,6 @@
+import React from "react";
 import Link from "next/link";
-import PrimaryButton from "../components/PrimaryButton";
+import PrimaryButton from "../Components/primaryButton";
 
 export default function PricingPage() {
   return (
