@@ -3,56 +3,150 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const questions = [
-  {
-    title: "What is your biggest issue?",
-    options: ["Back Pain", "Neck Pain", "Poor Posture", "Stiffness"],
-  },
-  {
-    title: "How often do you feel discomfort?",
-    options: ["Daily", "Weekly", "Sometimes", "Rarely"],
-  },
-  {
-    title: "How much time can you train?",
-    options: ["5 min", "10 min", "20 min", "30+ min"],
-  },
-];
+type Answers = {
+  age: string;
+  goal: string;
+  symptom: string;
+  lifestyle: string;
+};
 
 export default function QuizPage() {
-  const [step, setStep] = useState(0);
   const router = useRouter();
 
-  function choose(answer: string) {
-    if (step < questions.length - 1) {
-      setStep(step + 1);
-    } else {
-      router.push("/results");
+  const [step, setStep] = useState(1);
+
+  const [answers, setAnswers] = useState<Answers>({
+    age: "",
+    goal: "",
+    symptom: "",
+    lifestyle: "",
+  });
+
+  function update(key: keyof Answers, value: string) {
+    setAnswers({ ...answers, [key]: value });
+  }
+
+  function next() {
+    if (step < 4) setStep(step + 1);
+    else finishQuiz();
+  }
+
+  function finishQuiz() {
+    let type = "office";
+
+    if (
+      answers.goal === "menopause" ||
+      answers.symptom === "hot flashes"
+    ) {
+      type = "menopause";
     }
+
+    if (
+      answers.goal === "pelvic" ||
+      answers.symptom === "leakage"
+    ) {
+      type = "incontinence";
+    }
+
+    localStorage.setItem("userType", type);
+    router.push("/results");
   }
 
   return (
-    <main className="min-h-screen bg-[#09060f] text-white flex items-center justify-center px-6">
-      <div className="max-w-xl w-full bg-white/5 p-8 rounded-3xl border border-white/10">
-        <p className="text-zinc-400 mb-4">
-          Step {step + 1} / {questions.length}
-        </p>
-
-        <h1 className="text-4xl font-black mb-8">
-          {questions[step].title}
+    <main className="min-h-screen bg-[#09060f] text-white px-6 py-16">
+      <div className="max-w-2xl mx-auto">
+        <h1 className="text-5xl font-black mb-4">
+          Free AI Assessment
         </h1>
 
-        <div className="grid gap-4">
-          {questions[step].options.map((item) => (
-            <button
-              key={item}
-              onClick={() => choose(item)}
-              className="p-5 rounded-2xl border border-white/10 hover:bg-white/5"
-            >
-              {item}
-            </button>
-          ))}
-        </div>
+        <p className="text-zinc-400 mb-10">
+          Personalized plan in under 60 seconds.
+        </p>
+
+        {step === 1 && (
+          <Question
+            title="Your Age Range"
+            options={["25-39", "40-49", "50-59", "60+"]}
+            onSelect={(v) => update("age", v)}
+            next={next}
+          />
+        )}
+
+        {step === 2 && (
+          <Question
+            title="Main Goal"
+            options={[
+              "better posture",
+              "less pain",
+              "menopause",
+              "pelvic",
+            ]}
+            onSelect={(v) => update("goal", v)}
+            next={next}
+          />
+        )}
+
+        {step === 3 && (
+          <Question
+            title="Main Symptom"
+            options={[
+              "neck pain",
+              "back pain",
+              "hot flashes",
+              "leakage",
+            ]}
+            onSelect={(v) => update("symptom", v)}
+            next={next}
+          />
+        )}
+
+        {step === 4 && (
+          <Question
+            title="Daily Lifestyle"
+            options={[
+              "desk worker",
+              "active",
+              "busy parent",
+              "retired",
+            ]}
+            onSelect={(v) => update("lifestyle", v)}
+            next={next}
+          />
+        )}
       </div>
     </main>
+  );
+}
+
+function Question({
+  title,
+  options,
+  onSelect,
+  next,
+}: {
+  title: string;
+  options: string[];
+  onSelect: (v: string) => void;
+  next: () => void;
+}) {
+  return (
+    <div className="rounded-3xl bg-white/5 p-8 border border-white/10">
+      <h2 className="text-3xl font-bold mb-8">{title}</h2>
+
+      <div className="space-y-4">
+        {options.map((item) => (
+          <button
+            key={item}
+            onClick={() => {
+              onSelect(item);
+              next();
+            }}
+            className="w-full text-left p-5 rounded-2xl bg-black/30 hover:bg-black/50 transition"
+          >
+            {item}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }
