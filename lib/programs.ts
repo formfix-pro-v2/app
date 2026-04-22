@@ -1,39 +1,46 @@
-export type PlanType = "free" | "pro" | "elite";
+export type UserType =
+  | "menopause"
+  | "office"
+  | "incontinence";
 
-export function generateProgram(plan: PlanType) {
-  if (plan === "free") {
+export function getProgram(type: UserType) {
+  if (type === "menopause") {
     return {
-      title: "7-Day Starter Recovery Plan",
-      days: [
-        "Day 1: 10 min walk + chest stretch",
-        "Day 2: Core activation + posture reset",
-        "Day 3: Lower back mobility",
-        "Day 4: Recovery walk + breathing",
-        "Day 5: Glute activation",
-        "Day 6: Shoulder opener",
-        "Day 7: Full body mobility"
+      title: "Menopause Relief Program",
+      subtitle: "Balance hormones, reduce symptoms, regain confidence.",
+      modules: [
+        "Dry Eyes Recovery",
+        "Joint Pain Relief",
+        "Hot Flash Control",
+        "Energy Rebuild",
+        "Belly Fat Reset"
       ]
     };
   }
 
-  if (plan === "pro") {
+  if (type === "office") {
     return {
-      title: "30-Day Performance Recovery Plan",
-      days: [
-        "Week 1: Pain reduction + mobility",
-        "Week 2: Posture rebuild",
-        "Week 3: Strength foundation",
-        "Week 4: Energy optimization"
+      title: "Office Worker Recovery",
+      subtitle: "Undo desk damage and restore posture.",
+      modules: [
+        "Neck Pain Fix",
+        "Lower Back Relief",
+        "Tight Hips Reset",
+        "Eye Strain Recovery",
+        "Shoulder Release"
       ]
     };
   }
 
   return {
-    title: "90-Day Elite Transformation",
-    days: [
-      "Month 1: Recovery + fat loss",
-      "Month 2: Strength + posture mastery",
-      "Month 3: Peak confidence body system"
+    title: "Pelvic Confidence Program",
+    subtitle: "Regain bladder control and pelvic strength.",
+    modules: [
+      "Stress Leakage Fix",
+      "Urgency Control",
+      "Pelvic Strength Builder",
+      "Postpartum Recovery",
+      "Night Control Reset"
     ]
   };
 }
