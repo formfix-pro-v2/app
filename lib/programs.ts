@@ -1,55 +1,54 @@
-export type UserType = "menopause" | "office" | "incontinence";
+export type UserType =
+  | "menopause"
+  | "office"
+  | "incontinence";
 
-export type ProgramDay = {
-  title: string;
+type Day = {
   focus: string;
   tasks: string[];
 };
 
-export type ProgramData = {
+type Program = {
   title: string;
   subtitle: string;
   modules: string[];
-  days: ProgramDay[];
+  days: Day[];
 };
 
-export function getProgram(type: UserType): ProgramData {
+export function getProgram(type: UserType): Program {
   if (type === "menopause") {
     return {
-      title: "Menopause Relief System",
+      title: "Menopause Relief Program",
       subtitle:
-        "Designed to reduce common menopause symptoms and rebuild confidence.",
+        "Support hormones, reduce symptoms and restore confidence.",
       modules: [
         "Hot Flash Control",
         "Dry Eyes Support",
         "Joint Pain Relief",
         "Sleep Reset",
-        "Belly Fat Balance",
+        "Energy Recovery",
       ],
       days: [
         {
-          title: "Day 1",
           focus: "Cooling + Recovery",
           tasks: [
             "10 min walk",
-            "Breathing reset 5 min",
-            "Hydration target: 2L",
+            "Hydration goal",
+            "Breathing reset",
           ],
         },
         {
-          title: "Day 2",
           focus: "Joint Relief",
           tasks: [
-            "Mobility flow 12 min",
-            "Omega-rich meal",
-            "Stretch hips 5 min",
+            "Mobility routine",
+            "Stretch hips",
+            "Anti-inflammatory meal",
           ],
         },
         {
-          title: "Day 3",
-          focus: "Energy Rebuild",
+          focus: "Energy Reset",
           tasks: [
-            "Morning sunlight 10 min",
+            "Morning sunlight",
             "Core activation",
             "Low sugar day",
           ],
@@ -62,39 +61,36 @@ export function getProgram(type: UserType): ProgramData {
     return {
       title: "Office Worker Recovery",
       subtitle:
-        "Undo desk posture damage, stiffness and daily pain fast.",
+        "Fix posture, reduce pain and undo desk damage.",
       modules: [
         "Neck Pain Fix",
-        "Forward Head Reset",
-        "Lower Back Relief",
-        "Tight Hips Repair",
+        "Back Relief",
+        "Posture Reset",
+        "Hip Mobility",
         "Eye Strain Recovery",
       ],
       days: [
         {
-          title: "Day 1",
           focus: "Neck Reset",
           tasks: [
             "Chin tucks x15",
-            "Desk posture setup",
-            "Walk break every hour",
+            "Desk setup fix",
+            "Hourly walk break",
           ],
         },
         {
-          title: "Day 2",
           focus: "Back Recovery",
           tasks: [
             "Cat-Cow x15",
-            "Glute bridges x20",
-            "Stand 5 min every hour",
+            "Glute bridge x20",
+            "Stand every hour",
           ],
         },
         {
-          title: "Day 3",
           focus: "Hip Mobility",
           tasks: [
-            "Hip flexor stretch",
-            "Bodyweight squats x20",
+            "Hip stretch",
+            "Bodyweight squats",
             "Walk 20 min",
           ],
         },
@@ -105,39 +101,36 @@ export function getProgram(type: UserType): ProgramData {
   return {
     title: "Pelvic Confidence Program",
     subtitle:
-      "Support pelvic strength and bladder control naturally.",
+      "Improve bladder control and pelvic strength.",
     modules: [
       "Stress Leakage Fix",
       "Urgency Control",
-      "Pelvic Floor Strength",
+      "Pelvic Strength",
       "Postpartum Recovery",
       "Night Bathroom Reduction",
     ],
     days: [
       {
-        title: "Day 1",
         focus: "Connection",
         tasks: [
-          "Pelvic floor holds x10",
-          "Breathing 5 min",
+          "Pelvic holds x10",
+          "Breathing drill",
           "Reduce caffeine",
         ],
       },
       {
-        title: "Day 2",
         focus: "Strength",
         tasks: [
-          "Bridge hold x12",
-          "Quick contractions x10",
+          "Bridge holds",
+          "Quick contractions",
           "Walk 15 min",
         ],
       },
       {
-        title: "Day 3",
         focus: "Control",
         tasks: [
-          "Urgency breathing drill",
-          "Core brace x10",
+          "Urgency drill",
+          "Core brace",
           "Hydration timing",
         ],
       },
