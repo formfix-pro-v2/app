@@ -13,41 +13,38 @@ export default function ResultsPage() {
     if (saved) setType(saved);
   }, []);
 
-  const config = {
+  const data = {
     menopause: {
       title: "Menopause Relief Program",
-      subtitle:
-        "Your answers suggest hormone-related symptoms that respond well to movement, recovery and lifestyle support.",
-      bullets: [
+      text: "Your answers suggest hormone-related symptoms that can improve with movement, recovery and lifestyle changes.",
+      list: [
         "Reduce hot flashes",
-        "Improve dry eyes support habits",
-        "Ease joint stiffness",
-        "Restore energy",
-        "Manage belly fat",
+        "Support dry eyes",
+        "Ease joint pain",
+        "Improve sleep",
+        "Increase energy",
       ],
     },
     office: {
       title: "Office Worker Recovery",
-      subtitle:
-        "Your answers suggest posture strain, sedentary stress and mobility issues.",
-      bullets: [
+      text: "Your answers suggest posture strain and sedentary pain patterns.",
+      list: [
         "Fix neck pain",
+        "Reduce back pain",
         "Improve posture",
-        "Reduce lower back pain",
         "Open tight hips",
-        "Lower eye strain",
+        "Reduce eye strain",
       ],
     },
     incontinence: {
       title: "Pelvic Confidence Program",
-      subtitle:
-        "Your answers suggest pelvic floor weakness or urgency patterns.",
-      bullets: [
-        "Improve bladder control",
+      text: "Your answers suggest pelvic floor weakness or urgency patterns.",
+      list: [
+        "Improve control",
         "Strengthen pelvic floor",
         "Reduce urgency",
         "Support postpartum recovery",
-        "Increase confidence",
+        "Boost confidence",
       ],
     },
   }[type];
@@ -55,16 +52,11 @@ export default function ResultsPage() {
   return (
     <main className="min-h-screen bg-[#09060f] text-white px-6 py-20">
       <div className="max-w-4xl mx-auto">
-        <p className="text-orange-300 font-semibold mb-4">
-          Assessment Complete
-        </p>
-
-        <h1 className="text-5xl font-black mb-6">{config.title}</h1>
-
-        <p className="text-xl text-zinc-300 mb-10">{config.subtitle}</p>
+        <h1 className="text-5xl font-black mb-6">{data.title}</h1>
+        <p className="text-zinc-300 text-xl mb-10">{data.text}</p>
 
         <div className="grid md:grid-cols-2 gap-5 mb-12">
-          {config.bullets.map((item) => (
+          {data.list.map((item) => (
             <div
               key={item}
               className="p-5 rounded-2xl bg-white/5 border border-white/10"
@@ -74,10 +66,10 @@ export default function ResultsPage() {
           ))}
         </div>
 
-        <div className="flex flex-wrap gap-4">
+        <div className="flex gap-4 flex-wrap">
           <Link
             href="/dashboard"
-            className="px-8 py-4 rounded-2xl bg-white/10 font-semibold"
+            className="px-8 py-4 rounded-2xl bg-white/10"
           >
             Continue Free
           </Link>
@@ -86,7 +78,7 @@ export default function ResultsPage() {
             href="/pricing"
             className="px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-orange-500 font-bold"
           >
-            Unlock Full Plan
+            Upgrade
           </Link>
         </div>
       </div>
