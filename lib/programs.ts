@@ -6,41 +6,41 @@ export type UserType =
 export function getProgram(type: UserType) {
   if (type === "menopause") {
     return {
-      title: "Menopause Relief Program",
-      subtitle: "Balance hormones, reduce symptoms, regain confidence.",
+      title: "Menopause Recovery System",
+      subtitle: "Support hormones, reduce symptoms, feel younger.",
       modules: [
-        "Dry Eyes Recovery",
-        "Joint Pain Relief",
         "Hot Flash Control",
-        "Energy Rebuild",
-        "Belly Fat Reset"
+        "Dry Eyes Support",
+        "Joint Pain Relief",
+        "Energy Reset",
+        "Belly Fat Balance"
       ]
     };
   }
 
   if (type === "office") {
     return {
-      title: "Office Worker Recovery",
-      subtitle: "Undo desk damage and restore posture.",
+      title: "Desk Worker Recovery",
+      subtitle: "Undo office damage fast.",
       modules: [
         "Neck Pain Fix",
-        "Lower Back Relief",
-        "Tight Hips Reset",
-        "Eye Strain Recovery",
-        "Shoulder Release"
+        "Lower Back Reset",
+        "Forward Head Posture",
+        "Eye Strain Relief",
+        "Hip Mobility Restore"
       ]
     };
   }
 
   return {
-    title: "Pelvic Confidence Program",
-    subtitle: "Regain bladder control and pelvic strength.",
+    title: "Pelvic Confidence System",
+    subtitle: "Restore control naturally.",
     modules: [
       "Stress Leakage Fix",
       "Urgency Control",
-      "Pelvic Strength Builder",
+      "Pelvic Strength",
       "Postpartum Recovery",
-      "Night Control Reset"
+      "Night Bathroom Reduction"
     ]
   };
 }
