@@ -3,11 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+type UserType = "menopause" | "office" | "incontinence";
+
 type Answers = {
   age: string;
-  goal: string;
+  work: string;
   symptom: string;
-  lifestyle: string;
+  issue: string;
+  urgency: string;
 };
 
 export default function QuizPage() {
@@ -17,9 +20,10 @@ export default function QuizPage() {
 
   const [answers, setAnswers] = useState<Answers>({
     age: "",
-    goal: "",
+    work: "",
     symptom: "",
-    lifestyle: "",
+    issue: "",
+    urgency: "",
   });
 
   function update(key: keyof Answers, value: string) {
@@ -27,89 +31,109 @@ export default function QuizPage() {
   }
 
   function next() {
-    if (step < 4) setStep(step + 1);
-    else finishQuiz();
+    if (step < 5) setStep(step + 1);
+    else finish();
   }
 
-  function finishQuiz() {
-    let type = "office";
+  function finish() {
+    let type: UserType = "office";
 
     if (
-      answers.goal === "menopause" ||
-      answers.symptom === "hot flashes"
+      answers.age === "45+" ||
+      answers.symptom === "hot flashes" ||
+      answers.issue === "sleep"
     ) {
       type = "menopause";
     }
 
     if (
-      answers.goal === "pelvic" ||
-      answers.symptom === "leakage"
+      answers.symptom === "leakage" ||
+      answers.issue === "pelvic"
     ) {
       type = "incontinence";
     }
 
     localStorage.setItem("userType", type);
+    localStorage.setItem("quizDone", "true");
+
     router.push("/results");
   }
 
   return (
     <main className="min-h-screen bg-[#09060f] text-white px-6 py-16">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-5xl font-black mb-4">
-          Free AI Assessment
-        </h1>
-
-        <p className="text-zinc-400 mb-10">
-          Personalized plan in under 60 seconds.
+        <p className="text-orange-300 font-semibold mb-4">
+          Step {step} / 5
         </p>
+
+        <div className="w-full h-3 rounded-full bg-white/10 mb-10 overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-blue-500 to-orange-500"
+            style={{ width: `${step * 20}%` }}
+          />
+        </div>
 
         {step === 1 && (
           <Question
-            title="Your Age Range"
-            options={["25-39", "40-49", "50-59", "60+"]}
-            onSelect={(v) => update("age", v)}
+            title="Your age range?"
+            options={["18-29", "30-44", "45+", "60+"]}
+            onPick={(v) => update("age", v)}
             next={next}
           />
         )}
 
         {step === 2 && (
           <Question
-            title="Main Goal"
+            title="Your daily lifestyle?"
             options={[
-              "better posture",
-              "less pain",
-              "menopause",
-              "pelvic",
+              "desk worker",
+              "active job",
+              "busy parent",
+              "retired",
             ]}
-            onSelect={(v) => update("goal", v)}
+            onPick={(v) => update("work", v)}
             next={next}
           />
         )}
 
         {step === 3 && (
           <Question
-            title="Main Symptom"
+            title="Main symptom?"
             options={[
               "neck pain",
               "back pain",
               "hot flashes",
               "leakage",
             ]}
-            onSelect={(v) => update("symptom", v)}
+            onPick={(v) => update("symptom", v)}
             next={next}
           />
         )}
 
         {step === 4 && (
           <Question
-            title="Daily Lifestyle"
+            title="What bothers you most?"
             options={[
-              "desk worker",
-              "active",
-              "busy parent",
-              "retired",
+              "sleep",
+              "posture",
+              "pelvic",
+              "low energy",
             ]}
-            onSelect={(v) => update("lifestyle", v)}
+            onPick={(v) => update("issue", v)}
+            next={next}
+          />
+        )}
+
+        {step === 5 && (
+          <Question
+            title="How urgent is it?"
+            options={[
+              "just exploring",
+              "moderate",
+              "serious issue",
+              "need change now",
+            ]}
+            onPick={(v) => update("urgency", v)}
             next={next}
           />
         )}
@@ -121,24 +145,24 @@ export default function QuizPage() {
 function Question({
   title,
   options,
-  onSelect,
+  onPick,
   next,
 }: {
   title: string;
   options: string[];
-  onSelect: (v: string) => void;
+  onPick: (value: string) => void;
   next: () => void;
 }) {
   return (
-    <div className="rounded-3xl bg-white/5 p-8 border border-white/10">
-      <h2 className="text-3xl font-bold mb-8">{title}</h2>
+    <div className="rounded-3xl bg-white/5 border border-white/10 p-8">
+      <h1 className="text-4xl font-black mb-8">{title}</h1>
 
       <div className="space-y-4">
         {options.map((item) => (
           <button
             key={item}
             onClick={() => {
-              onSelect(item);
+              onPick(item);
               next();
             }}
             className="w-full text-left p-5 rounded-2xl bg-black/30 hover:bg-black/50 transition"
