@@ -40,7 +40,7 @@ export const plans: DayPlan[] = [
         start: "Lie on back, knees bent.",
         end: "Lift hips upward.",
         reps: "3 x 12",
-        image: "/public/exercises/bridge.jpg",
+        image: "exercises/bridge.jpg",
       },
     ],
   },
