@@ -1,13 +1,10 @@
-import type { Metadata } from "next";
 import "./globals.css";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "FormFix Pro | AI Posture & Pain Relief",
+  title: "Velora | Menopause Wellness",
   description:
-    "Fix posture, reduce pain and move better with personalized AI mobility programs.",
+    "Elegant daily wellness programs for women navigating menopause. Movement, posture, hormones, confidence.",
 };
 
 export default function RootLayout({
@@ -17,8 +14,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-[#09060f] text-white`}>
-        {children}
+      <body>
+        <div className="min-h-screen">
+          {/* soft background glow */}
+          <div
+            className="fixed inset-0 -z-10 opacity-70"
+            style={{
+              background:
+                "radial-gradient(circle at top right, rgba(214,167,177,.20), transparent 28%), radial-gradient(circle at bottom left, rgba(185,143,161,.16), transparent 32%)",
+            }}
+          />
+
+          {children}
+        </div>
       </body>
     </html>
   );
