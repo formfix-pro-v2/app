@@ -3,174 +3,125 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-type UserType = "menopause" | "office" | "incontinence";
-
-type Answers = {
-  age: string;
-  work: string;
-  symptom: string;
-  issue: string;
-  urgency: string;
-};
+const symptoms = [
+  "Hot flashes",
+  "Weight gain",
+  "Poor sleep",
+  "Joint pain",
+  "Dry eyes",
+  "Brain fog",
+  "Low energy",
+  "Mood swings",
+  "Low libido",
+];
 
 export default function QuizPage() {
   const router = useRouter();
 
-  const [step, setStep] = useState(1);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [severity, setSeverity] = useState("Moderate");
+  const [age, setAge] = useState("45-54");
 
-  const [answers, setAnswers] = useState<Answers>({
-    age: "",
-    work: "",
-    symptom: "",
-    issue: "",
-    urgency: "",
-  });
-
-  function update(key: keyof Answers, value: string) {
-    setAnswers({ ...answers, [key]: value });
+  function toggle(item: string) {
+    if (selected.includes(item)) {
+      setSelected(selected.filter((x) => x !== item));
+    } else {
+      setSelected([...selected, item]);
+    }
   }
 
-  function next() {
-    if (step < 5) setStep(step + 1);
-    else finish();
-  }
-
-  function finish() {
-    let type: UserType = "office";
-
-    if (
-      answers.age === "45+" ||
-      answers.symptom === "hot flashes" ||
-      answers.issue === "sleep"
-    ) {
-      type = "menopause";
-    }
-
-    if (
-      answers.symptom === "leakage" ||
-      answers.issue === "pelvic"
-    ) {
-      type = "incontinence";
-    }
-
-    localStorage.setItem("userType", type);
-    localStorage.setItem("quizDone", "true");
-
-    router.push("/results");
+  function submit() {
+    localStorage.setItem("menoSymptoms", JSON.stringify(selected));
+    localStorage.setItem("menoSeverity", severity);
+    localStorage.setItem("menoAge", age);
+    router.push("/dashboard");
   }
 
   return (
-    <main className="min-h-screen bg-[#09060f] text-white px-6 py-16">
-      <div className="max-w-2xl mx-auto">
-        <p className="text-orange-300 font-semibold mb-4">
-          Step {step} / 5
+    <main className="min-h-screen bg-[#160d14] text-white px-6 py-16">
+      <div className="max-w-3xl mx-auto">
+        <p className="text-pink-200/70 mb-4">
+          Personalized Menopause Assessment
         </p>
 
-        <div className="w-full h-3 rounded-full bg-white/10 mb-10 overflow-hidden">
-          <div
-            className="h-full bg-gradient-to-r from-blue-500 to-orange-500"
-            style={{ width: `${step * 20}%` }}
-          />
-        </div>
+        <h1 className="text-5xl font-light mb-10">
+          Tell us how you feel
+        </h1>
 
-        {step === 1 && (
-          <Question
-            title="Your age range?"
-            options={["18-29", "30-44", "45+", "60+"]}
-            onPick={(v) => update("age", v)}
-            next={next}
-          />
-        )}
+        {/* AGE */}
+        <section className="mb-10">
+          <h2 className="text-2xl mb-4">Age Range</h2>
 
-        {step === 2 && (
-          <Question
-            title="Your daily lifestyle?"
-            options={[
-              "desk worker",
-              "active job",
-              "busy parent",
-              "retired",
-            ]}
-            onPick={(v) => update("work", v)}
-            next={next}
-          />
-        )}
+          <div className="grid md:grid-cols-3 gap-4">
+            {["35-44", "45-54", "55+"].map((item) => (
+              <button
+                key={item}
+                onClick={() => setAge(item)}
+                className={`p-4 rounded-2xl border ${
+                  age === item
+                    ? "bg-pink-300 text-[#2a1620]"
+                    : "border-white/10 bg-white/5"
+                }`}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        </section>
 
-        {step === 3 && (
-          <Question
-            title="Main symptom?"
-            options={[
-              "neck pain",
-              "back pain",
-              "hot flashes",
-              "leakage",
-            ]}
-            onPick={(v) => update("symptom", v)}
-            next={next}
-          />
-        )}
+        {/* SYMPTOMS */}
+        <section className="mb-10">
+          <h2 className="text-2xl mb-4">
+            Select all symptoms that apply
+          </h2>
 
-        {step === 4 && (
-          <Question
-            title="What bothers you most?"
-            options={[
-              "sleep",
-              "posture",
-              "pelvic",
-              "low energy",
-            ]}
-            onPick={(v) => update("issue", v)}
-            next={next}
-          />
-        )}
+          <div className="grid md:grid-cols-2 gap-4">
+            {symptoms.map((item) => (
+              <button
+                key={item}
+                onClick={() => toggle(item)}
+                className={`p-4 rounded-2xl text-left border ${
+                  selected.includes(item)
+                    ? "bg-pink-300 text-[#2a1620]"
+                    : "border-white/10 bg-white/5"
+                }`}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        </section>
 
-        {step === 5 && (
-          <Question
-            title="How urgent is it?"
-            options={[
-              "just exploring",
-              "moderate",
-              "serious issue",
-              "need change now",
-            ]}
-            onPick={(v) => update("urgency", v)}
-            next={next}
-          />
-        )}
+        {/* SEVERITY */}
+        <section className="mb-12">
+          <h2 className="text-2xl mb-4">
+            How intense are symptoms?
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-4">
+            {["Mild", "Moderate", "Severe"].map((item) => (
+              <button
+                key={item}
+                onClick={() => setSeverity(item)}
+                className={`p-4 rounded-2xl ${
+                  severity === item
+                    ? "bg-pink-300 text-[#2a1620]"
+                    : "bg-white/5 border border-white/10"
+                }`}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <button
+          onClick={submit}
+          className="w-full p-5 rounded-full bg-pink-300 text-[#2a1620] font-semibold text-lg"
+        >
+          Create My Personal Plan
+        </button>
       </div>
     </main>
-  );
-}
-
-function Question({
-  title,
-  options,
-  onPick,
-  next,
-}: {
-  title: string;
-  options: string[];
-  onPick: (value: string) => void;
-  next: () => void;
-}) {
-  return (
-    <div className="rounded-3xl bg-white/5 border border-white/10 p-8">
-      <h1 className="text-4xl font-black mb-8">{title}</h1>
-
-      <div className="space-y-4">
-        {options.map((item) => (
-          <button
-            key={item}
-            onClick={() => {
-              onPick(item);
-              next();
-            }}
-            className="w-full text-left p-5 rounded-2xl bg-black/30 hover:bg-black/50 transition"
-          >
-            {item}
-          </button>
-        ))}
-      </div>
-    </div>
   );
 }
