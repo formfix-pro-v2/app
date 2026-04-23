@@ -112,7 +112,7 @@ export const plans: DayPlan[] = [
         end: "Rotate left and right.",
         reps: "45 sec",
         seconds: 45,
-        image: img("power.jpg"),
+        image: img("twist.jpg"),
       },
       {
         name: "Bridge Pulse",
@@ -337,7 +337,7 @@ export const plans: DayPlan[] = [
         end: "Rotate side-side.",
         reps: "45 sec",
         seconds: 45,
-        image: img("power.jpg"),
+        image: img("twist.jpg"),
       },
     ],
   },
