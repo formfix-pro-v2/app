@@ -1,31 +1,58 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --bg: #faf6f3;
+  --card: #ffffff;
+  --rose: #d6a7b1;
+  --mauve: #b98fa1;
+  --text: #3a2b2f;
+  --muted: #7b6870;
+  --line: #ecdfe3;
+}
 
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  background: #09060f;
-  color: white;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", sans-serif;
 }
 
-::selection {
-  background: #d946ef;
-  color: white;
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Playfair Display", serif;
 }
 
-@layer utilities {
-  .glass {
-    @apply bg-white/5 border border-white/10 backdrop-blur-xl;
-  }
+.soft-card {
+  background: rgba(255,255,255,.85);
+  border: 1px solid var(--line);
+  border-radius: 32px;
+  box-shadow: 0 10px 35px rgba(80,40,55,.08);
+}
 
-  .luxury-btn {
-    @apply px-8 py-4 rounded-2xl font-bold bg-gradient-to-r from-fuchsia-600 to-orange-500 hover:scale-105 transition;
-  }
+.btn-primary {
+  background: linear-gradient(135deg, #d6a7b1, #b98fa1);
+  color: white;
+  border-radius: 999px;
+  padding: 14px 28px;
+  font-weight: 600;
+}
 
-  .section-title {
-    @apply text-4xl md:text-5xl font-black;
-  }
+.btn-primary:hover {
+  transform: translateY(-1px);
+  transition: .2s ease;
+}
+
+.btn-outline {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 14px 28px;
 }
