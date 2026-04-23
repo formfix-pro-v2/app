@@ -1,105 +1,60 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-
-type Exercise = {
-  name: string;
-  why: string;
-  start: string;
-  end: string;
-  reps: string;
-};
+import { plans } from "@/lib/programs";
 
 export default function DashboardPage() {
-  const [symptoms, setSymptoms] = useState<string[]>([]);
-  const [severity, setSeverity] = useState("Moderate");
   const [day, setDay] = useState(1);
+  const [streak, setStreak] = useState(0);
 
   useEffect(() => {
-    const savedSymptoms = localStorage.getItem("menoSymptoms");
-    const savedSeverity = localStorage.getItem("menoSeverity");
     const savedDay = Number(localStorage.getItem("menoDay") || "1");
+    const savedStreak = Number(localStorage.getItem("menoStreak") || "0");
 
-    if (savedSymptoms) setSymptoms(JSON.parse(savedSymptoms));
-    if (savedSeverity) setSeverity(savedSeverity);
     setDay(savedDay);
+    setStreak(savedStreak);
   }, []);
 
-  const progress = Math.min(day * 3, 100);
+  const index = (day - 1) % plans.length;
+  const plan = plans[index];
 
-  const focus = useMemo(() => {
-    if (symptoms.includes("Poor sleep")) return "Sleep Recovery";
-    if (symptoms.includes("Joint pain")) return "Joint Comfort";
-    if (symptoms.includes("Weight gain")) return "Metabolism Support";
-    if (symptoms.includes("Low energy")) return "Energy Reset";
-    if (symptoms.includes("Hot flashes")) return "Cooling Balance";
-    return "Hormone Wellness";
-  }, [symptoms]);
-
-  const exercises: Exercise[] = [
-    {
-      name: "Wall Posture Reset",
-      why: "Improve posture and open chest tension.",
-      start: "Stand with back 10 cm from wall, feet hip width.",
-      end: "Head, shoulders and hips gently touching wall.",
-      reps: "3 x 30 sec",
-    },
-    {
-      name: "Glute Bridge",
-      why: "Support hips, lower back and metabolism.",
-      start: "Lie on back, knees bent, feet flat.",
-      end: "Lift hips until knees-hips-shoulders align.",
-      reps: "3 x 12 reps",
-    },
-    {
-      name: "Cat-Cow Flow",
-      why: "Reduce stiffness and improve spinal mobility.",
-      start: "Hands and knees neutral spine.",
-      end: "Alternate rounded back and open chest arch.",
-      reps: "60 sec",
-    },
-    {
-      name: "Breathing Calm Reset",
-      why: "Helps stress, sleep and hot flash management.",
-      start: "Sit tall, one hand on belly.",
-      end: "Slow inhale 4 sec / exhale 6 sec.",
-      reps: "3 min",
-    },
-    {
-      name: "Supported Squat",
-      why: "Strength, circulation and body tone.",
-      start: "Hold chair lightly, feet shoulder width.",
-      end: "Sit back halfway then rise tall.",
-      reps: "3 x 10 reps",
-    },
-  ];
+  const progress = Math.min(Math.round((day / 30) * 100), 100);
 
   function completeDay() {
-    const next = day + 1;
-    setDay(next);
-    localStorage.setItem("menoDay", String(next));
+    const nextDay = day + 1;
+    const nextStreak = streak + 1;
+
+    localStorage.setItem("menoDay", String(nextDay));
+    localStorage.setItem("menoStreak", String(nextStreak));
+
+    setDay(nextDay);
+    setStreak(nextStreak);
   }
 
   return (
     <main className="min-h-screen bg-[#160d14] text-white px-6 py-14">
       <div className="max-w-7xl mx-auto">
-        {/* top */}
-        <div className="grid lg:grid-cols-3 gap-6 mb-8">
+        {/* HERO */}
+        <section className="grid lg:grid-cols-3 gap-6 mb-8">
           <div className="lg:col-span-2 rounded-3xl bg-white/5 border border-white/10 p-8">
-            <p className="text-pink-200/70 mb-2">Day {day}</p>
+            <p className="text-pink-200/70 mb-2">
+              {plan.title}
+            </p>
 
             <h1 className="text-5xl font-light mb-4">
-              {focus}
+              {plan.theme}
             </h1>
 
             <p className="text-pink-100/75 text-lg">
-              Gentle structured support based on your selected symptoms.
+              A gentle daily structure created for women in menopause.
+              Follow consistently for best results.
             </p>
           </div>
 
           <div className="rounded-3xl bg-white/5 border border-white/10 p-8">
-            <p className="text-pink-200/70 mb-3">Progress</p>
+            <p className="text-pink-200/70 mb-3">Your Progress</p>
 
             <div className="text-5xl font-light mb-4">
               {progress}%
@@ -113,73 +68,83 @@ export default function DashboardPage() {
             </div>
 
             <p className="mt-4 text-pink-100/70">
-              Consistency builds results.
+              🔥 {streak} day streak
             </p>
           </div>
-        </div>
-
-        {/* symptoms */}
-        <section className="rounded-3xl bg-white/5 border border-white/10 p-8 mb-8">
-          <h2 className="text-3xl font-light mb-6">
-            Your Selected Symptoms
-          </h2>
-
-          <div className="flex flex-wrap gap-3">
-            {symptoms.length === 0 ? (
-              <div className="text-pink-100/60">
-                General menopause wellness plan active.
-              </div>
-            ) : (
-              symptoms.map((item) => (
-                <div
-                  key={item}
-                  className="px-4 py-2 rounded-full bg-pink-300 text-[#2a1620] font-medium"
-                >
-                  {item}
-                </div>
-              ))
-            )}
-          </div>
-
-          <p className="mt-5 text-pink-100/70">
-            Intensity: {severity}
-          </p>
         </section>
 
-        {/* workout cards */}
+        {/* BENEFITS */}
+        <section className="rounded-3xl bg-white/5 border border-white/10 p-8 mb-8">
+          <h2 className="text-3xl font-light mb-5">
+            Why today matters
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="rounded-2xl bg-pink-400/10 p-5">
+              Better hormone resilience
+            </div>
+
+            <div className="rounded-2xl bg-pink-400/10 p-5">
+              Improved posture & mobility
+            </div>
+
+            <div className="rounded-2xl bg-pink-400/10 p-5">
+              More calm daily energy
+            </div>
+          </div>
+        </section>
+
+        {/* EXERCISES */}
         <section className="mb-8">
           <h2 className="text-4xl font-light mb-6">
             Today’s Routine
           </h2>
 
           <div className="grid lg:grid-cols-2 gap-6">
-            {exercises.map((ex) => (
+            {plan.exercises.map((ex) => (
               <div
                 key={ex.name}
-                className="rounded-3xl bg-white/5 border border-white/10 p-7"
+                className="rounded-3xl bg-white/5 border border-white/10 overflow-hidden"
               >
-                <h3 className="text-2xl font-medium mb-3">
-                  {ex.name}
-                </h3>
+                <div className="relative h-64 w-full">
+                  <Image
+                    src={ex.image}
+                    alt={ex.name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
 
-                <p className="text-pink-100/75 mb-5">
-                  {ex.why}
-                </p>
+                <div className="p-7">
+                  <h3 className="text-2xl font-medium mb-3">
+                    {ex.name}
+                  </h3>
 
-                <div className="space-y-3 text-sm text-pink-100/75">
-                  <div>
-                    <span className="text-pink-200">Start:</span>{" "}
-                    {ex.start}
-                  </div>
+                  <p className="text-pink-100/75 mb-5">
+                    {ex.why}
+                  </p>
 
-                  <div>
-                    <span className="text-pink-200">Finish:</span>{" "}
-                    {ex.end}
-                  </div>
+                  <div className="space-y-3 text-sm text-pink-100/75">
+                    <div>
+                      <span className="text-pink-200">
+                        Start:
+                      </span>{" "}
+                      {ex.start}
+                    </div>
 
-                  <div>
-                    <span className="text-pink-200">Dose:</span>{" "}
-                    {ex.reps}
+                    <div>
+                      <span className="text-pink-200">
+                        Finish:
+                      </span>{" "}
+                      {ex.end}
+                    </div>
+
+                    <div>
+                      <span className="text-pink-200">
+                        Dose:
+                      </span>{" "}
+                      {ex.reps}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -187,11 +152,11 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        {/* actions */}
+        {/* ACTIONS */}
         <section className="grid md:grid-cols-2 gap-6">
           <button
             onClick={completeDay}
-            className="p-5 rounded-full bg-pink-300 text-[#2a1620] font-semibold text-lg"
+            className="p-5 rounded-full bg-pink-300 text-[#2a1620] font-semibold text-lg hover:scale-[1.02] transition"
           >
             Complete Today
           </button>
@@ -200,7 +165,7 @@ export default function DashboardPage() {
             href="/pricing"
             className="p-5 rounded-full border border-white/10 text-center hover:bg-white/5 transition"
           >
-            Unlock Premium Nutrition + Coaching
+            Unlock Nutrition + Premium Coaching
           </Link>
         </section>
       </div>
