@@ -3,30 +3,31 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-type Multi = string[];
+type QuizData = {
+  age: string;
+  stage: string;
+  symptoms: string[];
+  priority: string;
+  fitness: string;
+  time: string;
+};
 
 export default function QuizPage() {
   const router = useRouter();
 
   const [step, setStep] = useState(1);
 
-  const [age, setAge] = useState("");
-  const [stage, setStage] = useState("");
-  const [symptoms, setSymptoms] = useState<Multi>([]);
-  const [priority, setPriority] = useState("");
-  const [fitness, setFitness] = useState("");
-  const [time, setTime] = useState("");
+  const [data, setData] = useState<QuizData>({
+    age: "",
+    stage: "",
+    symptoms: [],
+    priority: "",
+    fitness: "",
+    time: "",
+  });
 
   const total = 6;
   const progress = Math.round((step / total) * 100);
-
-  function toggle(arr: Multi, value: string, setter: (v: Multi) => void) {
-    if (arr.includes(value)) {
-      setter(arr.filter((x) => x !== value));
-    } else {
-      setter([...arr, value]);
-    }
-  }
 
   function next() {
     if (step < total) setStep(step + 1);
@@ -36,41 +37,48 @@ export default function QuizPage() {
     if (step > 1) setStep(step - 1);
   }
 
-  function finish() {
-    const data = {
-      age,
-      stage,
-      symptoms,
-      priority,
-      fitness,
-      time,
-    };
+  function selectSingle(key: keyof QuizData, value: string) {
+    setData((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  }
 
+  function toggleSymptom(value: string) {
+    setData((prev) => ({
+      ...prev,
+      symptoms: prev.symptoms.includes(value)
+        ? prev.symptoms.filter((x) => x !== value)
+        : [...prev.symptoms, value],
+    }));
+  }
+
+  function finish() {
     localStorage.setItem("quizData", JSON.stringify(data));
     localStorage.setItem("day", "1");
     router.push("/results");
   }
 
   const chip =
-    "px-5 py-4 rounded-2xl border border-[#ead8de] bg-white hover:bg-[#fff7fa] transition cursor-pointer";
+    "w-full text-left px-5 py-4 rounded-2xl border border-[#ead8de] bg-white hover:bg-[#fff7fa] transition";
+
+  const active = "border-[#d6a7b1] bg-[#fff0f5]";
 
   return (
     <main className="max-w-4xl mx-auto px-6 py-12">
-      {/* TOP */}
+      {/* HEADER */}
       <div className="mb-10">
         <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
           Free Assessment
         </p>
 
-        <h1 className="text-5xl md:text-6xl mb-5">
-          Build Your Personalized
-          <br />
-          Menopause Plan
+        <h1 className="text-5xl md:text-6xl mb-6">
+          Build Your Personalized Plan
         </h1>
 
-        <div className="w-full h-3 bg-white rounded-full overflow-hidden border border-[#f1e4e8]">
+        <div className="w-full h-3 rounded-full bg-white border border-[#f0e3e8] overflow-hidden">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-[#d6a7b1] to-[#b98fa1]"
+            className="h-full bg-gradient-to-r from-[#d6a7b1] to-[#b98fa1]"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -91,9 +99,10 @@ export default function QuizPage() {
               {["40-45", "46-50", "51-55", "56+"].map((item) => (
                 <button
                   key={item}
-                  onClick={() => setAge(item)}
+                  type="button"
+                  onClick={() => selectSingle("age", item)}
                   className={`${chip} ${
-                    age === item ? "border-[#d6a7b1] bg-[#fff3f6]" : ""
+                    data.age === item ? active : ""
                   }`}
                 >
                   {item}
@@ -106,7 +115,9 @@ export default function QuizPage() {
         {/* STEP 2 */}
         {step === 2 && (
           <>
-            <h2 className="text-3xl mb-6">Where Are You Now?</h2>
+            <h2 className="text-3xl mb-6">
+              Menopause Stage
+            </h2>
 
             <div className="grid gap-4">
               {[
@@ -117,9 +128,10 @@ export default function QuizPage() {
               ].map((item) => (
                 <button
                   key={item}
-                  onClick={() => setStage(item)}
+                  type="button"
+                  onClick={() => selectSingle("stage", item)}
                   className={`${chip} ${
-                    stage === item ? "border-[#d6a7b1] bg-[#fff3f6]" : ""
+                    data.stage === item ? active : ""
                   }`}
                 >
                   {item}
@@ -132,8 +144,13 @@ export default function QuizPage() {
         {/* STEP 3 */}
         {step === 3 && (
           <>
-            <h2 className="text-3xl mb-3">Current Symptoms</h2>
-            <p className="text-[#7b6870] mb-6">Choose all that apply.</p>
+            <h2 className="text-3xl mb-3">
+              Current Symptoms
+            </h2>
+
+            <p className="text-[#7b6870] mb-6">
+              Choose all that apply.
+            </p>
 
             <div className="grid md:grid-cols-2 gap-4">
               {[
@@ -148,10 +165,11 @@ export default function QuizPage() {
               ].map((item) => (
                 <button
                   key={item}
-                  onClick={() => toggle(symptoms, item, setSymptoms)}
+                  type="button"
+                  onClick={() => toggleSymptom(item)}
                   className={`${chip} ${
-                    symptoms.includes(item)
-                      ? "border-[#d6a7b1] bg-[#fff3f6]"
+                    data.symptoms.includes(item)
+                      ? active
                       : ""
                   }`}
                 >
@@ -165,7 +183,9 @@ export default function QuizPage() {
         {/* STEP 4 */}
         {step === 4 && (
           <>
-            <h2 className="text-3xl mb-6">Main Priority</h2>
+            <h2 className="text-3xl mb-6">
+              Main Priority
+            </h2>
 
             <div className="grid gap-4">
               {[
@@ -177,10 +197,13 @@ export default function QuizPage() {
               ].map((item) => (
                 <button
                   key={item}
-                  onClick={() => setPriority(item)}
+                  type="button"
+                  onClick={() =>
+                    selectSingle("priority", item)
+                  }
                   className={`${chip} ${
-                    priority === item
-                      ? "border-[#d6a7b1] bg-[#fff3f6]"
+                    data.priority === item
+                      ? active
                       : ""
                   }`}
                 >
@@ -194,22 +217,29 @@ export default function QuizPage() {
         {/* STEP 5 */}
         {step === 5 && (
           <>
-            <h2 className="text-3xl mb-6">Fitness Level</h2>
+            <h2 className="text-3xl mb-6">
+              Fitness Level
+            </h2>
 
             <div className="grid gap-4">
-              {["Beginner", "Intermediate", "Active"].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => setFitness(item)}
-                  className={`${chip} ${
-                    fitness === item
-                      ? "border-[#d6a7b1] bg-[#fff3f6]"
-                      : ""
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
+              {["Beginner", "Intermediate", "Active"].map(
+                (item) => (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() =>
+                      selectSingle("fitness", item)
+                    }
+                    className={`${chip} ${
+                      data.fitness === item
+                        ? active
+                        : ""
+                    }`}
+                  >
+                    {item}
+                  </button>
+                )
+              )}
             </div>
           </>
         )}
@@ -217,38 +247,59 @@ export default function QuizPage() {
         {/* STEP 6 */}
         {step === 6 && (
           <>
-            <h2 className="text-3xl mb-6">Daily Time Available</h2>
+            <h2 className="text-3xl mb-6">
+              Daily Time Available
+            </h2>
 
             <div className="grid gap-4">
-              {["10 min", "20 min", "30+ min"].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => setTime(item)}
-                  className={`${chip} ${
-                    time === item ? "border-[#d6a7b1] bg-[#fff3f6]" : ""
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
+              {["10 min", "20 min", "30+ min"].map(
+                (item) => (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() =>
+                      selectSingle("time", item)
+                    }
+                    className={`${chip} ${
+                      data.time === item
+                        ? active
+                        : ""
+                    }`}
+                  >
+                    {item}
+                  </button>
+                )
+              )}
             </div>
           </>
         )}
 
-        {/* NAV */}
+        {/* BUTTONS */}
         <div className="flex gap-4 mt-10">
           {step > 1 && (
-            <button onClick={back} className="btn-outline">
+            <button
+              type="button"
+              onClick={back}
+              className="btn-outline"
+            >
               Back
             </button>
           )}
 
           {step < total ? (
-            <button onClick={next} className="btn-primary ml-auto">
+            <button
+              type="button"
+              onClick={next}
+              className="btn-primary ml-auto"
+            >
               Continue
             </button>
           ) : (
-            <button onClick={finish} className="btn-primary ml-auto">
+            <button
+              type="button"
+              onClick={finish}
+              className="btn-primary ml-auto"
+            >
               Create My Plan
             </button>
           )}
