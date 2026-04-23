@@ -1,191 +1,204 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { plans } from "@/lib/programs";
 
 export default function DashboardPage() {
   const [day, setDay] = useState(1);
-  const [streak, setStreak] = useState(0);
-  const [water, setWater] = useState(0);
+  const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
+  const [runningIndex, setRunningIndex] = useState<number | null>(null);
+  const [premium, setPremium] = useState(false);
 
   useEffect(() => {
-    setDay(Number(localStorage.getItem("menoDay") || "1"));
-    setStreak(Number(localStorage.getItem("menoStreak") || "0"));
-    setWater(Number(localStorage.getItem("water") || "0"));
+    const savedDay = Number(localStorage.getItem("day") || "1");
+    setDay(savedDay);
+    setPremium(localStorage.getItem("premium") === "true");
   }, []);
 
-  const plan = plans[(day - 1) % plans.length];
+  useEffect(() => {
+    if (secondsLeft === null) return;
+
+    if (secondsLeft <= 0) {
+      setSecondsLeft(null);
+      setRunningIndex(null);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setSecondsLeft((s) => (s ? s - 1 : 0));
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [secondsLeft]);
+
+  const currentPlan = useMemo(() => {
+    return plans[(day - 1) % plans.length];
+  }, [day]);
+
+  function startTimer(index: number, sec: number) {
+    setRunningIndex(index);
+    setSecondsLeft(sec);
+  }
+
+  function nextDay() {
+    const next = day + 1;
+    localStorage.setItem("day", String(next));
+    setDay(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   const progress = Math.min(Math.round((day / 30) * 100), 100);
 
-  function completeDay() {
-    const nextDay = day + 1;
-    const nextStreak = streak + 1;
-
-    localStorage.setItem("menoDay", String(nextDay));
-    localStorage.setItem("menoStreak", String(nextStreak));
-
-    setDay(nextDay);
-    setStreak(nextStreak);
-  }
-
-  function addWater() {
-    const next = water + 1;
-    localStorage.setItem("water", String(next));
-    setWater(next);
-  }
+  const format = (num: number) => {
+    const m = Math.floor(num / 60);
+    const s = num % 60;
+    return `${m}:${String(s).padStart(2, "0")}`;
+  };
 
   return (
-    <main className="min-h-screen bg-[#160d14] text-white px-6 py-10">
-      <div className="max-w-7xl mx-auto">
+    <main className="max-w-7xl mx-auto px-6 py-12">
+      {/* HERO */}
+      <section className="grid lg:grid-cols-3 gap-8 mb-10">
+        <div className="soft-card p-8 lg:col-span-2">
+          <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
+            Today&apos;s Program
+          </p>
 
-        {/* HEADER */}
-        <div className="grid lg:grid-cols-3 gap-6 mb-8">
+          <h1 className="text-5xl md:text-6xl mb-4">
+            {currentPlan.title}
+          </h1>
 
-          <div className="lg:col-span-2 rounded-[2rem] p-8 bg-white/5 border border-white/10 backdrop-blur-xl">
-            <p className="text-pink-200/70 mb-2">
-              {plan.title}
-            </p>
+          <h2 className="text-3xl mb-4">
+            {currentPlan.theme}
+          </h2>
 
-            <h1 className="text-5xl md:text-6xl font-light mb-4 text-pink-50">
-              {plan.theme}
-            </h1>
+          <p className="text-[#7b6870] text-lg leading-relaxed">
+            {currentPlan.description}
+          </p>
 
-            <p className="text-pink-100/70 text-lg max-w-2xl">
-              Gentle daily movement and hormone-support wellness routines designed
-              for women navigating menopause with grace.
-            </p>
-
-            <button
-              onClick={completeDay}
-              className="mt-8 px-8 py-4 rounded-full bg-pink-300 text-[#2a1620] font-semibold"
-            >
-              Complete Today
-            </button>
-          </div>
-
-          <div className="rounded-[2rem] p-8 bg-white/5 border border-white/10">
-            <p className="text-pink-200/70 mb-3">Progress</p>
-
-            <div className="text-5xl font-light mb-4">
-              {progress}%
-            </div>
-
-            <div className="w-full h-3 rounded-full bg-white/10 overflow-hidden">
+          <div className="mt-8">
+            <div className="w-full h-3 rounded-full bg-white border border-[#f0e3e8] overflow-hidden">
               <div
-                className="h-full bg-pink-300"
+                className="h-full rounded-full bg-gradient-to-r from-[#d6a7b1] to-[#b98fa1]"
                 style={{ width: `${progress}%` }}
               />
             </div>
 
-            <div className="mt-6 text-pink-100/75">
-              🔥 {streak} day streak
-            </div>
-
-            <div className="mt-2 text-pink-100/75">
-              💧 {water}/8 glasses
-            </div>
-
-            <button
-              onClick={addWater}
-              className="mt-5 w-full p-3 rounded-full border border-white/10 hover:bg-white/5"
-            >
-              Add Water
-            </button>
+            <p className="mt-3 text-[#7b6870]">
+              30-Day Journey Progress: {progress}%
+            </p>
           </div>
-
         </div>
 
-        {/* MAIN GRID */}
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="soft-card p-8">
+          <h3 className="text-3xl mb-5">Your Focus</h3>
 
-          {/* EXERCISES */}
-          <div className="lg:col-span-2 space-y-6">
-
-            {plan.exercises.map((ex) => (
-              <div
-                key={ex.name}
-                className="rounded-[2rem] overflow-hidden bg-white/5 border border-white/10"
-              >
-                <div className="relative h-72 w-full">
-                  <Image
-                    src={ex.image}
-                    alt={ex.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-
-                <div className="p-7">
-                  <h2 className="text-3xl font-light mb-3">
-                    {ex.name}
-                  </h2>
-
-                  <p className="text-pink-100/75 mb-6">
-                    {ex.why}
-                  </p>
-
-                  <div className="space-y-3 text-sm text-pink-100/70">
-                    <div>
-                      <span className="text-pink-300">Start:</span>{" "}
-                      {ex.start}
-                    </div>
-
-                    <div>
-                      <span className="text-pink-300">Finish:</span>{" "}
-                      {ex.end}
-                    </div>
-
-                    <div>
-                      <span className="text-pink-300">Dose:</span>{" "}
-                      {ex.reps}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-
+          <div className="space-y-3 text-[#7b6870]">
+            <div>✓ Better sleep</div>
+            <div>✓ Hormone calm</div>
+            <div>✓ Lean strength</div>
+            <div>✓ Elegant posture</div>
+            <div>✓ Daily energy</div>
           </div>
 
-          {/* SIDEBAR */}
-          <div className="space-y-6">
+          {!premium && (
+            <Link
+              href="/pricing"
+              className="btn-primary inline-block mt-8"
+            >
+              Unlock Premium
+            </Link>
+          )}
+        </div>
+      </section>
 
-            <div className="rounded-[2rem] p-8 bg-white/5 border border-white/10">
-              <h3 className="text-2xl font-light mb-5">
-                Today Tips
-              </h3>
+      {/* EXERCISES */}
+      <section>
+        <h2 className="text-5xl mb-8">Today&apos;s Exercises</h2>
 
-              <div className="space-y-4 text-pink-100/75">
-                <div>✨ Protein with breakfast</div>
-                <div>✨ 10 min walk after meals</div>
-                <div>✨ Magnesium in evening</div>
-                <div>✨ Screens off 1h before bed</div>
+        <div className="grid lg:grid-cols-2 gap-8">
+          {currentPlan.exercises.map((exercise, index) => (
+            <div key={index} className="soft-card p-6">
+              {/* BIGGER IMAGE AREA */}
+              <div className="relative w-full h-[320px] rounded-3xl overflow-hidden mb-6 bg-[#f8eef1]">
+                <Image
+                  src={exercise.image}
+                  alt={exercise.name}
+                  fill
+                  className="object-contain p-3"
+                />
               </div>
-            </div>
 
-            <div className="rounded-[2rem] p-8 bg-white/5 border border-white/10">
-              <h3 className="text-2xl font-light mb-5">
-                Premium Upgrade
-              </h3>
+              <h3 className="text-3xl mb-3">{exercise.name}</h3>
 
-              <p className="text-pink-100/75 mb-6">
-                Unlock meal plans, symptom coaching,
-                weight loss protocols and advanced routines.
+              <p className="text-[#7b6870] mb-4">
+                {exercise.why}
               </p>
 
-              <Link
-                href="/pricing"
-                className="block text-center p-4 rounded-full bg-pink-300 text-[#2a1620] font-semibold"
-              >
-                Upgrade
-              </Link>
+              <div className="space-y-2 text-sm text-[#7b6870] mb-5">
+                <div>
+                  <span className="font-semibold text-[#3a2b2f]">
+                    Start:
+                  </span>{" "}
+                  {exercise.start}
+                </div>
+
+                <div>
+                  <span className="font-semibold text-[#3a2b2f]">
+                    Finish:
+                  </span>{" "}
+                  {exercise.end}
+                </div>
+
+                <div>
+                  <span className="font-semibold text-[#3a2b2f]">
+                    Dose:
+                  </span>{" "}
+                  {exercise.reps}
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-3 items-center">
+                <button
+                  onClick={() =>
+                    startTimer(index, exercise.seconds)
+                  }
+                  className="btn-primary"
+                >
+                  Start Timer
+                </button>
+
+                {runningIndex === index &&
+                  secondsLeft !== null && (
+                    <div className="px-5 py-3 rounded-full bg-[#fff3f6] border border-[#ead8de] font-semibold">
+                      {format(secondsLeft)}
+                    </div>
+                  )}
+              </div>
             </div>
-
-          </div>
-
+          ))}
         </div>
-      </div>
+      </section>
+
+      {/* NEXT DAY */}
+      <section className="mt-12">
+        <div className="soft-card p-10 text-center">
+          <h3 className="text-4xl mb-4">
+            Complete Today & Continue
+          </h3>
+
+          <p className="text-[#7b6870] text-lg mb-8">
+            Small consistent steps create real hormonal,
+            physical and emotional change.
+          </p>
+
+          <button onClick={nextDay} className="btn-primary">
+            Mark Day Complete
+          </button>
+        </div>
+      </section>
     </main>
   );
 }
