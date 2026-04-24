@@ -1,14 +1,15 @@
 export type Exercise = {
   name: string;
-  why: string;
+  image: string;
   start: string;
   end: string;
+  why: string;
   reps: string;
   seconds: number;
-  image: string;
 };
 
 export type DayPlan = {
+  day?: number;
   title: string;
   theme: string;
   description: string;
@@ -17,382 +18,223 @@ export type DayPlan = {
 
 const img = (file: string) => `/app/exercises/${file}`;
 
-export const plans: DayPlan[] = [
+/* MASTER EXERCISE LIBRARY */
+const library: Exercise[] = [
   {
-    title: "Day 1",
-    theme: "Sleep + Hot Flash Reset",
-    description:
-      "Evening-focused calming flow for nervous system balance, cooler nights and deeper sleep.",
-    exercises: [
-      {
-        name: "Breathing Calm Reset",
-        why: "Reduces stress and supports better sleep.",
-        start: "Sit tall, one hand on belly.",
-        end: "Slow inhale 4 sec / exhale 6 sec.",
-        reps: "3 rounds",
-        seconds: 180,
-        image: img("breathing.jpg"),
-      },
-      {
-        name: "Cat-Cow Flow",
-        why: "Releases spinal tension.",
-        start: "Hands and knees.",
-        end: "Round then arch spine.",
-        reps: "60 sec",
-        seconds: 60,
-        image: img("catcow.jpg"),
-      },
-      {
-        name: "Bridge Hold",
-        why: "Supports hips and low back.",
-        start: "Lie down knees bent.",
-        end: "Lift hips upward.",
-        reps: "3 x 20 sec",
-        seconds: 60,
-        image: img("bridge.jpg"),
-      },
-      {
-        name: "Forward Fold Support",
-        why: "Calms body and hamstrings.",
-        start: "Stand holding chair.",
-        end: "Lean forward gently.",
-        reps: "45 sec",
-        seconds: 45,
-        image: img("fold.jpg"),
-      },
-      {
-        name: "Neck Release",
-        why: "Relieves tension headaches.",
-        start: "Sit tall.",
-        end: "Tilt ear to shoulder.",
-        reps: "30 sec each side",
-        seconds: 60,
-        image: img("neck.jpg"),
-      },
-    ],
+    name: "Bridge Lift",
+    image: img("bridge.jpg"),
+    start: "Lie on back, knees bent, feet flat.",
+    end: "Lift hips upward and squeeze glutes.",
+    why: "Strengthens glutes, pelvic floor and low back.",
+    reps: "2 min",
+    seconds: 120,
   },
-
   {
-    title: "Day 2",
-    theme: "Metabolism + Belly Tone",
-    description:
-      "Gentle body-toning routine to support energy, strength and metabolism.",
-    exercises: [
-      {
-        name: "Chair Squat",
-        why: "Builds lower-body strength.",
-        start: "Stand in front of chair.",
-        end: "Sit back then rise.",
-        reps: "3 x 12",
-        seconds: 90,
-        image: img("squat.jpg"),
-      },
-      {
-        name: "March in Place",
-        why: "Raises heart rate safely.",
-        start: "Stand tall.",
-        end: "Lift knees rhythmically.",
-        reps: "90 sec",
-        seconds: 90,
-        image: img("march.jpg"),
-      },
-      {
-        name: "Wall Push Up",
-        why: "Tones arms and chest.",
-        start: "Hands on wall.",
-        end: "Lower chest then push away.",
-        reps: "3 x 12",
-        seconds: 75,
-        image: img("pushup.jpg"),
-      },
-      {
-        name: "Standing Twist",
-        why: "Activates waist and posture.",
-        start: "Stand tall arms bent.",
-        end: "Rotate left and right.",
-        reps: "45 sec",
-        seconds: 45,
-        image: img("twist.jpg"),
-      },
-      {
-        name: "Bridge Pulse",
-        why: "Targets glutes and core.",
-        start: "Bridge position lifted.",
-        end: "Small pulses upward.",
-        reps: "30 reps",
-        seconds: 60,
-        image: img("bridge.jpg"),
-      },
-    ],
+    name: "Cat-Cow Flow",
+    image: img("catcow.jpg"),
+    start: "Hands and knees.",
+    end: "Alternate arching and rounding spine.",
+    why: "Improves spinal mobility and stiffness.",
+    reps: "2 min",
+    seconds: 120,
   },
-
   {
-    title: "Day 3",
-    theme: "Joint Ease + Mobility",
-    description:
-      "Designed for stiffness in knees, hips, shoulders and low back.",
-    exercises: [
-      {
-        name: "Ankle Circles",
-        why: "Improves circulation and comfort.",
-        start: "Sit tall.",
-        end: "Circle ankle slowly.",
-        reps: "20 each",
-        seconds: 60,
-        image: img("ankle.jpg"),
-      },
-      {
-        name: "Shoulder Rolls",
-        why: "Releases upper body tension.",
-        start: "Relax arms.",
-        end: "Roll backward slowly.",
-        reps: "20 reps",
-        seconds: 45,
-        image: img("shoulder.jpg"),
-      },
-      {
-        name: "Hip Openers",
-        why: "Improves hip movement.",
-        start: "Wide stance.",
-        end: "Shift side to side.",
-        reps: "60 sec",
-        seconds: 60,
-        image: img("hip.jpg"),
-      },
-      {
-        name: "Wall Calf Stretch",
-        why: "Helps walking comfort.",
-        start: "Hands on wall.",
-        end: "Back heel pressed down.",
-        reps: "30 sec each",
-        seconds: 60,
-        image: img("wall.jpg"),
-      },
-      {
-        name: "Cat-Cow Flow",
-        why: "Spinal mobility reset.",
-        start: "Hands knees.",
-        end: "Round / arch.",
-        reps: "60 sec",
-        seconds: 60,
-        image: img("catcow.jpg"),
-      },
-    ],
+    name: "Wall Posture Reset",
+    image: img("wallposture.jpg"),
+    start: "Stand against wall.",
+    end: "Lengthen spine, tuck chin gently.",
+    why: "Restores posture and alignment.",
+    reps: "2 min",
+    seconds: 120,
   },
-
   {
-    title: "Day 4",
-    theme: "Cooling Reset",
-    description:
-      "Use on stressful or overheating days to calm the system.",
-    exercises: [
-      {
-        name: "Breath Walk",
-        why: "Helps regulate stress response.",
-        start: "Walk calmly.",
-        end: "Sync steps with breath.",
-        reps: "5 min",
-        seconds: 300,
-        image: img("walk.jpg"),
-      },
-      {
-        name: "Forward Fold Support",
-        why: "Reduces body tension.",
-        start: "Stand wide stance.",
-        end: "Lean onto chair.",
-        reps: "45 sec",
-        seconds: 45,
-        image: img("fold.jpg"),
-      },
-      {
-        name: "Neck Release",
-        why: "Calming tension release.",
-        start: "Sit tall.",
-        end: "Tilt side gently.",
-        reps: "30 sec each",
-        seconds: 60,
-        image: img("neck.jpg"),
-      },
-      {
-        name: "Shoulder Rolls",
-        why: "Stress reset.",
-        start: "Relax arms.",
-        end: "Roll slowly.",
-        reps: "20 reps",
-        seconds: 45,
-        image: img("shoulder.jpg"),
-      },
-      {
-        name: "Breathing Calm Reset",
-        why: "Cooling nervous system.",
-        start: "Sit tall.",
-        end: "Long slow exhale.",
-        reps: "2 min",
-        seconds: 120,
-        image: img("breathing.jpg"),
-      },
-    ],
+    name: "Chair Squat",
+    image: img("chairsquat.jpg"),
+    start: "Stand in front of chair.",
+    end: "Lower hips back then rise.",
+    why: "Builds leg strength safely.",
+    reps: "2 min",
+    seconds: 120,
   },
-
   {
-    title: "Day 5",
-    theme: "Confidence + Posture",
-    description:
-      "Stand taller, feel elegant and restore feminine presence.",
-    exercises: [
-      {
-        name: "Wall Posture Reset",
-        why: "Aligns head and shoulders.",
-        start: "Back near wall.",
-        end: "Head + shoulders touch wall.",
-        reps: "45 sec",
-        seconds: 45,
-        image: img("wall.jpg"),
-      },
-      {
-        name: "Power Posture Hold",
-        why: "Boosts confidence and breath.",
-        start: "Stand tall.",
-        end: "Hands hips chest open.",
-        reps: "60 sec",
-        seconds: 60,
-        image: img("power.jpg"),
-      },
-      {
-        name: "Chair Squat",
-        why: "Strong elegant lower body.",
-        start: "Stand front chair.",
-        end: "Sit back rise tall.",
-        reps: "3 x 12",
-        seconds: 90,
-        image: img("squat.jpg"),
-      },
-      {
-        name: "Wall Push Up",
-        why: "Upper body tone.",
-        start: "Hands wall.",
-        end: "Push away.",
-        reps: "3 x 12",
-        seconds: 75,
-        image: img("pushup.jpg"),
-      },
-      {
-        name: "Smile Walk",
-        why: "Mood lift.",
-        start: "Walk softly.",
-        end: "Relax jaw + smile.",
-        reps: "5 min",
-        seconds: 300,
-        image: img("walk.jpg"),
-      },
-    ],
+    name: "March in Place",
+    image: img("march.jpg"),
+    start: "Stand tall.",
+    end: "Lift knees rhythmically.",
+    why: "Boosts circulation and metabolism.",
+    reps: "2 min",
+    seconds: 120,
   },
-
   {
-    title: "Day 6",
-    theme: "Tone + Strength",
-    description:
-      "Build lean muscle and maintain metabolism after 40.",
-    exercises: [
-      {
-        name: "Chair Squat",
-        why: "Leg tone.",
-        start: "Stand front chair.",
-        end: "Lower + rise.",
-        reps: "3 x 15",
-        seconds: 100,
-        image: img("squat.jpg"),
-      },
-      {
-        name: "Wall Push Up",
-        why: "Arm tone.",
-        start: "Hands wall.",
-        end: "Push away.",
-        reps: "3 x 15",
-        seconds: 90,
-        image: img("pushup.jpg"),
-      },
-      {
-        name: "March in Place",
-        why: "Burn calories.",
-        start: "Stand tall.",
-        end: "Lift knees.",
-        reps: "2 min",
-        seconds: 120,
-        image: img("march.jpg"),
-      },
-      {
-        name: "Bridge Pulse",
-        why: "Glute shaping.",
-        start: "Lift hips.",
-        end: "Pulse upward.",
-        reps: "30 reps",
-        seconds: 60,
-        image: img("bridge.jpg"),
-      },
-      {
-        name: "Standing Twist",
-        why: "Core engagement.",
-        start: "Tall stance.",
-        end: "Rotate side-side.",
-        reps: "45 sec",
-        seconds: 45,
-        image: img("twist.jpg"),
-      },
-    ],
+    name: "Bird Dog",
+    image: img("birddog.jpg"),
+    start: "Hands and knees.",
+    end: "Extend opposite arm and leg.",
+    why: "Core balance and spinal support.",
+    reps: "2 min",
+    seconds: 120,
   },
-
   {
-    title: "Day 7",
-    theme: "Recovery Flow",
-    description:
-      "Gentle restorative day for consistency and recovery.",
-    exercises: [
-      {
-        name: "Cat-Cow Flow",
-        why: "Spine mobility.",
-        start: "Hands knees.",
-        end: "Round / arch.",
-        reps: "60 sec",
-        seconds: 60,
-        image: img("catcow.jpg"),
-      },
-      {
-        name: "Breathing Calm Reset",
-        why: "Stress reduction.",
-        start: "Sit tall.",
-        end: "Slow breathing.",
-        reps: "3 min",
-        seconds: 180,
-        image: img("breathing.jpg"),
-      },
-      {
-        name: "Forward Fold Support",
-        why: "Relaxation.",
-        start: "Use chair.",
-        end: "Lean softly.",
-        reps: "45 sec",
-        seconds: 45,
-        image: img("fold.jpg"),
-      },
-      {
-        name: "Neck Release",
-        why: "Release tension.",
-        start: "Sit tall.",
-        end: "Side tilt.",
-        reps: "30 sec each",
-        seconds: 60,
-        image: img("neck.jpg"),
-      },
-      {
-        name: "Walk Softly",
-        why: "Recovery circulation.",
-        start: "Easy pace.",
-        end: "Relaxed walk.",
-        reps: "5 min",
-        seconds: 300,
-        image: img("walk.jpg"),
-      },
-    ],
+    name: "Pelvic Tilt",
+    image: img("pelvictilt.jpg"),
+    start: "Lie down knees bent.",
+    end: "Flatten lower back gently.",
+    why: "Great for pelvic floor and back comfort.",
+    reps: "2 min",
+    seconds: 120,
+  },
+  {
+    name: "Child Pose Reach",
+    image: img("childpose.jpg"),
+    start: "Kneel, hips to heels.",
+    end: "Arms forward and relax chest.",
+    why: "Calms nervous system and eases back tension.",
+    reps: "2 min",
+    seconds: 120,
+  },
+  {
+    name: "Thoracic Opener",
+    image: img("thoracic.jpg"),
+    start: "Hands behind head.",
+    end: "Open elbows wide and lift chest.",
+    why: "Relieves desk posture tightness.",
+    reps: "2 min",
+    seconds: 120,
+  },
+  {
+    name: "Standing Twist",
+    image: img("twist.jpg"),
+    start: "Stand relaxed.",
+    end: "Rotate torso side to side.",
+    why: "Improves waist mobility.",
+    reps: "2 min",
+    seconds: 120,
+  },
+  {
+    name: "Heel Slides",
+    image: img("heelslide.jpg"),
+    start: "Lie on back.",
+    end: "Slide heel out then in.",
+    why: "Core activation and hip comfort.",
+    reps: "2 min",
+    seconds: 120,
+  },
+  {
+    name: "Calf Raise",
+    image: img("calfraise.jpg"),
+    start: "Stand with support.",
+    end: "Rise to toes slowly.",
+    why: "Improves circulation.",
+    reps: "2 min",
+    seconds: 120,
+  },
+  {
+    name: "Arm Sweep Breath",
+    image: img("armsweep.jpg"),
+    start: "Arms by sides.",
+    end: "Lift arms overhead with inhale.",
+    why: "Stress relief and rib mobility.",
+    reps: "2 min",
+    seconds: 120,
+  },
+  {
+    name: "Glute Squeeze",
+    image: img("glutesqueeze.jpg"),
+    start: "Stand tall.",
+    end: "Squeeze glutes 5 sec / release.",
+    why: "Pelvic support and posture.",
+    reps: "2 min",
+    seconds: 120,
+  },
+  {
+    name: "Side Leg Lift",
+    image: img("sideleg.jpg"),
+    start: "Lie on side.",
+    end: "Lift top leg slowly.",
+    why: "Hip stability and balance.",
+    reps: "2 min",
+    seconds: 120,
   },
 ];
+
+/* ROTATION */
+function rotateExercises(day: number, count: number): Exercise[] {
+  const arr: Exercise[] = [];
+
+  for (let i = 0; i < count; i++) {
+    arr.push(library[(day + i) % library.length]);
+  }
+
+  return arr;
+}
+
+/* LEGACY EXPORT (for old dashboard compatibility) */
+export const plans: DayPlan[] = Array.from(
+  { length: 30 },
+  (_, i) => buildPlan(i + 1)
+);
+
+/* MAIN BUILDER */
+export function buildPlan(
+  day: number,
+  symptoms: string[] = [],
+  selectedTime = "10 min"
+): DayPlan {
+  let count = 5;
+
+  if (selectedTime === "20 min") count = 10;
+  if (selectedTime === "30+ min") count = 15;
+
+  let title = "Hormone Balance Reset";
+  let theme = "Energy + Posture + Daily Wellness";
+  let description =
+    "Structured daily movement plan to reduce symptoms and rebuild confidence.";
+
+  if (
+    symptoms.includes("Poor sleep") ||
+    symptoms.includes("Hot flashes")
+  ) {
+    title = "Sleep + Cooling Recovery";
+    theme = "Evening nervous system reset";
+    description =
+      "Designed for sleep support, overheating reduction and calm evenings.";
+  }
+
+  if (symptoms.includes("Weight gain")) {
+    title = "Metabolism Sculpt";
+    theme = "Lean shape + calorie support";
+    description =
+      "Strength + movement focused plan for belly fat and energy.";
+  }
+
+  if (symptoms.includes("Joint pain")) {
+    title = "Joint Ease Mobility";
+    theme = "Pain reduction + flexibility";
+    description =
+      "Low impact movement for hips, knees, shoulders and stiffness.";
+  }
+
+  if (symptoms.includes("Low confidence")) {
+    title = "Confidence Feminine Reset";
+    theme = "Posture + elegance + body confidence";
+    description =
+      "Tone body, improve posture and restore feminine energy.";
+  }
+
+  return {
+    day,
+    title: `${title} - Day ${day}`,
+    theme,
+    description,
+    exercises: rotateExercises(day, count),
+  };
+}
+
+/* SMART EXPORT */
+export function getPlan(
+  day: number,
+  symptoms: string[] = [],
+  selectedTime = "10 min"
+) {
+  return buildPlan(day, symptoms, selectedTime);
+}
