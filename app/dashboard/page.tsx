@@ -1,298 +1,244 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { plans } from "@/lib/programs";
+import Image from "next/image";
+import { getPlan } from "@/lib/programs";
 
 type QuizData = {
-  age?: string;
-  stage?: string;
   symptoms?: string[];
-  priority?: string;
-  fitness?: string;
   time?: string;
 };
 
 export default function DashboardPage() {
   const [day, setDay] = useState(1);
+  const [quiz, setQuiz] = useState<QuizData>({});
   const [premium, setPremium] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
-  const [runningIndex, setRunningIndex] = useState<number | null>(null);
-  const [quizData, setQuizData] = useState<QuizData>({});
 
   useEffect(() => {
     const savedDay = Number(localStorage.getItem("day") || "1");
     setDay(savedDay);
 
-    setPremium(localStorage.getItem("premium") === "true");
-
     const raw = localStorage.getItem("quizData");
     if (raw) {
       try {
-        setQuizData(JSON.parse(raw));
+        setQuiz(JSON.parse(raw));
       } catch {}
     }
+
+    setPremium(localStorage.getItem("premium") === "true");
   }, []);
 
-  useEffect(() => {
-    if (secondsLeft === null) return;
+  const plan = useMemo(() => {
+    return getPlan(
+      day,
+      quiz.symptoms || [],
+      quiz.time || "10 min"
+    );
+  }, [day, quiz]);
 
-    if (secondsLeft <= 0) {
-      setSecondsLeft(null);
-      setRunningIndex(null);
-      return;
-    }
+  const totalDays = premium ? 90 : 30;
 
-    const t = setTimeout(() => {
-      setSecondsLeft((prev) => (prev ? prev - 1 : 0));
-    }, 1000);
+  const completedPercent = Math.min(
+    Math.round((day / totalDays) * 100),
+    100
+  );
 
-    return () => clearTimeout(t);
-  }, [secondsLeft]);
-
-  const currentPlan = useMemo(() => {
-    return plans[(day - 1) % plans.length];
-  }, [day]);
-
-  function startTimer(index: number, seconds: number) {
-    setRunningIndex(index);
-    setSecondsLeft(seconds);
-  }
-
-  function completeDay() {
-    const next = day + 1;
-    localStorage.setItem("day", String(next));
-    setDay(next);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  function resetJourney() {
-    localStorage.setItem("day", "1");
-    setDay(1);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  function formatTime(num: number) {
-    const m = Math.floor(num / 60);
-    const s = num % 60;
-    return `${m}:${String(s).padStart(2, "0")}`;
-  }
-
-  const progress = Math.min(Math.round((day / 30) * 100), 100);
+  const totalMinutes = plan.exercises.length * 2;
 
   return (
-    <main className="max-w-7xl mx-auto px-6 py-12">
-      {/* TOP GRID */}
-      <section className="grid lg:grid-cols-3 gap-8 mb-10">
-        {/* MAIN CARD */}
-        <div className="soft-card p-8 lg:col-span-2">
-          <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
-            Your Personalized Program
-          </p>
-
-          <h1 className="text-5xl md:text-6xl mb-4">
-            {currentPlan.title}
-          </h1>
-
-          <h2 className="text-3xl mb-4">
-            {currentPlan.theme}
-          </h2>
-
-          <p className="text-[#7b6870] text-lg leading-relaxed">
-            {currentPlan.description}
-          </p>
-
-          <div className="mt-8">
-            <div className="w-full h-3 rounded-full bg-white border border-[#f0e3e8] overflow-hidden">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-[#d6a7b1] to-[#b98fa1]"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-
-            <p className="mt-3 text-[#7b6870]">
-              30-Day Progress: {progress}%
+    <main className="max-w-7xl mx-auto px-6 py-10">
+      {/* HERO */}
+      <section className="soft-card p-8 md:p-10 mb-8">
+        <div className="grid lg:grid-cols-2 gap-8 items-center">
+          <div>
+            <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
+              Your Daily Program
             </p>
-          </div>
-        </div>
 
-        {/* PROFILE */}
-        <div className="soft-card p-8">
-          <h3 className="text-3xl mb-5">Your Profile</h3>
+            <h1 className="text-5xl md:text-6xl mb-4">
+              Day {day}
+            </h1>
 
-          <div className="space-y-3 text-[#7b6870]">
-            <div>
-              <span className="font-semibold text-[#3a2b2f]">
-                Age:
-              </span>{" "}
-              {quizData.age || "-"}
-            </div>
+            <h2 className="text-3xl mb-4">
+              {plan.title}
+            </h2>
 
-            <div>
-              <span className="font-semibold text-[#3a2b2f]">
-                Stage:
-              </span>{" "}
-              {quizData.stage || "-"}
-            </div>
+            <p className="text-[#7b6870] text-lg leading-relaxed mb-8">
+              {plan.description}
+            </p>
 
-            <div>
-              <span className="font-semibold text-[#3a2b2f]">
-                Priority:
-              </span>{" "}
-              {quizData.priority || "-"}
-            </div>
+            <div className="flex flex-wrap gap-4">
+              <Link
+                href="/session"
+                className="btn-primary"
+              >
+                Start Full Session
+              </Link>
 
-            <div>
-              <span className="font-semibold text-[#3a2b2f]">
-                Time:
-              </span>{" "}
-              {quizData.time || "-"}
+              <Link
+                href="/pricing"
+                className="btn-outline"
+              >
+                Upgrade Premium
+              </Link>
             </div>
           </div>
 
-          {!premium && (
-            <Link
-              href="/pricing"
-              className="btn-primary inline-block mt-8"
-            >
-              Upgrade Premium
-            </Link>
-          )}
+          <div className="soft-card p-6">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-5 rounded-3xl bg-white">
+                <div className="text-sm text-[#7b6870] mb-2">
+                  Session Time
+                </div>
+                <div className="text-3xl font-semibold">
+                  {totalMinutes} min
+                </div>
+              </div>
+
+              <div className="p-5 rounded-3xl bg-white">
+                <div className="text-sm text-[#7b6870] mb-2">
+                  Exercises
+                </div>
+                <div className="text-3xl font-semibold">
+                  {plan.exercises.length}
+                </div>
+              </div>
+
+              <div className="p-5 rounded-3xl bg-white">
+                <div className="text-sm text-[#7b6870] mb-2">
+                  Program
+                </div>
+                <div className="text-xl font-semibold">
+                  {premium ? "Premium" : "Free"}
+                </div>
+              </div>
+
+              <div className="p-5 rounded-3xl bg-white">
+                <div className="text-sm text-[#7b6870] mb-2">
+                  Progress
+                </div>
+                <div className="text-3xl font-semibold">
+                  {completedPercent}%
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* SYMPTOMS */}
-      {quizData.symptoms && quizData.symptoms.length > 0 && (
-        <section className="soft-card p-8 mb-10">
-          <h3 className="text-3xl mb-5">
-            Focus Symptoms
+      {/* PROGRESS */}
+      <section className="soft-card p-8 mb-8">
+        <div className="flex justify-between mb-4">
+          <h3 className="text-3xl">
+            Transformation Progress
           </h3>
 
-          <div className="flex flex-wrap gap-3">
-            {quizData.symptoms.map((item, i) => (
-              <div
-                key={i}
-                className="px-4 py-2 rounded-full bg-[#fff3f6] border border-[#ead8de]"
-              >
-                {item}
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+          <span className="text-[#7b6870]">
+            Day {day} / {totalDays}
+          </span>
+        </div>
+
+        <div className="h-4 bg-white rounded-full overflow-hidden border border-[#f0e3e8]">
+          <div
+            className="h-full bg-gradient-to-r from-[#d6a7b1] to-[#b98fa1]"
+            style={{
+              width: `${completedPercent}%`,
+            }}
+          />
+        </div>
+      </section>
 
       {/* EXERCISES */}
-      <section>
-        <h2 className="text-5xl mb-8">
-          Today&apos;s Exercises
-        </h2>
+      <section className="mb-8">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-4xl">
+            Today’s Exercises
+          </h3>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          {currentPlan.exercises.map((exercise, index) => (
+          <Link
+            href="/session"
+            className="btn-outline"
+          >
+            Guided Mode
+          </Link>
+        </div>
+
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {plan.exercises.map((item, i) => (
             <div
-              key={index}
-              className="soft-card p-6"
+              key={i}
+              className="soft-card p-5"
             >
-              {/* LARGE IMAGE */}
-              <div className="relative w-full h-[340px] rounded-3xl overflow-hidden mb-6 bg-[#f9eef2]">
+              <div className="relative w-full h-[260px] rounded-3xl overflow-hidden bg-[#f9eef2] mb-5">
                 <Image
-                  src={exercise.image}
-                  alt={exercise.name}
+                  src={item.image}
+                  alt={item.name}
                   fill
-                  className="object-contain p-3"
+                  className="object-contain p-4"
                 />
               </div>
 
-              <h3 className="text-3xl mb-3">
-                {exercise.name}
-              </h3>
-
-              <p className="text-[#7b6870] mb-5">
-                {exercise.why}
+              <p className="text-sm uppercase tracking-[0.2em] text-[#b98fa1] mb-2">
+                Exercise {i + 1}
               </p>
 
-              <div className="space-y-2 text-sm text-[#7b6870] mb-5">
-                <div>
-                  <span className="font-semibold text-[#3a2b2f]">
-                    Start:
-                  </span>{" "}
-                  {exercise.start}
-                </div>
+              <h4 className="text-2xl mb-3">
+                {item.name}
+              </h4>
 
-                <div>
-                  <span className="font-semibold text-[#3a2b2f]">
-                    Finish:
-                  </span>{" "}
-                  {exercise.end}
-                </div>
+              <div className="space-y-2 text-[#7b6870] text-sm leading-relaxed mb-4">
+                <p>
+                  <strong>Start:</strong>{" "}
+                  {item.start}
+                </p>
 
-                <div>
-                  <span className="font-semibold text-[#3a2b2f]">
-                    Dose:
-                  </span>{" "}
-                  {exercise.reps}
-                </div>
+                <p>
+                  <strong>Finish:</strong>{" "}
+                  {item.end}
+                </p>
+
+                <p>{item.why}</p>
               </div>
 
-              <div className="flex flex-wrap gap-3 items-center">
-                <button
-                  onClick={() =>
-                    startTimer(index, exercise.seconds)
-                  }
-                  className="btn-primary"
-                >
-                  Start Timer
-                </button>
+              <div className="flex justify-between items-center">
+                <span className="px-3 py-2 rounded-full bg-[#fff3f6] border border-[#ead8de] text-sm">
+                  2 min
+                </span>
 
-                {runningIndex === index &&
-                  secondsLeft !== null && (
-                    <div className="px-5 py-3 rounded-full bg-[#fff3f6] border border-[#ead8de] font-semibold">
-                      {formatTime(secondsLeft)}
-                    </div>
-                  )}
+                <Link
+                  href="/session"
+                  className="text-[#b98fa1] font-medium"
+                >
+                  Open →
+                </Link>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ACTIONS */}
-      <section className="mt-12 grid md:grid-cols-2 gap-6">
-        <div className="soft-card p-10 text-center">
+      {/* PREMIUM CTA */}
+      {!premium && (
+        <section className="soft-card p-8">
           <h3 className="text-4xl mb-4">
-            Continue Tomorrow
+            Unlock Premium Transformation
           </h3>
 
-          <p className="text-[#7b6870] text-lg mb-8">
-            Progress grows with consistency.
+          <p className="text-[#7b6870] text-lg mb-8 max-w-3xl">
+            Get full 90-day menopause programs,
+            advanced symptom plans, premium guided
+            sessions and deeper body transformation.
           </p>
 
-          <button
-            onClick={completeDay}
+          <Link
+            href="/pricing"
             className="btn-primary"
           >
-            Mark Day Complete
-          </button>
-        </div>
-
-        <div className="soft-card p-10 text-center">
-          <h3 className="text-4xl mb-4">
-            Restart Journey
-          </h3>
-
-          <p className="text-[#7b6870] text-lg mb-8">
-            Begin fresh from Day 1 anytime.
-          </p>
-
-          <button
-            onClick={resetJourney}
-            className="btn-outline"
-          >
-            Reset Program
-          </button>
-        </div>
-      </section>
+            Upgrade Now
+          </Link>
+        </section>
+      )}
     </main>
   );
 }
