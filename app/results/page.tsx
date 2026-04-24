@@ -4,19 +4,21 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
 type QuizData = {
-  age?: string;
-  stage?: string;
   symptoms?: string[];
-  priority?: string;
-  fitness?: string;
   time?: string;
+  age?: string;
 };
 
 export default function ResultsPage() {
-  const [data, setData] = useState<QuizData>({});
+  const [data, setData] = useState<QuizData>({
+    symptoms: [],
+    time: "10 min",
+    age: "40+",
+  });
 
   useEffect(() => {
     const raw = localStorage.getItem("quizData");
+
     if (raw) {
       try {
         setData(JSON.parse(raw));
@@ -24,203 +26,129 @@ export default function ResultsPage() {
     }
   }, []);
 
-  const program = useMemo(() => {
+  const result = useMemo(() => {
     const symptoms = data.symptoms || [];
 
-    if (
-      data.priority === "Sleep better" ||
-      symptoms.includes("Poor sleep") ||
-      symptoms.includes("Hot flashes")
-    ) {
-      return {
-        title: "Sleep + Hot Flash Reset",
-        subtitle:
-          "A calming evening routine designed to reduce overheating, improve sleep quality and restore energy.",
-        duration: "10–20 min daily",
-        includes: [
-          "Cooling nervous-system routines",
-          "Evening stretch flows",
-          "Breathing for deeper sleep",
-          "Low-stress hormone support habits",
-        ],
-      };
-    }
+    let title = "Balanced Glow Reset";
+    let subtitle =
+      "Designed to improve energy, posture and confidence.";
+
+    let focus = [
+      "Daily guided movement",
+      "Gentle metabolism support",
+      "Stress relief flows",
+      "Better body confidence",
+    ];
 
     if (
-      data.priority === "Lose belly fat" ||
-      symptoms.includes("Weight gain")
+      symptoms.includes("Hot flashes") ||
+      symptoms.includes("Poor sleep")
     ) {
-      return {
-        title: "Metabolism + Belly Tone",
-        subtitle:
-          "Gentle strength and movement plan to support lean shape, confidence and energy after 40.",
-        duration: "15–25 min daily",
-        includes: [
-          "Low-impact toning sessions",
-          "Walking + calorie burn structure",
-          "Core activation",
-          "Consistency tracker",
-        ],
-      };
+      title = "Sleep & Cooling Recovery";
+      subtitle =
+        "Focused on evening calm, better sleep and heat regulation.";
+
+      focus = [
+        "Cooling evening sessions",
+        "Nervous system reset",
+        "Sleep support habits",
+        "Stress reduction",
+      ];
     }
 
-    if (
-      data.priority === "Move without pain" ||
-      symptoms.includes("Joint pain")
-    ) {
-      return {
-        title: "Joint Ease + Mobility",
-        subtitle:
-          "Mobility-based sessions created to reduce stiffness and help you move freely again.",
-        duration: "10–15 min daily",
-        includes: [
-          "Hip and knee relief flows",
-          "Shoulder mobility",
-          "Spinal decompression",
-          "Recovery movement days",
-        ],
-      };
+    if (symptoms.includes("Weight gain")) {
+      title = "Metabolism Sculpt Plan";
+      subtitle =
+        "Targets waistline, energy and body composition.";
+
+      focus = [
+        "Waist toning sessions",
+        "Strength flows",
+        "Daily calorie burn support",
+        "Confidence rebuilding",
+      ];
+    }
+
+    if (symptoms.includes("Joint pain")) {
+      title = "Joint Ease Mobility";
+      subtitle =
+        "Gentle movement for stiffness and pain relief.";
+
+      focus = [
+        "Hip & knee mobility",
+        "Spine comfort",
+        "Low impact sessions",
+        "Daily flexibility",
+      ];
     }
 
     return {
-      title: "Confidence + Feminine Energy",
-      subtitle:
-        "Posture, tone and emotional reset plan to help you feel radiant and strong again.",
-      duration: "10–20 min daily",
-      includes: [
-        "Posture elegance routines",
-        "Mood-lifting movement",
-        "Confidence habits",
-        "Strength + grace training",
-      ],
+      title,
+      subtitle,
+      focus,
     };
   }, [data]);
 
-  const score = useMemo(() => {
-    let total = 72;
-
-    if (data.fitness === "Beginner") total = 78;
-    if (data.fitness === "Intermediate") total = 84;
-    if (data.fitness === "Active") total = 91;
-
-    if ((data.symptoms || []).length >= 4) total -= 6;
-
-    return Math.max(68, Math.min(96, total));
-  }, [data]);
-
   return (
-    <main className="max-w-6xl mx-auto px-6 py-12">
+    <main className="max-w-6xl mx-auto px-6 py-14">
       {/* HERO */}
-      <section className="soft-card p-8 md:p-12 mb-8">
+      <section className="soft-card p-10 text-center mb-8">
         <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
-          Your Personalized Results
+          Your Personalized Result
         </p>
 
-        <h1 className="text-5xl md:text-6xl mb-4">
-          We Built Your Plan
+        <h1 className="text-5xl md:text-6xl mb-5">
+          {result.title}
         </h1>
 
-        <p className="text-[#7b6870] text-lg max-w-3xl leading-relaxed">
-          Based on your answers, your current body priorities,
-          symptom profile and available time, we matched you
-          with the most effective starting program.
+        <p className="text-[#7b6870] text-xl max-w-3xl mx-auto leading-relaxed">
+          {result.subtitle}
         </p>
       </section>
 
-      {/* SCORE + PROFILE */}
-      <section className="grid lg:grid-cols-3 gap-8 mb-8">
-        <div className="soft-card p-8 text-center">
-          <div className="text-sm uppercase tracking-[0.2em] text-[#b98fa1] mb-4">
-            Wellness Score
+      {/* PROFILE */}
+      <section className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="soft-card p-6">
+          <div className="text-sm text-[#7b6870] mb-2">
+            Age Group
           </div>
 
-          <div className="text-7xl font-semibold mb-3">
-            {score}
-          </div>
-
-          <div className="text-[#7b6870]">
-            Strong potential for fast progress
+          <div className="text-3xl">
+            {data.age || "40+"}
           </div>
         </div>
 
-        <div className="soft-card p-8 lg:col-span-2">
-          <h2 className="text-3xl mb-5">
-            Your Current Profile
-          </h2>
-
-          <div className="grid md:grid-cols-2 gap-4 text-[#7b6870]">
-            <div>
-              <span className="font-semibold text-[#3a2b2f]">
-                Age:
-              </span>{" "}
-              {data.age || "-"}
-            </div>
-
-            <div>
-              <span className="font-semibold text-[#3a2b2f]">
-                Stage:
-              </span>{" "}
-              {data.stage || "-"}
-            </div>
-
-            <div>
-              <span className="font-semibold text-[#3a2b2f]">
-                Fitness:
-              </span>{" "}
-              {data.fitness || "-"}
-            </div>
-
-            <div>
-              <span className="font-semibold text-[#3a2b2f]">
-                Daily Time:
-              </span>{" "}
-              {data.time || "-"}
-            </div>
+        <div className="soft-card p-6">
+          <div className="text-sm text-[#7b6870] mb-2">
+            Daily Time
           </div>
 
-          {!!data.symptoms?.length && (
-            <div className="mt-6">
-              <div className="font-semibold mb-3">
-                Symptoms:
-              </div>
+          <div className="text-3xl">
+            {data.time || "10 min"}
+          </div>
+        </div>
 
-              <div className="flex flex-wrap gap-3">
-                {data.symptoms.map((item, i) => (
-                  <div
-                    key={i}
-                    className="px-4 py-2 rounded-full bg-[#fff3f6] border border-[#ead8de]"
-                  >
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+        <div className="soft-card p-6">
+          <div className="text-sm text-[#7b6870] mb-2">
+            Symptoms
+          </div>
+
+          <div className="text-3xl">
+            {(data.symptoms || []).length}
+          </div>
         </div>
       </section>
 
-      {/* RECOMMENDED PROGRAM */}
-      <section className="soft-card p-8 md:p-10 mb-8">
-        <p className="uppercase tracking-[0.2em] text-sm text-[#b98fa1] mb-4">
-          Recommended Program
-        </p>
-
-        <h2 className="text-5xl mb-4">
-          {program.title}
+      {/* FOCUS */}
+      <section className="soft-card p-8 mb-8">
+        <h2 className="text-4xl mb-6">
+          Your Main Focus Areas
         </h2>
 
-        <p className="text-[#7b6870] text-lg leading-relaxed mb-6 max-w-3xl">
-          {program.subtitle}
-        </p>
-
-        <div className="inline-block px-5 py-3 rounded-full bg-[#fff3f6] border border-[#ead8de] mb-8">
-          {program.duration}
-        </div>
-
         <div className="grid md:grid-cols-2 gap-4">
-          {program.includes.map((item, i) => (
+          {result.focus.map((item) => (
             <div
-              key={i}
+              key={item}
               className="p-5 rounded-3xl bg-white border border-[#f0e3e8]"
             >
               ✓ {item}
@@ -229,37 +157,69 @@ export default function ResultsPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="grid md:grid-cols-2 gap-8">
-        <div className="soft-card p-8">
-          <h3 className="text-4xl mb-4">
-            Start Free Today
-          </h3>
+      {/* SYMPTOMS */}
+      {(data.symptoms || []).length > 0 && (
+        <section className="soft-card p-8 mb-8">
+          <h2 className="text-4xl mb-6">
+            Based On Your Symptoms
+          </h2>
 
-          <p className="text-[#7b6870] mb-8">
-            Begin your guided dashboard with daily sessions,
-            exercise timers and progress tracking.
-          </p>
+          <div className="flex flex-wrap gap-3">
+            {(data.symptoms || []).map((item) => (
+              <span
+                key={item}
+                className="px-4 py-3 rounded-full bg-[#fff3f6] border border-[#ead8de]"
+              >
+                {item}
+              </span>
+            ))}
+          </div>
+        </section>
+      )}
 
-          <Link href="/dashboard" className="btn-primary">
-            Open My Dashboard
+      {/* RECOMMENDATION */}
+      <section className="soft-card p-10 mb-8">
+        <h2 className="text-5xl mb-5">
+          Recommended Next Step
+        </h2>
+
+        <p className="text-[#7b6870] text-lg leading-relaxed mb-8">
+          Start your personalized dashboard now and receive
+          a daily guided plan built around your goals and
+          symptoms.
+        </p>
+
+        <div className="flex flex-wrap gap-4">
+          <Link
+            href="/dashboard"
+            className="btn-primary"
+          >
+            Start Free Dashboard
           </Link>
-        </div>
 
-        <div className="soft-card p-8">
-          <h3 className="text-4xl mb-4">
+          <Link
+            href="/pricing"
+            className="btn-outline"
+          >
             Unlock Premium
-          </h3>
-
-          <p className="text-[#7b6870] mb-8">
-            Full 90-day transformation programs, advanced
-            routines, premium plans and deeper results.
-          </p>
-
-          <Link href="/pricing" className="btn-outline">
-            View Premium Plans
           </Link>
         </div>
+      </section>
+
+      {/* PREMIUM TEASE */}
+      <section className="grid md:grid-cols-3 gap-6">
+        {[
+          "Sleep Reset Protocols",
+          "Belly Tone After 40",
+          "Confidence & Glow Routines",
+        ].map((item) => (
+          <div
+            key={item}
+            className="soft-card p-6 text-center"
+          >
+            ✨ {item}
+          </div>
+        ))}
       </section>
     </main>
   );
