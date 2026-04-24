@@ -1,93 +1,69 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  getMembership,
+  clearMembership,
+  cancelMembership,
+} from "@/lib/subscription";
 
-type Plan = "free" | "glow" | "elite";
+type State = {
+  plan: "free" | "glow" | "elite";
+  status: "active" | "expired" | "none";
+  purchaseDate: string | null;
+  expiryDate: string | null;
+  daysRemaining: number;
+};
 
 export default function AccountPage() {
-  const [plan, setPlan] =
-    useState<Plan>("free");
-
-  const [purchaseDate, setPurchaseDate] =
-    useState("");
-
-  const [day, setDay] = useState("1");
+  const [data, setData] =
+    useState<State>({
+      plan: "free",
+      status: "none",
+      purchaseDate: null,
+      expiryDate: null,
+      daysRemaining: 0,
+    });
 
   useEffect(() => {
-    const savedPlan =
-      (localStorage.getItem(
-        "plan"
-      ) as Plan) || "free";
-
-    const premium =
-      localStorage.getItem(
-        "premium"
-      ) === "true";
-
-    const savedDay =
-      localStorage.getItem("day") ||
-      "1";
-
-    const savedDate =
-      localStorage.getItem(
-        "purchaseDate"
-      ) || "";
-
-    setPlan(
-      premium ? savedPlan : "free"
+    setData(
+      getMembership()
     );
-
-    setDay(savedDay);
-    setPurchaseDate(savedDate);
   }, []);
 
-  const details = useMemo(() => {
-    if (plan === "elite") {
-      return {
-        title: "Elite Member ✨",
-        desc:
-          "Full premium transformation access.",
-        color:
-          "bg-gradient-to-r from-[#d6a7b1] to-[#b98fa1] text-white",
-      };
-    }
+  const premium =
+    data.status === "active";
 
-    if (plan === "glow") {
-      return {
-        title: "Glow Member ✨",
-        desc:
-          "30-day premium wellness access.",
-        color:
-          "bg-[#fff1f5] text-[#8f5d6f]",
-      };
-    }
+  const badge =
+    data.plan === "elite"
+      ? "Elite Member ✨"
+      : data.plan === "glow"
+      ? "Glow Member ✨"
+      : "Free Account";
 
-    return {
-      title: "Free Account",
-      desc:
-        "Upgrade anytime to unlock premium features.",
-      color:
-        "bg-white text-[#7b6870]",
-    };
-  }, [plan]);
+  function handleCancel() {
+    cancelMembership();
 
-  function logout() {
-    localStorage.removeItem("premium");
-    localStorage.removeItem("plan");
-    localStorage.removeItem("purchaseDate");
+    setData(
+      getMembership()
+    );
+  }
 
-    location.reload();
+  function handleReset() {
+    clearMembership();
+
+    setData(
+      getMembership()
+    );
   }
 
   return (
     <main className="max-w-6xl mx-auto px-6 py-14">
       {/* HERO */}
       <section className="soft-card p-10 mb-8">
-        <div
-          className={`inline-block px-5 py-3 rounded-full mb-6 ${details.color}`}
-        >
-          {details.title}
+        <div className="inline-block px-5 py-3 rounded-full bg-[#fff1f5] text-[#8f5d6f] mb-6">
+          {badge}
         </div>
 
         <h1 className="text-5xl mb-4">
@@ -95,41 +71,52 @@ export default function AccountPage() {
         </h1>
 
         <p className="text-[#7b6870] text-lg">
-          {details.desc}
+          {premium
+            ? "Your premium access is active."
+            : data.status ===
+              "expired"
+            ? "Your membership expired."
+            : "Upgrade anytime to unlock premium."}
         </p>
       </section>
 
-      {/* INFO */}
-      <section className="grid md:grid-cols-3 gap-6 mb-8">
+      {/* STATS */}
+      <section className="grid md:grid-cols-4 gap-6 mb-8">
         <div className="soft-card p-6">
           <div className="text-sm text-[#7b6870] mb-2">
-            Current Plan
+            Plan
           </div>
-
           <div className="text-3xl capitalize">
-            {plan}
+            {data.plan}
           </div>
         </div>
 
         <div className="soft-card p-6">
           <div className="text-sm text-[#7b6870] mb-2">
-            Current Day
+            Status
           </div>
+          <div className="text-3xl capitalize">
+            {data.status}
+          </div>
+        </div>
 
+        <div className="soft-card p-6">
+          <div className="text-sm text-[#7b6870] mb-2">
+            Days Left
+          </div>
           <div className="text-3xl">
-            {day}
+            {data.daysRemaining}
           </div>
         </div>
 
         <div className="soft-card p-6">
           <div className="text-sm text-[#7b6870] mb-2">
-            Joined
+            Expiry
           </div>
-
-          <div className="text-lg break-all">
-            {purchaseDate
+          <div className="text-lg">
+            {data.expiryDate
               ? new Date(
-                  purchaseDate
+                  data.expiryDate
                 ).toLocaleDateString()
               : "—"}
           </div>
@@ -139,11 +126,11 @@ export default function AccountPage() {
       {/* ACTIONS */}
       <section className="soft-card p-8 mb-8">
         <h2 className="text-4xl mb-6">
-          Manage Membership
+          Membership Actions
         </h2>
 
         <div className="flex flex-wrap gap-4">
-          {plan === "free" && (
+          {!premium && (
             <Link
               href="/pricing"
               className="btn-primary"
@@ -152,24 +139,38 @@ export default function AccountPage() {
             </Link>
           )}
 
-          {plan === "glow" && (
-            <Link
-              href="/plans/elite"
-              className="btn-primary"
-            >
-              Upgrade to Elite
-            </Link>
-          )}
+          {data.plan === "glow" &&
+            premium && (
+              <Link
+                href="/plans/elite"
+                className="btn-primary"
+              >
+                Upgrade to Elite
+              </Link>
+            )}
 
           <Link
             href="/dashboard"
             className="btn-outline"
           >
-            Open Dashboard
+            Dashboard
           </Link>
 
+          {premium && (
+            <button
+              onClick={
+                handleCancel
+              }
+              className="btn-outline"
+            >
+              Cancel Membership
+            </button>
+          )}
+
           <button
-            onClick={logout}
+            onClick={
+              handleReset
+            }
             className="btn-outline"
           >
             Reset Account
@@ -177,21 +178,51 @@ export default function AccountPage() {
         </div>
       </section>
 
-      {/* PREMIUM PERKS */}
-      <section className="grid md:grid-cols-3 gap-6">
-        {[
-          "Smart personalized plans",
-          "Daily premium sessions",
-          "Long-term transformation tracking",
-        ].map((item) => (
-          <div
-            key={item}
-            className="soft-card p-6 text-center"
+      {/* RETENTION */}
+      {premium &&
+        data.daysRemaining <= 7 && (
+          <section className="soft-card p-8">
+            <h2 className="text-4xl mb-4">
+              Renew Soon
+            </h2>
+
+            <p className="text-[#7b6870] mb-6">
+              Your access ends in{" "}
+              {
+                data.daysRemaining
+              }{" "}
+              days.
+            </p>
+
+            <Link
+              href="/pricing"
+              className="btn-primary"
+            >
+              Renew Membership
+            </Link>
+          </section>
+        )}
+
+      {data.status ===
+        "expired" && (
+        <section className="soft-card p-8">
+          <h2 className="text-4xl mb-4">
+            Welcome Back
+          </h2>
+
+          <p className="text-[#7b6870] mb-6">
+            Reactivate your
+            premium plan anytime.
+          </p>
+
+          <Link
+            href="/pricing"
+            className="btn-primary"
           >
-            ✨ {item}
-          </div>
-        ))}
-      </section>
+            Reactivate Now
+          </Link>
+        </section>
+      )}
     </main>
   );
 }
