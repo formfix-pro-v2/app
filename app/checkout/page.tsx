@@ -1,46 +1,48 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { useMemo, Suspense, useState } from "react";
-import { useRouter } from "next/navigation";
-import { activatePlan } from "@/lib/checkout";
+import {
+  Suspense,
+  useMemo,
+  useState,
+} from "react";
+import {
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
+
+import {
+  getPlan,
+} from "@/lib/checkout";
+
+import {
+  startMembership,
+} from "@/lib/subscription";
 
 function CheckoutContent() {
-  const params = useSearchParams();
-  const router = useRouter();
+  const params =
+    useSearchParams();
 
-  const [loading, setLoading] = useState(false);
+  const router =
+    useRouter();
 
-  const plan = params.get("plan") || "glow";
+  const [loading, setLoading] =
+    useState(false);
 
-  const data = useMemo(() => {
-    if (plan === "elite") {
-      return {
-        id: "elite",
-        name: "Elite",
-        price: "€79",
-        days: "90 Days",
-        desc:
-          "Full premium transformation with advanced systems.",
-      };
-    }
+  const rawPlan =
+    params.get("plan");
 
-    return {
-      id: "glow",
-      name: "Glow",
-      price: "€29",
-      days: "30 Days",
-      desc:
-        "Elegant reset for sleep, confidence and comfort.",
-    };
-  }, [plan]);
+  const data = useMemo(
+    () =>
+      getPlan(rawPlan),
+    [rawPlan]
+  );
 
   function completePurchase() {
     setLoading(true);
 
     setTimeout(() => {
-      activatePlan(
-        data.id as "glow" | "elite"
+      startMembership(
+        data.id
       );
 
       router.push(
@@ -63,28 +65,30 @@ function CheckoutContent() {
           </h1>
 
           <p className="text-[#7b6870] text-lg mb-8">
-            {data.desc}
+            {data.description}
           </p>
 
-          <div className="text-6xl mb-8">
-            {data.price}
+          <div className="text-6xl mb-2">
+            €{data.price}
           </div>
 
+          <p className="text-[#7b6870] mb-8">
+            {
+              data.monthlyEquivalent
+            }
+          </p>
+
           <div className="space-y-4">
-            {[
-              data.days + " Access",
-              "Daily guided sessions",
-              "Premium dashboard",
-              "Instant access today",
-              "Mobile friendly",
-            ].map((item) => (
-              <div
-                key={item}
-                className="p-4 rounded-2xl bg-white border border-[#f0e3e8]"
-              >
-                ✓ {item}
-              </div>
-            ))}
+            {data.features.map(
+              (item) => (
+                <div
+                  key={item}
+                  className="p-4 rounded-2xl bg-white border border-[#f0e3e8]"
+                >
+                  ✓ {item}
+                </div>
+              )
+            )}
           </div>
         </section>
 
@@ -124,13 +128,15 @@ function CheckoutContent() {
           </div>
 
           <button
-            onClick={completePurchase}
+            onClick={
+              completePurchase
+            }
             disabled={loading}
             className="btn-primary w-full mt-8 disabled:opacity-60"
           >
             {loading
               ? "Processing..."
-              : `Complete Purchase ${data.price}`}
+              : `Complete Purchase €${data.price}`}
           </button>
 
           <p className="text-sm text-[#7b6870] mt-4 text-center">
@@ -138,7 +144,7 @@ function CheckoutContent() {
           </p>
 
           <div className="mt-8 p-5 rounded-3xl bg-[#fff4f7]">
-            ⭐⭐⭐⭐⭐ “I feel like myself again.”
+            ⭐⭐⭐⭐⭐ “I finally feel in control again.”
           </div>
         </section>
       </div>
