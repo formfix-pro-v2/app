@@ -11,10 +11,7 @@ export type PlanData = {
   features: string[];
 };
 
-export const plans: Record<
-  PlanType,
-  PlanData
-> = {
+export const plans: Record<PlanType, PlanData> = {
   glow: {
     id: "glow",
     name: "Glow",
@@ -53,9 +50,7 @@ export const plans: Record<
   },
 };
 
-export function getPlan(
-  id: string | null
-): PlanData {
+export function getPlan(id: string | null): PlanData {
   if (id === "elite") {
     return plans.elite;
   }
@@ -63,14 +58,13 @@ export function getPlan(
   return plans.glow;
 }
 
-export function activatePlan(
-  id: PlanType
-) {
-  localStorage.setItem("premium", "true");
-  localStorage.setItem("plan", id);
-  localStorage.setItem("day", "1");
-  localStorage.setItem(
-    "purchaseDate",
-    new Date().toISOString()
-  );
+// ✅ POPRAVLJENO: Dodata provera da li smo u browseru pre koriscenja localStorage
+export function activatePlan(id: PlanType) {
+  // Proveri da li window objekat postoji (sto znaci da smo na klijentu/browseru)
+  if (typeof window !== "undefined") {
+    localStorage.setItem("premium", "true");
+    localStorage.setItem("plan", id);
+    localStorage.setItem("day", "1");
+    localStorage.setItem("purchaseDate", new Date().toISOString());
+  }
 }
