@@ -1,33 +1,132 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { setPremium } from "@/lib/storage";
 
 export default function CheckoutPage() {
+  const params = useSearchParams();
   const router = useRouter();
 
-  function buy() {
-    setPremium(true);
+  const plan = params.get("plan") || "glow";
+
+  const data = useMemo(() => {
+    if (plan === "elite") {
+      return {
+        name: "Elite",
+        price: "€79",
+        days: "90 Days",
+        desc:
+          "Full premium transformation with advanced systems.",
+      };
+    }
+
+    return {
+      name: "Glow",
+      price: "€29",
+      days: "30 Days",
+      desc:
+        "Elegant reset for sleep, confidence and comfort.",
+    };
+  }, [plan]);
+
+  function fakePurchase() {
+    localStorage.setItem("premium", "true");
+    localStorage.setItem("plan", plan);
+    localStorage.setItem("day", "1");
+
     router.push("/dashboard");
   }
 
   return (
-    <main className="min-h-screen bg-[#09060f] text-white flex items-center justify-center px-6">
-      <div className="max-w-lg w-full p-8 rounded-3xl bg-white/5 border border-white/10">
-        <h1 className="text-4xl font-black mb-6">
-          Upgrade to Premium
-        </h1>
+    <main className="max-w-6xl mx-auto px-6 py-14">
+      <div className="grid lg:grid-cols-2 gap-8">
+        {/* LEFT */}
+        <section className="soft-card p-8">
+          <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
+            Secure Checkout
+          </p>
 
-        <p className="text-zinc-300 mb-8">
-          Unlock all recovery programs and advanced coaching.
-        </p>
+          <h1 className="text-5xl mb-4">
+            {data.name} Membership
+          </h1>
 
-        <button
-          onClick={buy}
-          className="w-full p-4 rounded-2xl bg-gradient-to-r from-blue-600 to-orange-500 font-bold"
-        >
-          Pay Now
-        </button>
+          <p className="text-[#7b6870] text-lg mb-8">
+            {data.desc}
+          </p>
+
+          <div className="text-6xl mb-8">
+            {data.price}
+          </div>
+
+          <div className="space-y-4">
+            {[
+              data.days + " Access",
+              "Daily guided sessions",
+              "Premium dashboard",
+              "Instant access today",
+              "Mobile friendly",
+            ].map((item) => (
+              <div
+                key={item}
+                className="p-4 rounded-2xl bg-white border border-[#f0e3e8]"
+              >
+                ✓ {item}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* RIGHT */}
+        <section className="soft-card p-8">
+          <h2 className="text-4xl mb-6">
+            Payment Details
+          </h2>
+
+          <div className="space-y-5">
+            <input
+              placeholder="Full Name"
+              className="w-full p-4 rounded-2xl border border-[#ead8de] bg-white"
+            />
+
+            <input
+              placeholder="Email"
+              className="w-full p-4 rounded-2xl border border-[#ead8de] bg-white"
+            />
+
+            <input
+              placeholder="Card Number"
+              className="w-full p-4 rounded-2xl border border-[#ead8de] bg-white"
+            />
+
+            <div className="grid grid-cols-2 gap-4">
+              <input
+                placeholder="MM/YY"
+                className="w-full p-4 rounded-2xl border border-[#ead8de] bg-white"
+              />
+
+              <input
+                placeholder="CVC"
+                className="w-full p-4 rounded-2xl border border-[#ead8de] bg-white"
+              />
+            </div>
+          </div>
+
+          <button
+            onClick={fakePurchase}
+            className="btn-primary w-full mt-8"
+          >
+            Complete Purchase {data.price}
+          </button>
+
+          <p className="text-sm text-[#7b6870] mt-4 text-center">
+            30-Day Happiness Guarantee
+          </p>
+
+          <div className="mt-8 p-5 rounded-3xl bg-[#fff4f7]">
+            ⭐⭐⭐⭐⭐ “I feel like myself again.”
+          </div>
+        </section>
       </div>
     </main>
   );
