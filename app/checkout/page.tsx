@@ -10,20 +10,12 @@ import {
   useSearchParams,
 } from "next/navigation";
 
-import {
-  getPlan,
-} from "@/lib/checkout";
-
-import {
-  startMembership,
-} from "@/lib/subscription";
+import { getPlan } from "@/lib/checkout";
+import { startMembership } from "@/lib/subscription";
 
 function CheckoutContent() {
-  const params =
-    useSearchParams();
-
-  const router =
-    useRouter();
+  const params = useSearchParams();
+  const router = useRouter();
 
   const [loading, setLoading] =
     useState(false);
@@ -32,8 +24,7 @@ function CheckoutContent() {
     params.get("plan");
 
   const data = useMemo(
-    () =>
-      getPlan(rawPlan),
+    () => getPlan(rawPlan),
     [rawPlan]
   );
 
@@ -41,9 +32,14 @@ function CheckoutContent() {
     setLoading(true);
 
     setTimeout(() => {
-      startMembership(
-        data.id
-      );
+      /* local storage membership */
+      startMembership(data.id);
+
+      /* cookie for middleware lock */
+      document.cookie =
+        "premium=true; path=/; max-age=31536000; SameSite=Lax";
+
+      document.cookie = `plan=${data.id}; path=/; max-age=31536000; SameSite=Lax`;
 
       router.push(
         "/checkout/success"
@@ -73,9 +69,7 @@ function CheckoutContent() {
           </div>
 
           <p className="text-[#7b6870] mb-8">
-            {
-              data.monthlyEquivalent
-            }
+            {data.monthlyEquivalent}
           </p>
 
           <div className="space-y-4">
@@ -101,28 +95,28 @@ function CheckoutContent() {
           <div className="space-y-5">
             <input
               placeholder="Full Name"
-              className="w-full p-4 rounded-2xl border border-[#ead8de] bg-white"
+              className="w-full p-4 rounded-2xl border border-[#ead8de]"
             />
 
             <input
               placeholder="Email"
-              className="w-full p-4 rounded-2xl border border-[#ead8de] bg-white"
+              className="w-full p-4 rounded-2xl border border-[#ead8de]"
             />
 
             <input
               placeholder="Card Number"
-              className="w-full p-4 rounded-2xl border border-[#ead8de] bg-white"
+              className="w-full p-4 rounded-2xl border border-[#ead8de]"
             />
 
             <div className="grid grid-cols-2 gap-4">
               <input
                 placeholder="MM/YY"
-                className="w-full p-4 rounded-2xl border border-[#ead8de] bg-white"
+                className="w-full p-4 rounded-2xl border border-[#ead8de]"
               />
 
               <input
                 placeholder="CVC"
-                className="w-full p-4 rounded-2xl border border-[#ead8de] bg-white"
+                className="w-full p-4 rounded-2xl border border-[#ead8de]"
               />
             </div>
           </div>
@@ -142,10 +136,6 @@ function CheckoutContent() {
           <p className="text-sm text-[#7b6870] mt-4 text-center">
             30-Day Happiness Guarantee
           </p>
-
-          <div className="mt-8 p-5 rounded-3xl bg-[#fff4f7]">
-            ⭐⭐⭐⭐⭐ “I finally feel in control again.”
-          </div>
         </section>
       </div>
     </main>
