@@ -1,114 +1,212 @@
+"use client";
+
 import Link from "next/link";
 
 export default function PricingPage() {
+  const plans = [
+    {
+      name: "Glow",
+      price: "€29",
+      subtitle: "Feel lighter, brighter and more like yourself again.",
+      badge: "Most Popular",
+      cta: "Choose Glow",
+      href: "/checkout?plan=glow",
+      features: [
+        "30-Day Menopause Transformation Plan",
+        "Daily guided sessions",
+        "Sleep + hot flash support routines",
+        "Belly tone + metabolism reset",
+        "Posture & feminine confidence flows",
+        "Progress dashboard",
+        "Smart symptom adjustments",
+        "Nutrition habit checklist",
+      ],
+    },
+    {
+      name: "Elite",
+      price: "€79",
+      subtitle: "Full premium system for serious transformation.",
+      badge: "Best Value",
+      cta: "Choose Elite",
+      href: "/checkout?plan=elite",
+      features: [
+        "Everything in Glow",
+        "90-Day premium transformation roadmap",
+        "Advanced body sculpt phases",
+        "Pelvic floor recovery system",
+        "Joint pain & mobility protocols",
+        "Monthly reassessment engine",
+        "Priority future updates",
+        "VIP premium workout library",
+      ],
+    },
+  ];
+
   return (
     <main className="max-w-7xl mx-auto px-6 py-14">
       {/* HERO */}
-      <section className="text-center mb-16">
+      <section className="text-center mb-14">
         <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
-          Membership Options
+          Premium Membership
         </p>
 
-        <h1 className="text-6xl md:text-7xl leading-tight mb-6">
-          Choose Your
-          <br />
-          Wellness Path
+        <h1 className="text-5xl md:text-7xl mb-6">
+          Feel Like Yourself Again
         </h1>
 
-        <p className="text-xl text-[#7b6870] max-w-2xl mx-auto">
-          Elegant support for every stage of menopause —
-          from gentle beginnings to full transformation.
+        <p className="max-w-3xl mx-auto text-[#7b6870] text-xl leading-relaxed">
+          Personalized menopause support built for real women:
+          sleep, weight, confidence, mobility, energy and glow.
         </p>
       </section>
 
-      {/* CARDS */}
-      <section className="grid lg:grid-cols-3 gap-8">
-        {/* FREE */}
-        <div className="soft-card p-10">
-          <p className="text-sm uppercase tracking-[0.2em] text-[#b98fa1] mb-4">
-            Starter
-          </p>
-
-          <h2 className="text-4xl mb-3">Free</h2>
-
-          <div className="text-5xl mb-6">€0</div>
-
-          <div className="space-y-4 text-[#7b6870] mb-10">
-            <div>✓ 7-day starter program</div>
-            <div>✓ Symptom assessment</div>
-            <div>✓ Daily movement basics</div>
-            <div>✓ Wellness dashboard</div>
-          </div>
-
-          <Link href="/quiz" className="btn-outline block text-center">
-            Begin Free
-          </Link>
-        </div>
-
-        {/* MOST POPULAR */}
-        <div className="soft-card p-10 border-2 border-[#d6a7b1] scale-[1.02]">
-          <p className="text-sm uppercase tracking-[0.2em] text-[#b98fa1] mb-4">
-            Most Loved
-          </p>
-
-          <h2 className="text-4xl mb-3">Glow</h2>
-
-          <div className="text-5xl mb-6">€19</div>
-
-          <div className="space-y-4 text-[#7b6870] mb-10">
-            <div>✓ Full 90-day programs</div>
-            <div>✓ Belly tone after 40</div>
-            <div>✓ Sleep + hot flash reset</div>
-            <div>✓ Premium dashboard tools</div>
-            <div>✓ New weekly routines</div>
-          </div>
-
-          <Link
-            href="/results"
-            className="btn-primary block text-center"
+      {/* VALUE STRIP */}
+      <section className="grid md:grid-cols-4 gap-4 mb-12">
+        {[
+          "Better Sleep",
+          "Flatter Waist",
+          "More Energy",
+          "Less Joint Pain",
+        ].map((item) => (
+          <div
+            key={item}
+            className="soft-card p-5 text-center text-lg"
           >
-            Choose Glow
-          </Link>
-        </div>
+            ✨ {item}
+          </div>
+        ))}
+      </section>
 
-        {/* ELITE */}
-        <div className="soft-card p-10">
-          <p className="text-sm uppercase tracking-[0.2em] text-[#b98fa1] mb-4">
-            Concierge
-          </p>
+      {/* PLANS */}
+      <section className="grid lg:grid-cols-2 gap-8 mb-16">
+        {plans.map((plan) => (
+          <div
+            key={plan.name}
+            className="soft-card p-8 relative"
+          >
+            <div className="absolute top-5 right-5 px-4 py-2 rounded-full bg-[#ffe7ef] text-[#8f5d6f] text-sm font-medium">
+              {plan.badge}
+            </div>
 
-          <h2 className="text-4xl mb-3">Elite</h2>
+            <h2 className="text-5xl mb-2">
+              {plan.name}
+            </h2>
 
-          <div className="text-5xl mb-6">€39</div>
+            <p className="text-[#7b6870] mb-6 text-lg">
+              {plan.subtitle}
+            </p>
 
-          <div className="space-y-4 text-[#7b6870] mb-10">
-            <div>✓ Everything in Glow</div>
-            <div>✓ Nutrition guidance</div>
-            <div>✓ Symptom priority plans</div>
-            <div>✓ Confidence coaching</div>
-            <div>✓ VIP updates</div>
+            <div className="text-6xl mb-8">
+              {plan.price}
+            </div>
+
+            <div className="space-y-4 mb-10">
+              {plan.features.map((feature) => (
+                <div
+                  key={feature}
+                  className="p-4 rounded-2xl bg-white border border-[#f0e3e8]"
+                >
+                  ✓ {feature}
+                </div>
+              ))}
+            </div>
+
+            <Link
+              href={plan.href}
+              className={
+                plan.name === "Elite"
+                  ? "btn-primary w-full text-center"
+                  : "btn-outline w-full text-center"
+              }
+            >
+              {plan.cta}
+            </Link>
+          </div>
+        ))}
+      </section>
+
+      {/* REASSESSMENT */}
+      <section className="soft-card p-10 mb-12">
+        <div className="grid lg:grid-cols-2 gap-8 items-center">
+          <div>
+            <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
+              Smart Assessment System
+            </p>
+
+            <h3 className="text-5xl mb-6">
+              Plans That Adapt With You
+            </h3>
+
+            <p className="text-[#7b6870] text-lg leading-relaxed">
+              Every month we reassess symptoms, sleep,
+              confidence, body changes and pain levels —
+              then update your program automatically.
+            </p>
           </div>
 
-          <Link
-            href="/results"
-            className="btn-outline block text-center"
-          >
-            Join Elite
-          </Link>
+          <div className="grid gap-4">
+            {[
+              "Sleep Score Review",
+              "Weight / Shape Progress",
+              "Pain Level Check",
+              "Confidence Score",
+              "New Symptom Adjustments",
+            ].map((item) => (
+              <div
+                key={item}
+                className="p-5 rounded-3xl bg-white border border-[#f0e3e8]"
+              >
+                ✓ {item}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* GUARANTEE */}
-      <section className="mt-16">
-        <div className="soft-card p-10 text-center">
-          <h3 className="text-4xl mb-4">
-            Feel Better In Weeks
-          </h3>
+      {/* TESTIMONIALS */}
+      <section className="grid md:grid-cols-3 gap-6 mb-14">
+        {[
+          "I sleep through the night again.",
+          "My belly reduced and I feel feminine again.",
+          "Best investment I made after 45.",
+        ].map((quote, i) => (
+          <div
+            key={i}
+            className="soft-card p-6"
+          >
+            ⭐⭐⭐⭐⭐
+            <p className="mt-4 text-[#7b6870]">
+              {quote}
+            </p>
+          </div>
+        ))}
+      </section>
 
-          <p className="text-[#7b6870] text-lg max-w-2xl mx-auto">
-            Better sleep, improved posture, calmer energy and
-            renewed confidence through sustainable daily routines.
-          </p>
+      {/* FINAL CTA */}
+      <section className="soft-card p-10 text-center">
+        <h3 className="text-5xl mb-5">
+          Your Next 30 Days Can Change Everything
+        </h3>
+
+        <p className="text-[#7b6870] text-lg mb-8 max-w-2xl mx-auto">
+          Start now and rebuild energy, confidence and body
+          comfort with a premium feminine system.
+        </p>
+
+        <div className="flex flex-wrap gap-4 justify-center">
+          <Link
+            href="/checkout?plan=glow"
+            className="btn-outline"
+          >
+            Start Glow
+          </Link>
+
+          <Link
+            href="/checkout?plan=elite"
+            className="btn-primary"
+          >
+            Start Elite
+          </Link>
         </div>
       </section>
     </main>
