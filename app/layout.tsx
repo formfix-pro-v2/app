@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import Header from "@/components/header";
 
 export const metadata: Metadata = {
   title: "Velora | Menopause Wellness",
@@ -14,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className="bg-[#fff8fb] text-[#3d2b32]">
         <div className="min-h-screen">
           {/* soft background glow */}
           <div
@@ -24,6 +25,8 @@ export default function RootLayout({
                 "radial-gradient(circle at top right, rgba(214,167,177,.20), transparent 28%), radial-gradient(circle at bottom left, rgba(185,143,161,.16), transparent 32%)",
             }}
           />
+
+          <Header />
 
           {children}
         </div>
