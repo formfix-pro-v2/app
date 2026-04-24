@@ -3,23 +3,6 @@ import Link from "next/link";
 export default function HomePage() {
   return (
     <main>
-      {/* NAV */}
-      <header className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
-        <div className="text-4xl font-semibold tracking-tight">
-          Velora
-        </div>
-
-        <nav className="hidden md:flex gap-8 text-[#7b6870]">
-          <a href="#benefits">Benefits</a>
-          <a href="#programs">Programs</a>
-          <a href="#pricing">Pricing</a>
-        </nav>
-
-        <Link href="/quiz" className="btn-primary">
-          Free Assessment
-        </Link>
-      </header>
-
       {/* HERO */}
       <section className="max-w-7xl mx-auto px-6 pt-10 pb-20 grid lg:grid-cols-2 gap-12 items-center">
         <div>
