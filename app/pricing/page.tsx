@@ -7,37 +7,33 @@ export default function PricingPage() {
     {
       name: "Glow",
       price: "€29",
-      subtitle: "Feel lighter, brighter and more like yourself again.",
       badge: "Most Popular",
-      cta: "Choose Glow",
-      href: "/checkout?plan=glow",
+      subtitle:
+        "30-day feminine reset for sleep, confidence and body comfort.",
+      href: "/plans/glow",
+      cta: "Explore Glow",
       features: [
-        "30-Day Menopause Transformation Plan",
+        "30-Day Program",
         "Daily guided sessions",
-        "Sleep + hot flash support routines",
-        "Belly tone + metabolism reset",
-        "Posture & feminine confidence flows",
+        "Sleep + hot flash support",
+        "Belly tone routines",
         "Progress dashboard",
-        "Smart symptom adjustments",
-        "Nutrition habit checklist",
       ],
     },
     {
       name: "Elite",
       price: "€79",
-      subtitle: "Full premium system for serious transformation.",
       badge: "Best Value",
-      cta: "Choose Elite",
-      href: "/checkout?plan=elite",
+      subtitle:
+        "90-day premium transformation with advanced systems.",
+      href: "/plans/elite",
+      cta: "Explore Elite",
       features: [
         "Everything in Glow",
-        "90-Day premium transformation roadmap",
-        "Advanced body sculpt phases",
-        "Pelvic floor recovery system",
-        "Joint pain & mobility protocols",
-        "Monthly reassessment engine",
-        "Priority future updates",
-        "VIP premium workout library",
+        "90-Day Roadmap",
+        "Pelvic floor restore",
+        "Monthly reassessments",
+        "VIP premium library",
       ],
     },
   ];
@@ -47,52 +43,35 @@ export default function PricingPage() {
       {/* HERO */}
       <section className="text-center mb-14">
         <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
-          Premium Membership
+          Choose Your Membership
         </p>
 
         <h1 className="text-5xl md:text-7xl mb-6">
-          Feel Like Yourself Again
+          Premium Plans Designed For Women 40+
         </h1>
 
         <p className="max-w-3xl mx-auto text-[#7b6870] text-xl leading-relaxed">
-          Personalized menopause support built for real women:
-          sleep, weight, confidence, mobility, energy and glow.
+          Compare your options, explore benefits and choose
+          the transformation path that fits you best.
         </p>
       </section>
 
-      {/* VALUE STRIP */}
-      <section className="grid md:grid-cols-4 gap-4 mb-12">
-        {[
-          "Better Sleep",
-          "Flatter Waist",
-          "More Energy",
-          "Less Joint Pain",
-        ].map((item) => (
-          <div
-            key={item}
-            className="soft-card p-5 text-center text-lg"
-          >
-            ✨ {item}
-          </div>
-        ))}
-      </section>
-
-      {/* PLANS */}
-      <section className="grid lg:grid-cols-2 gap-8 mb-16">
+      {/* CARDS */}
+      <section className="grid lg:grid-cols-2 gap-8 mb-14">
         {plans.map((plan) => (
           <div
             key={plan.name}
             className="soft-card p-8 relative"
           >
-            <div className="absolute top-5 right-5 px-4 py-2 rounded-full bg-[#ffe7ef] text-[#8f5d6f] text-sm font-medium">
+            <div className="absolute top-5 right-5 px-4 py-2 rounded-full bg-[#ffe7ef] text-[#8f5d6f] text-sm">
               {plan.badge}
             </div>
 
-            <h2 className="text-5xl mb-2">
+            <h2 className="text-5xl mb-3">
               {plan.name}
             </h2>
 
-            <p className="text-[#7b6870] mb-6 text-lg">
+            <p className="text-[#7b6870] text-lg mb-6">
               {plan.subtitle}
             </p>
 
@@ -101,12 +80,12 @@ export default function PricingPage() {
             </div>
 
             <div className="space-y-4 mb-10">
-              {plan.features.map((feature) => (
+              {plan.features.map((item) => (
                 <div
-                  key={feature}
+                  key={item}
                   className="p-4 rounded-2xl bg-white border border-[#f0e3e8]"
                 >
-                  ✓ {feature}
+                  ✓ {item}
                 </div>
               ))}
             </div>
@@ -125,87 +104,58 @@ export default function PricingPage() {
         ))}
       </section>
 
-      {/* REASSESSMENT */}
-      <section className="soft-card p-10 mb-12">
-        <div className="grid lg:grid-cols-2 gap-8 items-center">
-          <div>
-            <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
-              Smart Assessment System
-            </p>
+      {/* COMPARE */}
+      <section className="soft-card p-10 mb-14">
+        <h2 className="text-5xl mb-8 text-center">
+          Quick Comparison
+        </h2>
 
-            <h3 className="text-5xl mb-6">
-              Plans That Adapt With You
-            </h3>
-
-            <p className="text-[#7b6870] text-lg leading-relaxed">
-              Every month we reassess symptoms, sleep,
-              confidence, body changes and pain levels —
-              then update your program automatically.
-            </p>
-          </div>
-
-          <div className="grid gap-4">
-            {[
-              "Sleep Score Review",
-              "Weight / Shape Progress",
-              "Pain Level Check",
-              "Confidence Score",
-              "New Symptom Adjustments",
-            ].map((item) => (
-              <div
-                key={item}
-                className="p-5 rounded-3xl bg-white border border-[#f0e3e8]"
-              >
-                ✓ {item}
+        <div className="space-y-4">
+          {[
+            ["Program Length", "30 Days", "90 Days"],
+            ["Guided Sessions", "Yes", "Premium Library"],
+            ["Reassessments", "Basic", "Monthly Smart"],
+            ["Pelvic Floor Restore", "—", "Yes"],
+            ["Advanced Sculpt Phases", "—", "Yes"],
+          ].map(([f, g, e]) => (
+            <div
+              key={f}
+              className="grid md:grid-cols-3 gap-4 p-4 rounded-2xl bg-white border border-[#f0e3e8]"
+            >
+              <div className="text-[#7b6870]">
+                {f}
               </div>
-            ))}
-          </div>
+              <div>{g}</div>
+              <div>{e}</div>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section className="grid md:grid-cols-3 gap-6 mb-14">
-        {[
-          "I sleep through the night again.",
-          "My belly reduced and I feel feminine again.",
-          "Best investment I made after 45.",
-        ].map((quote, i) => (
-          <div
-            key={i}
-            className="soft-card p-6"
-          >
-            ⭐⭐⭐⭐⭐
-            <p className="mt-4 text-[#7b6870]">
-              {quote}
-            </p>
-          </div>
-        ))}
-      </section>
-
-      {/* FINAL CTA */}
+      {/* CTA */}
       <section className="soft-card p-10 text-center">
-        <h3 className="text-5xl mb-5">
-          Your Next 30 Days Can Change Everything
-        </h3>
+        <h2 className="text-5xl mb-5">
+          Explore Before You Decide
+        </h2>
 
-        <p className="text-[#7b6870] text-lg mb-8 max-w-2xl mx-auto">
-          Start now and rebuild energy, confidence and body
-          comfort with a premium feminine system.
+        <p className="text-[#7b6870] text-lg mb-8">
+          View every feature inside Glow and Elite before
+          checkout.
         </p>
 
         <div className="flex flex-wrap gap-4 justify-center">
           <Link
-            href="/checkout?plan=glow"
+            href="/plans/glow"
             className="btn-outline"
           >
-            Start Glow
+            View Glow
           </Link>
 
           <Link
-            href="/checkout?plan=elite"
+            href="/plans/elite"
             className="btn-primary"
           >
-            Start Elite
+            View Elite
           </Link>
         </div>
       </section>
