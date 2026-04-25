@@ -1,8 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 
-export default function PricingPage() {
+function PricingContent() {
+  const params = useSearchParams();
+
+  const locked =
+    params.get("locked") === "true";
+
   const plans = [
     {
       name: "Glow",
@@ -40,6 +47,25 @@ export default function PricingPage() {
 
   return (
     <main className="max-w-7xl mx-auto px-6 py-14">
+      {/* LOCKED NOTICE */}
+      {locked && (
+        <section className="soft-card p-8 mb-10 border border-[#e8c8d3]">
+          <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
+            Premium Access Required
+          </p>
+
+          <h2 className="text-5xl mb-4">
+            Unlock Your Wellness Experience
+          </h2>
+
+          <p className="text-[#7b6870] text-lg leading-relaxed">
+            Upgrade now to access your premium dashboard,
+            guided sessions, personalized plans and progress
+            tracking tools.
+          </p>
+        </section>
+      )}
+
       {/* HERO */}
       <section className="text-center mb-14">
         <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
@@ -56,7 +82,7 @@ export default function PricingPage() {
         </p>
       </section>
 
-      {/* CARDS */}
+      {/* PLAN CARDS */}
       <section className="grid lg:grid-cols-2 gap-8 mb-14">
         {plans.map((plan) => (
           <div
@@ -94,8 +120,8 @@ export default function PricingPage() {
               href={plan.href}
               className={
                 plan.name === "Elite"
-                  ? "btn-primary w-full text-center"
-                  : "btn-outline w-full text-center"
+                  ? "btn-primary w-full text-center block"
+                  : "btn-outline w-full text-center block"
               }
             >
               {plan.cta}
@@ -117,16 +143,19 @@ export default function PricingPage() {
             ["Reassessments", "Basic", "Monthly Smart"],
             ["Pelvic Floor Restore", "—", "Yes"],
             ["Advanced Sculpt Phases", "—", "Yes"],
-          ].map(([f, g, e]) => (
+            ["Progress Dashboard", "Yes", "Advanced"],
+          ].map(([feature, glow, elite]) => (
             <div
-              key={f}
+              key={feature}
               className="grid md:grid-cols-3 gap-4 p-4 rounded-2xl bg-white border border-[#f0e3e8]"
             >
               <div className="text-[#7b6870]">
-                {f}
+                {feature}
               </div>
-              <div>{g}</div>
-              <div>{e}</div>
+
+              <div>{glow}</div>
+
+              <div>{elite}</div>
             </div>
           ))}
         </div>
@@ -135,12 +164,12 @@ export default function PricingPage() {
       {/* CTA */}
       <section className="soft-card p-10 text-center">
         <h2 className="text-5xl mb-5">
-          Explore Before You Decide
+          Start Feeling Better Today
         </h2>
 
         <p className="text-[#7b6870] text-lg mb-8">
-          View every feature inside Glow and Elite before
-          checkout.
+          Explore every feature before checkout and choose
+          the plan that fits your next chapter.
         </p>
 
         <div className="flex flex-wrap gap-4 justify-center">
@@ -160,5 +189,19 @@ export default function PricingPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function PricingPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="p-10 text-center">
+          Loading plans...
+        </div>
+      }
+    >
+      <PricingContent />
+    </Suspense>
   );
 }
