@@ -238,3 +238,19 @@ export function getPlan(
 ) {
   return buildPlan(day, symptoms, selectedTime);
 }
+export function getTodayProgram(day: number) {
+  const safeDay =
+    Math.max(1, day || 1);
+
+  const program =
+    programs.find(
+      (item) =>
+        item.day === safeDay
+    );
+
+  if (program) {
+    return program;
+  }
+
+  return programs[0];
+}
