@@ -1,257 +1,229 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { getPlan } from "@/lib/programs";
+import { getTodayProgram } from "@/lib/programs";
 
-type QuizData = {
-  symptoms?: string[];
-  time?: string;
+type Exercise = {
+  name: string;
+  duration?: number;
+  image?: string;
 };
 
 export default function SessionPage() {
   const [day, setDay] = useState(1);
-  const [quiz, setQuiz] = useState<QuizData>({});
-  const [index, setIndex] = useState(0);
-  const [secondsLeft, setSecondsLeft] = useState(120);
-  const [started, setStarted] = useState(false);
-  const [finished, setFinished] = useState(false);
+
+  const [running, setRunning] =
+    useState(false);
+
+  const [currentIndex, setCurrentIndex] =
+    useState(0);
+
+  const [secondsLeft, setSecondsLeft] =
+    useState(120);
 
   useEffect(() => {
-    const savedDay = Number(localStorage.getItem("day") || "1");
-    setDay(savedDay);
+    const saved =
+      Number(
+        localStorage.getItem("day")
+      ) || 1;
 
-    const raw = localStorage.getItem("quizData");
-    if (raw) {
-      try {
-        setQuiz(JSON.parse(raw));
-      } catch {}
-    }
+    setDay(saved);
   }, []);
 
-  const plan = useMemo(() => {
-    return getPlan(
-      day,
-      quiz.symptoms || [],
-      quiz.time || "10 min"
-    );
-  }, [day, quiz]);
+  const session = useMemo(() => {
+    return getTodayProgram(day);
+  }, [day]);
 
-  const current = plan.exercises[index];
+  const exercises =
+    (session.exercises ||
+      []) as Exercise[];
 
-  useEffect(() => {
-    if (!started || finished) return;
+  const totalSeconds =
+    exercises.length * 120;
 
-    if (secondsLeft <= 0) {
-      if (index < plan.exercises.length - 1) {
-        setIndex((v) => v + 1);
-        setSecondsLeft(120);
-      } else {
-        setFinished(true);
-      }
-      return;
-    }
+  const totalMinutes = Math.floor(
+    totalSeconds / 60
+  );
 
-    const t = setTimeout(() => {
-      setSecondsLeft((v) => v - 1);
-    }, 1000);
+  const active =
+    exercises[currentIndex];
 
-    return () => clearTimeout(t);
-  }, [started, secondsLeft, index, finished, plan]);
-
+  /* PLAY WHOLE SESSION */
   function startSession() {
-    setStarted(true);
+    if (!exercises.length) return;
+
+    setRunning(true);
+    setCurrentIndex(0);
+    setSecondsLeft(120);
   }
 
   function pauseSession() {
-    setStarted(false);
+    setRunning(false);
   }
 
-  function resumeSession() {
-    setStarted(true);
+  function resetSession() {
+    setRunning(false);
+    setCurrentIndex(0);
+    setSecondsLeft(120);
   }
 
-  function skipNext() {
-    if (index < plan.exercises.length - 1) {
-      setIndex(index + 1);
-      setSecondsLeft(120);
-    } else {
-      setFinished(true);
-    }
-  }
+  useEffect(() => {
+    if (!running) return;
 
-  function completeDay() {
-    const next = day + 1;
-    localStorage.setItem("day", String(next));
-    window.location.href = "/app/dashboard";
-  }
+    const timer = setInterval(() => {
+      setSecondsLeft((prev) => {
+        if (prev > 1) return prev - 1;
 
-  function format(sec: number) {
-    const m = Math.floor(sec / 60);
-    const s = sec % 60;
-    return `${m}:${String(s).padStart(2, "0")}`;
-  }
+        /* next exercise */
+        if (
+          currentIndex <
+          exercises.length - 1
+        ) {
+          setCurrentIndex(
+            (i) => i + 1
+          );
+          return 120;
+        }
 
-  const totalExercises = plan.exercises.length;
-  const progress =
-    ((index + (120 - secondsLeft) / 120) /
-      totalExercises) *
-    100;
+        /* finished */
+        setRunning(false);
+        return 0;
+      });
+    }, 1000);
 
-  const totalRemaining =
-    (totalExercises - index - 1) * 120 + secondsLeft;
+    return () =>
+      clearInterval(timer);
+  }, [
+    running,
+    currentIndex,
+    exercises.length,
+  ]);
 
-  if (finished) {
-    return (
-      <main className="max-w-4xl mx-auto px-6 py-16">
-        <section className="soft-card p-12 text-center">
-          <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
-            Session Completed
-          </p>
-
-          <h1 className="text-6xl mb-4">
-            Beautiful Work ✨
-          </h1>
-
-          <p className="text-[#7b6870] text-lg mb-8">
-            You completed Day {day}. Small consistent
-            sessions create real hormonal change.
-          </p>
-
-          <div className="grid md:grid-cols-3 gap-4 mb-10">
-            <div className="soft-card p-5">
-              {totalExercises} Exercises
-            </div>
-            <div className="soft-card p-5">
-              {totalExercises * 2} Minutes
-            </div>
-            <div className="soft-card p-5">
-              Streak +1
-            </div>
-          </div>
-
-          <button
-            onClick={completeDay}
-            className="btn-primary"
-          >
-            Unlock Next Day
-          </button>
-        </section>
-      </main>
+  function format(
+    seconds: number
+  ) {
+    const m = Math.floor(
+      seconds / 60
     );
+    const s = seconds % 60;
+
+    return `${m}:${String(s).padStart(
+      2,
+      "0"
+    )}`;
   }
 
   return (
-    <main className="max-w-5xl mx-auto px-6 py-10">
-      {/* TOP BAR */}
-      <section className="soft-card p-6 mb-8">
-        <div className="flex flex-wrap gap-4 justify-between items-center">
-          <div>
-            <p className="text-[#b98fa1] uppercase text-sm tracking-[0.2em]">
-              Guided Session
-            </p>
-
-            <h1 className="text-4xl">
-              {plan.title}
-            </h1>
-          </div>
-
-          <div className="text-right">
-            <div className="text-sm text-[#7b6870]">
-              Remaining
-            </div>
-            <div className="text-3xl font-semibold">
-              {format(totalRemaining)}
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-5 h-3 bg-white rounded-full overflow-hidden border border-[#f0e3e8]">
-          <div
-            className="h-full bg-gradient-to-r from-[#d6a7b1] to-[#b98fa1]"
-            style={{
-              width: `${progress}%`,
-            }}
-          />
-        </div>
-      </section>
-
-      {/* CURRENT CARD */}
-      <section className="soft-card p-8 text-center">
-        <p className="text-sm uppercase tracking-[0.2em] text-[#b98fa1] mb-4">
-          Exercise {index + 1} of {totalExercises}
+    <main className="max-w-6xl mx-auto px-6 py-14">
+      {/* HERO */}
+      <section className="soft-card p-10 mb-8 text-center">
+        <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
+          Guided Session
         </p>
 
-        <div className="relative w-full h-[420px] rounded-3xl overflow-hidden bg-[#f9eef2] mb-8">
-          <Image
-            src={current.image}
-            alt={current.name}
-            fill
-            className="object-contain p-4"
-          />
-        </div>
+        <h1 className="text-5xl mb-4">
+          Confidence Feminine Reset - Day{" "}
+          {day}
+        </h1>
 
-        <h2 className="text-5xl mb-4">
-          {current.name}
-        </h2>
-
-        <p className="text-[#7b6870] mb-2">
-          <strong>Start:</strong> {current.start}
-        </p>
-
-        <p className="text-[#7b6870] mb-5">
-          <strong>Finish:</strong> {current.end}
-        </p>
-
-        <p className="text-[#7b6870] mb-8">
-          {current.why}
-        </p>
-
-        <div className="text-7xl mb-8 font-semibold">
-          {format(secondsLeft)}
-        </div>
-
-        <div className="flex flex-wrap gap-4 justify-center">
-          {!started ? (
+        {/* BIG PLAY BUTTON */}
+        <div className="my-8">
+          {!running ? (
             <button
-              onClick={startSession}
-              className="btn-primary"
+              onClick={
+                startSession
+              }
+              className="w-28 h-28 rounded-full bg-gradient-to-r from-[#d6a7b1] to-[#b98fa1] text-white text-4xl shadow-[0_20px_40px_rgba(185,143,161,0.30)] hover:scale-105 transition"
             >
-              Start
+              ▶
             </button>
           ) : (
             <button
-              onClick={pauseSession}
-              className="btn-outline"
+              onClick={
+                pauseSession
+              }
+              className="w-28 h-28 rounded-full bg-gradient-to-r from-[#d6a7b1] to-[#b98fa1] text-white text-4xl shadow-[0_20px_40px_rgba(185,143,161,0.30)]"
             >
-              Pause
+              ❚❚
             </button>
           )}
-
-          {!started && secondsLeft < 120 && (
-            <button
-              onClick={resumeSession}
-              className="btn-primary"
-            >
-              Resume
-            </button>
-          )}
-
-          <button
-            onClick={skipNext}
-            className="btn-outline"
-          >
-            Skip
-          </button>
-
-          <Link
-            href="/dashboard"
-            className="btn-outline"
-          >
-            Exit
-          </Link>
         </div>
+
+        <div className="text-6xl mb-3">
+          {totalMinutes}:00
+        </div>
+
+        <p className="text-[#7b6870]">
+          Full guided premium
+          session
+        </p>
+
+        {running && (
+          <div className="mt-8 p-6 rounded-3xl bg-[#fff4f7]">
+            <p className="text-sm text-[#7b6870] mb-2">
+              Current Exercise
+            </p>
+
+            <h2 className="text-3xl mb-4">
+              {active?.name}
+            </h2>
+
+            <div className="text-5xl">
+              {format(
+                secondsLeft
+              )}
+            </div>
+          </div>
+        )}
+
+        {!running && (
+          <button
+            onClick={
+              resetSession
+            }
+            className="btn-outline mt-6"
+          >
+            Reset Session
+          </button>
+        )}
+      </section>
+
+      {/* EXERCISES */}
+      <section className="grid md:grid-cols-2 gap-6">
+        {exercises.map(
+          (exercise, index) => (
+            <div
+              key={
+                exercise.name +
+                index
+              }
+              className={`soft-card p-6 ${
+                index ===
+                currentIndex
+                  ? "ring-2 ring-[#d6a7b1]"
+                  : ""
+              }`}
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-[#fff1f5] flex items-center justify-center text-[#8f5d6f]">
+                  {index + 1}
+                </div>
+
+                <div>
+                  <h3 className="text-2xl">
+                    {
+                      exercise.name
+                    }
+                  </h3>
+
+                  <p className="text-[#7b6870]">
+                    2 minutes
+                  </p>
+                </div>
+              </div>
+            </div>
+          )
+        )}
       </section>
     </main>
   );
