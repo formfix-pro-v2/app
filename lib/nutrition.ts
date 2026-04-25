@@ -6,9 +6,9 @@ export type GoalType =
 
 export type UserProfile = {
   age: number;
-  height: number; // cm
-  weight: number; // kg
-  activity?: number; // 1.2 - 1.55
+  height: number;
+  weight: number;
+  activity?: number;
   goal: GoalType;
   symptoms?: string[];
 };
@@ -20,6 +20,23 @@ export type NutritionPlan = {
   fats: number;
   fiber: number;
   water: number;
+};
+
+export type Meal = {
+  key: string;
+  type:
+    | "breakfast"
+    | "lunch"
+    | "dinner"
+    | "snack";
+  title: string;
+  subtitle: string;
+  kcal: number;
+  protein: number;
+  prep: string;
+  benefits: string;
+  ingredients: string[];
+  steps: string[];
 };
 
 export function calculateNutrition(
@@ -40,22 +57,19 @@ export function calculateNutrition(
   if (
     user.goal ===
     "fat_loss"
-  ) {
+  )
     calories *= 0.85;
-  }
 
   if (
     user.goal === "tone"
-  ) {
+  )
     calories *= 0.92;
-  }
 
   if (
     user.goal ===
     "energy"
-  ) {
+  )
     calories *= 1.03;
-  }
 
   const finalCalories =
     Math.round(calories);
@@ -87,14 +101,11 @@ export function calculateNutrition(
     )
   );
 
-  const water = Math.max(
-    2.2,
-    Number(
-      (
-        user.weight *
-        0.033
-      ).toFixed(1)
-    )
+  const water = Number(
+    (
+      user.weight *
+      0.033
+    ).toFixed(1)
   );
 
   return {
@@ -108,41 +119,131 @@ export function calculateNutrition(
   };
 }
 
-export function getPreviewMeals(
+export function getMealPlan(
   symptoms: string[] = []
-) {
-  const poorSleep =
+): Meal[] {
+  const sleep =
     symptoms.includes(
       "Poor sleep"
     );
 
-  const bloating =
+  const bloat =
     symptoms.includes(
       "Bloating"
     );
 
-  const lowEnergy =
+  const energy =
     symptoms.includes(
       "Low energy"
     );
 
-  return {
-    breakfast: poorSleep
-      ? "Greek yogurt, berries, chia, oats"
-      : "Protein oats with berries",
+  return [
+    {
+      key: "b1",
+      type: "breakfast",
+      title:
+        sleep
+          ? "Sleep Support Yogurt Bowl"
+          : "Protein Berry Oats",
+      subtitle:
+        "Balanced start with fiber + protein",
+      kcal: 420,
+      protein: 31,
+      prep: "5 min",
+      benefits:
+        "Stable blood sugar, satiety, hormone support",
+      ingredients: [
+        "220g Greek yogurt",
+        "40g oats",
+        "80g berries",
+        "10g chia",
+        "Cinnamon",
+      ],
+      steps: [
+        "Add yogurt to bowl.",
+        "Mix oats and chia.",
+        "Top with berries.",
+        "Finish with cinnamon.",
+      ],
+    },
 
-    lunch: bloating
-      ? "Salmon, rice, zucchini"
-      : "Chicken quinoa power bowl",
+    {
+      key: "l1",
+      type: "lunch",
+      title:
+        bloat
+          ? "Anti-Bloat Salmon Rice Bowl"
+          : "Chicken Quinoa Power Bowl",
+      subtitle:
+        "Lean protein + quality carbs",
+      kcal: 560,
+      protein: 42,
+      prep: "15 min",
+      benefits:
+        "Energy support and appetite control",
+      ingredients: [
+        "140g protein source",
+        "70g dry rice/quinoa",
+        "Spinach",
+        "Cucumber",
+        "Olive oil",
+      ],
+      steps: [
+        "Cook grains.",
+        "Cook protein.",
+        "Slice vegetables.",
+        "Assemble bowl.",
+      ],
+    },
 
-    dinner: lowEnergy
-      ? "Turkey stir fry + sweet potato"
-      : "Lean protein + greens + carbs",
+    {
+      key: "d1",
+      type: "dinner",
+      title:
+        energy
+          ? "Turkey Sweet Potato Plate"
+          : "Mediterranean Protein Dinner",
+      subtitle:
+        "Recovery focused evening meal",
+      kcal: 520,
+      protein: 40,
+      prep: "20 min",
+      benefits:
+        "Supports recovery and evening satiety",
+      ingredients: [
+        "150g turkey/chicken",
+        "220g sweet potato",
+        "Green vegetables",
+        "Herbs",
+      ],
+      steps: [
+        "Roast potato.",
+        "Cook protein.",
+        "Steam vegetables.",
+        "Serve warm.",
+      ],
+    },
 
-    snack:
-      "Apple + almonds",
-
-    locked:
-      "30 premium rotating days locked 🔒",
-  };
+    {
+      key: "s1",
+      type: "snack",
+      title:
+        "Apple Almond Energy Snack",
+      subtitle:
+        "Simple hunger control option",
+      kcal: 240,
+      protein: 8,
+      prep: "2 min",
+      benefits:
+        "Craving control between meals",
+      ingredients: [
+        "1 apple",
+        "20g almonds",
+      ],
+      steps: [
+        "Slice apple.",
+        "Serve with almonds.",
+      ],
+    },
+  ];
 }
