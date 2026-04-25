@@ -1,4 +1,3 @@
-app/results/page.tsx
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -20,40 +19,31 @@ type QuizData = {
 };
 
 export default function ResultsPage() {
-  const [data, setData] =
-    useState<QuizData>({
-      symptoms: [],
-      time: "10 min",
-      age: "48",
-      height: "168",
-      weight: "72",
-      activity: "light",
-      goal: "tone",
-      foodStyle: "balanced",
-    });
+  const [data, setData] = useState<QuizData>({
+    symptoms: [],
+    time: "10 min",
+    age: "48",
+    height: "168",
+    weight: "72",
+    activity: "light",
+    goal: "tone",
+    foodStyle: "balanced",
+  });
 
   useEffect(() => {
-    const raw =
-      localStorage.getItem(
-        "quizData"
-      );
+    const raw = localStorage.getItem("quizData");
 
     if (raw) {
       try {
-        setData(
-          JSON.parse(raw)
-        );
+        setData(JSON.parse(raw));
       } catch {}
     }
   }, []);
 
   const result = useMemo(() => {
-    const symptoms =
-      data.symptoms || [];
+    const symptoms = data.symptoms || [];
 
-    let title =
-      "Balanced Glow Reset";
-
+    let title = "Balanced Glow Reset";
     let subtitle =
       "Designed to improve energy, posture and confidence.";
 
@@ -65,16 +55,10 @@ export default function ResultsPage() {
     ];
 
     if (
-      symptoms.includes(
-        "Hot flashes"
-      ) ||
-      symptoms.includes(
-        "Poor sleep"
-      )
+      symptoms.includes("Hot flashes") ||
+      symptoms.includes("Poor sleep")
     ) {
-      title =
-        "Sleep & Cooling Recovery";
-
+      title = "Sleep & Cooling Recovery";
       subtitle =
         "Focused on evening calm, better sleep and heat regulation.";
 
@@ -86,14 +70,8 @@ export default function ResultsPage() {
       ];
     }
 
-    if (
-      symptoms.includes(
-        "Weight gain"
-      )
-    ) {
-      title =
-        "Metabolism Sculpt Plan";
-
+    if (symptoms.includes("Weight gain")) {
+      title = "Metabolism Sculpt Plan";
       subtitle =
         "Targets waistline, energy and body composition.";
 
@@ -112,49 +90,30 @@ export default function ResultsPage() {
     };
   }, [data]);
 
-  const nutrition =
-    useMemo(() => {
-      return calculateNutrition({
-        age:
-          Number(
-            data.age
-          ) || 48,
-        height:
-          Number(
-            data.height
-          ) || 168,
-        weight:
-          Number(
-            data.weight
-          ) || 72,
-        activity:
-          data.activity ||
-          "light",
-        goal:
-          (data.goal as
-            | "fat_loss"
-            | "maintain"
-            | "tone"
-            | "energy") ||
-          "tone",
-        symptoms:
-          data.symptoms ||
-          [],
-      });
-    }, [data]);
+  const nutrition = useMemo(() => {
+    return calculateNutrition({
+      age: Number(data.age) || 48,
+      height: Number(data.height) || 168,
+      weight: Number(data.weight) || 72,
+      activity: data.activity || "light",
+      goal:
+        (data.goal as
+          | "fat_loss"
+          | "maintain"
+          | "tone"
+          | "energy") || "tone",
+      symptoms: data.symptoms || [],
+    });
+  }, [data]);
 
-  const meals =
-    useMemo(() => {
-      return getMealPlan(
-        data.symptoms ||
-          [],
-        data.foodStyle ||
-          "balanced"
-      );
-    }, [data]);
+  const meals = useMemo(() => {
+    return getMealPlan(
+      data.symptoms || [],
+      data.foodStyle || "balanced"
+    );
+  }, [data]);
 
-  const breakfast =
-    meals[0];
+  const breakfast = meals[0];
 
   return (
     <main className="max-w-6xl mx-auto px-6 py-14">
@@ -168,48 +127,30 @@ export default function ResultsPage() {
         </h1>
 
         <p className="text-[#7b6870] text-xl max-w-3xl mx-auto leading-relaxed">
-          {
-            result.subtitle
-          }
+          {result.subtitle}
         </p>
       </section>
 
       <section className="grid md:grid-cols-4 gap-6 mb-8">
         {[
-          [
-            "Age",
-            data.age,
-          ],
-          [
-            "Weight",
-            `${data.weight} kg`,
-          ],
-          [
-            "Height",
-            `${data.height} cm`,
-          ],
-          [
-            "Activity",
-            data.activity,
-          ],
-        ].map(
-          ([a, b]) => (
-            <div
-              key={
-                String(a)
-              }
-              className="soft-card p-6"
-            >
-              <div className="text-sm text-[#7b6870] mb-2">
-                {a}
-              </div>
-
-              <div className="text-3xl">
-                {b}
-              </div>
+          ["Age", data.age],
+          ["Weight", `${data.weight} kg`],
+          ["Height", `${data.height} cm`],
+          ["Activity", data.activity],
+        ].map(([label, value]) => (
+          <div
+            key={String(label)}
+            className="soft-card p-6"
+          >
+            <div className="text-sm text-[#7b6870] mb-2">
+              {label}
             </div>
-          )
-        )}
+
+            <div className="text-3xl">
+              {value}
+            </div>
+          </div>
+        ))}
       </section>
 
       <section className="soft-card p-8 mb-8">
@@ -218,20 +159,14 @@ export default function ResultsPage() {
         </h2>
 
         <div className="grid md:grid-cols-2 gap-4">
-          {result.focus.map(
-            (
-              item
-            ) => (
-              <div
-                key={
-                  item
-                }
-                className="p-5 rounded-3xl bg-white border border-[#f0e3e8]"
-              >
-                ✓ {item}
-              </div>
-            )
-          )}
+          {result.focus.map((item) => (
+            <div
+              key={item}
+              className="p-5 rounded-3xl bg-white border border-[#f0e3e8]"
+            >
+              ✓ {item}
+            </div>
+          ))}
         </div>
       </section>
 
@@ -245,56 +180,30 @@ export default function ResultsPage() {
         </h2>
 
         <p className="text-[#7b6870] mb-8">
-          Calculated using your
-          age, weight, height,
-          activity level and goal.
+          Calculated using your age, weight,
+          height, activity level and goal.
         </p>
 
         <div className="grid md:grid-cols-4 gap-4 mb-8">
           {[
-            [
-              "Calories",
-              nutrition.calories,
-            ],
-            [
-              "Protein",
-              `${nutrition.protein}g`,
-            ],
-            [
-              "Fiber",
-              `${nutrition.fiber}g`,
-            ],
-            [
-              "Water",
-              `${nutrition.water}L`,
-            ],
-          ].map(
-            (
-              [
-                label,
-                val,
-              ]
-            ) => (
-              <div
-                key={
-                  String(
-                    label
-                  )
-                }
-                className="p-5 rounded-3xl bg-white border border-[#f0e3e8] text-center"
-              >
-                <div className="text-sm text-[#7b6870] mb-2">
-                  {
-                    label
-                  }
-                </div>
-
-                <div className="text-3xl">
-                  {val}
-                </div>
+            ["Calories", nutrition.calories],
+            ["Protein", `${nutrition.protein}g`],
+            ["Fiber", `${nutrition.fiber}g`],
+            ["Water", `${nutrition.water}L`],
+          ].map(([label, value]) => (
+            <div
+              key={String(label)}
+              className="p-5 rounded-3xl bg-white border border-[#f0e3e8] text-center"
+            >
+              <div className="text-sm text-[#7b6870] mb-2">
+                {label}
               </div>
-            )
-          )}
+
+              <div className="text-3xl">
+                {value}
+              </div>
+            </div>
+          ))}
         </div>
 
         <div className="p-6 rounded-3xl bg-white border border-[#f0e3e8] mb-6">
@@ -303,51 +212,33 @@ export default function ResultsPage() {
           </p>
 
           <h3 className="text-3xl mb-3">
-            {
-              breakfast.title
-            }
+            {breakfast.title}
           </h3>
 
           <p className="text-[#7b6870] mb-4">
-            {
-              breakfast.subtitle
-            }
+            {breakfast.subtitle}
           </p>
 
           <div className="grid md:grid-cols-3 gap-3 mb-5">
             <div className="p-3 rounded-2xl bg-[#fff4f7]">
-              {
-                breakfast.kcal
-              } kcal
+              {breakfast.kcal} kcal
             </div>
 
             <div className="p-3 rounded-2xl bg-[#fff4f7]">
-              {
-                breakfast.protein
-              }g protein
+              {breakfast.protein}g protein
             </div>
 
             <div className="p-3 rounded-2xl bg-[#fff4f7]">
-              Prep {
-                breakfast.prep
-              }
+              Prep {breakfast.prep}
             </div>
           </div>
 
           <ul className="space-y-2 text-[#6f5a62]">
-            {breakfast.ingredients.map(
-              (
-                item
-              ) => (
-                <li
-                  key={
-                    item
-                  }
-                >
-                  • {item}
-                </li>
-              )
-            )}
+            {breakfast.ingredients.map((item) => (
+              <li key={item}>
+                • {item}
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -356,20 +247,14 @@ export default function ResultsPage() {
             "Lunch Plan 🔒",
             "Dinner Plan 🔒",
             "Snack Plan 🔒",
-          ].map(
-            (
-              item
-            ) => (
-              <div
-                key={
-                  item
-                }
-                className="p-6 rounded-3xl border border-dashed border-[#e8c8d3] text-center"
-              >
-                {item}
-              </div>
-            )
-          )}
+          ].map((item) => (
+            <div
+              key={item}
+              className="p-6 rounded-3xl border border-dashed border-[#e8c8d3] text-center"
+            >
+              {item}
+            </div>
+          ))}
         </div>
 
         <Link
