@@ -19,7 +19,10 @@ export default function SessionPage() {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
   const [index, setIndex] = useState(0);
+  
+  // Postavljamo inicijalno vreme na osnovu vežbe ili fallback na 120
   const [timeLeft, setTimeLeft] = useState(120);
+  const TOTAL_TIME = 120; 
 
   useEffect(() => {
     const savedDay = localStorage.getItem("day");
@@ -41,7 +44,7 @@ export default function SessionPage() {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           nextExercise();
-          return 120;
+          return TOTAL_TIME;
         }
         return prev - 1;
       });
@@ -57,11 +60,10 @@ export default function SessionPage() {
   function nextExercise() {
     if (index < program.exercises.length - 1) {
       setIndex((prev) => prev + 1);
-      setTimeLeft(120);
+      setTimeLeft(TOTAL_TIME);
     } else {
       setFinished(true);
       setStarted(false);
-
       localStorage.setItem("day", String(day + 1));
     }
   }
@@ -75,6 +77,9 @@ export default function SessionPage() {
     const s = sec % 60;
     return `${m}:${String(s).padStart(2, "0")}`;
   }
+
+  // Računamo širinu progres bara
+  const progressWidth = (timeLeft / TOTAL_TIME) * 100;
 
   if (finished) {
     return (
@@ -95,52 +100,70 @@ export default function SessionPage() {
 
   return (
     <main className="max-w-6xl mx-auto px-6 py-14">
-      <section className="soft-card p-10 text-center mb-8">
-        <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
-          Live Session
-        </p>
-        <h1 className="text-5xl mb-3">{program.title}</h1>
-        <p className="text-[#7b6870] mb-8">
-          Exercise {index + 1} of {program.exercises.length}
-        </p>
+      {/* Header sekcija sa tajmerom i progres barom */}
+      <section className="soft-card overflow-hidden text-center mb-8">
+        <div className="p-10">
+          <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
+            Live Session
+          </p>
+          <h1 className="text-5xl mb-3">{program.title}</h1>
+          <p className="text-[#7b6870] mb-8">
+            Exercise {index + 1} of {program.exercises.length}
+          </p>
 
-        {!started ? (
-          <button
-            onClick={startSession}
-            className="w-40 h-40 rounded-full bg-[#d9a8b8] text-white text-5xl mx-auto shadow-xl hover:scale-105 transition"
-          >
-            ▶
-          </button>
-        ) : (
-          <div className="text-6xl font-light">{format(timeLeft)}</div>
+          {!started ? (
+            <button
+              onClick={startSession}
+              className="w-40 h-40 rounded-full bg-[#d9a8b8] text-white text-5xl mx-auto shadow-xl hover:scale-105 transition flex items-center justify-center"
+            >
+              ▶
+            </button>
+          ) : (
+            <div className="text-7xl font-extralight text-[#4a3f44] tracking-tight">
+              {format(timeLeft)}
+            </div>
+          )}
+        </div>
+
+        {/* PROGRESS BAR LINIJA */}
+        {started && (
+          <div className="w-full h-2 bg-[#f0e3e8]">
+            <div 
+              className="h-full bg-[#d9a8b8] transition-all duration-1000 ease-linear"
+              style={{ width: `${progressWidth}%` }}
+            />
+          </div>
         )}
       </section>
 
-      <section className="soft-card p-8 mb-8 overflow-hidden">
-        {/* FIX: Uklonjen scale-125 i popravljen prikaz slike */}
-        <div className="w-full h-[400px] rounded-3xl overflow-hidden mb-8 border border-[#f0e3e8]">
+      {/* Aktivna vežba */}
+      <section className="soft-card p-8 mb-8">
+        <div className="w-full h-[400px] rounded-3xl overflow-hidden mb-8 border border-[#f0e3e8] bg-white">
           <img
             src={current.image}
             alt={current.name}
-            className="w-full h-full object-contain bg-white"
+            className="w-full h-full object-contain"
           />
         </div>
 
-        <h2 className="text-5xl mb-6">{current.name}</h2>
+        <div className="flex justify-between items-end mb-6">
+          <h2 className="text-5xl">{current.name}</h2>
+          <span className="text-[#b98fa1] text-xl font-medium">{current.reps}</span>
+        </div>
 
         <div className="grid md:grid-cols-2 gap-5 text-[#6f5a62] mb-6">
           <div className="p-6 rounded-3xl bg-white border border-[#f0e3e8]">
             <span className="block text-xs uppercase tracking-widest text-[#b98fa1] mb-2">Start Position</span>
-            <p className="text-lg">{current.start}</p>
+            <p className="text-lg leading-relaxed">{current.start}</p>
           </div>
 
           <div className="p-6 rounded-3xl bg-white border border-[#f0e3e8]">
             <span className="block text-xs uppercase tracking-widest text-[#b98fa1] mb-2">Finish Position</span>
-            <p className="text-lg">{current.end}</p>
+            <p className="text-lg leading-relaxed">{current.end}</p>
           </div>
         </div>
 
-        <div className="p-6 rounded-3xl bg-[#fff4f7] mb-8 text-[#7b6870]">
+        <div className="p-6 rounded-3xl bg-[#fff4f7] mb-8 text-[#7b6870] border border-[#f8e1e7]">
           <span className="mr-2">✨</span> {current.why}
         </div>
 
@@ -154,21 +177,27 @@ export default function SessionPage() {
         </div>
       </section>
 
+      {/* Lista sledećih vežbi */}
       <section className="soft-card p-8">
-        <h3 className="text-3xl mb-5">Up Next</h3>
+        <h3 className="text-3xl mb-5 text-[#4a3f44]">Up Next</h3>
         <div className="grid gap-3">
           {program.exercises.slice(index + 1).map((item, i) => (
             <div
               key={item.name + i}
-              className="p-5 rounded-3xl bg-white border border-[#f0e3e8] flex justify-between items-center"
+              className="p-5 rounded-3xl bg-white border border-[#f0e3e8] flex justify-between items-center hover:border-[#d9a8b8] transition-colors"
             >
-              <span>
-                <span className="text-[#b98fa1] font-medium mr-2">{index + i + 2}.</span>
+              <span className="text-lg">
+                <span className="text-[#b98fa1] font-medium mr-3">{index + i + 2}.</span>
                 {item.name}
               </span>
-              <span className="text-sm text-[#b98fa1]">{item.reps}</span>
+              <span className="text-sm px-4 py-1 rounded-full bg-[#fff4f7] text-[#b98fa1] border border-[#f8e1e7]">
+                {item.reps}
+              </span>
             </div>
           ))}
+          {program.exercises.slice(index + 1).length === 0 && (
+            <p className="text-[#b98fa1] italic">No more exercises. You are almost done!</p>
+          )}
         </div>
       </section>
     </main>
