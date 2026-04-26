@@ -10,7 +10,6 @@ import {
 
 type QuizData = {
   symptoms?: string[];
-  time?: string;
   age?: string;
   height?: string;
   weight?: string;
@@ -31,7 +30,7 @@ export default function DashboardPage() {
       age: "48",
       height: "168",
       weight: "72",
-      activity: "light",
+      activity: "1.375",
       goal: "tone",
     });
 
@@ -97,8 +96,9 @@ export default function DashboardPage() {
             data.weight
           ) || 72,
         activity:
-          data.activity ||
-          "light",
+          Number(
+            data.activity
+          ) || 1.375,
         goal:
           (data.goal as any) ||
           "tone",
