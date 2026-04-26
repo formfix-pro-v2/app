@@ -19,14 +19,15 @@ type QuizData = {
 
 export default function ResultsPage() {
   const [data, setData] =
-    useState<QuizData>({
-      symptoms: [],
-      time: "10 min",
-      age: "40+",
-      height: "168",
-      weight: "72",
-      goal: "tone",
-    });
+  useState<QuizData>({
+    symptoms: [],
+    time: "10 min",
+    age: "48",
+    height: "168",
+    weight: "72",
+    activity: "1.375",
+    goal: "tone",
+  });
 
   useEffect(() => {
     const raw =
