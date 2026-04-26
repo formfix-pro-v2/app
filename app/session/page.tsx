@@ -229,7 +229,7 @@ export default function SessionPage() {
           alt={
             current.name
           }
-          className="w-full h-[360px] object-cover rounded-3xl mb-6"
+           className="w-full h-[420px] object-cover object-center scale-125 rounded-3xl mb-6"
         />
 
         <h2 className="text-5xl mb-4">
