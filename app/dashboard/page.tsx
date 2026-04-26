@@ -1,5 +1,3 @@
-app/dashboard/page.tsx
-
 "use client";
 
 import Link from "next/link";
@@ -53,17 +51,19 @@ export default function DashboardPage() {
         "quizData"
       );
 
-    if (savedDay)
+    if (savedDay) {
       setDay(
         Number(
           savedDay
         )
       );
+    }
 
-    if (savedPlan)
+    if (savedPlan) {
       setPlan(
         savedPlan
       );
+    }
 
     if (raw) {
       try {
@@ -132,9 +132,7 @@ export default function DashboardPage() {
         </p>
 
         <div className="text-3xl mb-8">
-          {program.exercises.length *
-            2}
-          :00
+          {program.exercises.length * 2}:00
         </div>
 
         <Link
