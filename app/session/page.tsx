@@ -1,229 +1,324 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { getTodayProgram } from "@/lib/programs";
 
 type Exercise = {
   name: string;
-  duration?: number;
-  image?: string;
+  image: string;
+  start: string;
+  end: string;
+  why: string;
+  reps: string;
+  seconds: number;
 };
 
 export default function SessionPage() {
-  const [day, setDay] = useState(1);
+  const [day, setDay] =
+    useState(1);
 
-  const [running, setRunning] =
+  const [started, setStarted] =
     useState(false);
 
-  const [currentIndex, setCurrentIndex] =
+  const [finished, setFinished] =
+    useState(false);
+
+  const [index, setIndex] =
     useState(0);
 
-  const [secondsLeft, setSecondsLeft] =
+  const [timeLeft, setTimeLeft] =
     useState(120);
 
   useEffect(() => {
-    const saved =
-      Number(
-        localStorage.getItem("day")
-      ) || 1;
+    const savedDay =
+      localStorage.getItem(
+        "day"
+      );
 
-    setDay(saved);
+    if (savedDay) {
+      setDay(
+        Number(
+          savedDay
+        )
+      );
+    }
   }, []);
 
-  const session = useMemo(() => {
-    return getTodayProgram(day);
-  }, [day]);
+  const program =
+    useMemo(() => {
+      return getTodayProgram(
+        day
+      );
+    }, [day]);
 
-  const exercises =
-    (session.exercises ||
-      []) as Exercise[];
-
-  const totalSeconds =
-    exercises.length * 120;
-
-  const totalMinutes = Math.floor(
-    totalSeconds / 60
-  );
-
-  const active =
-    exercises[currentIndex];
-
-  /* PLAY WHOLE SESSION */
-  function startSession() {
-    if (!exercises.length) return;
-
-    setRunning(true);
-    setCurrentIndex(0);
-    setSecondsLeft(120);
-  }
-
-  function pauseSession() {
-    setRunning(false);
-  }
-
-  function resetSession() {
-    setRunning(false);
-    setCurrentIndex(0);
-    setSecondsLeft(120);
-  }
+  const current =
+    program.exercises[
+      index
+    ];
 
   useEffect(() => {
-    if (!running) return;
+    if (
+      !started ||
+      finished
+    )
+      return;
 
-    const timer = setInterval(() => {
-      setSecondsLeft((prev) => {
-        if (prev > 1) return prev - 1;
+    const timer =
+      setInterval(() => {
+        setTimeLeft(
+          (
+            prev
+          ) => {
+            if (
+              prev <= 1
+            ) {
+              nextExercise();
+              return 120;
+            }
 
-        /* next exercise */
-        if (
-          currentIndex <
-          exercises.length - 1
-        ) {
-          setCurrentIndex(
-            (i) => i + 1
-          );
-          return 120;
-        }
-
-        /* finished */
-        setRunning(false);
-        return 0;
-      });
-    }, 1000);
+            return prev - 1;
+          }
+        );
+      }, 1000);
 
     return () =>
-      clearInterval(timer);
+      clearInterval(
+        timer
+      );
   }, [
-    running,
-    currentIndex,
-    exercises.length,
+    started,
+    index,
+    finished,
   ]);
 
-  function format(
-    seconds: number
-  ) {
-    const m = Math.floor(
-      seconds / 60
-    );
-    const s = seconds % 60;
+  function startSession() {
+    setStarted(true);
+  }
 
-    return `${m}:${String(s).padStart(
+  function nextExercise() {
+    if (
+      index <
+      program.exercises
+        .length -
+        1
+    ) {
+      setIndex(
+        (
+          prev
+        ) =>
+          prev +
+          1
+      );
+      setTimeLeft(
+        120
+      );
+    } else {
+      setFinished(
+        true
+      );
+      setStarted(
+        false
+      );
+
+      localStorage.setItem(
+        "day",
+        String(
+          day + 1
+        )
+      );
+    }
+  }
+
+  function skip() {
+    nextExercise();
+  }
+
+  function format(
+    sec: number
+  ) {
+    const m =
+      Math.floor(
+        sec / 60
+      );
+    const s =
+      sec % 60;
+
+    return `${m}:${String(
+      s
+    ).padStart(
       2,
       "0"
     )}`;
   }
 
+  if (
+    finished
+  ) {
+    return (
+      <main className="max-w-4xl mx-auto px-6 py-20">
+        <section className="soft-card p-12 text-center">
+          <div className="text-7xl mb-6">
+            ✅
+          </div>
+
+          <h1 className="text-5xl mb-4">
+            Session Complete
+          </h1>
+
+          <p className="text-xl text-[#7b6870] mb-8">
+            Amazing work today.
+            Your next day is unlocked.
+          </p>
+
+          <Link
+            href="/dashboard"
+            className="btn-primary"
+          >
+            Return Dashboard
+          </Link>
+        </section>
+      </main>
+    );
+  }
+
   return (
     <main className="max-w-6xl mx-auto px-6 py-14">
-      {/* HERO */}
-      <section className="soft-card p-10 mb-8 text-center">
+      <section className="soft-card p-10 text-center mb-8">
         <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
-          Guided Session
+          Live Session
         </p>
 
-        <h1 className="text-5xl mb-4">
-          Confidence Feminine Reset - Day{" "}
-          {day}
+        <h1 className="text-5xl mb-3">
+          {program.title}
         </h1>
 
-        {/* BIG PLAY BUTTON */}
-        <div className="my-8">
-          {!running ? (
-            <button
-              onClick={
-                startSession
-              }
-              className="w-28 h-28 rounded-full bg-gradient-to-r from-[#d6a7b1] to-[#b98fa1] text-white text-4xl shadow-[0_20px_40px_rgba(185,143,161,0.30)] hover:scale-105 transition"
-            >
-              ▶
-            </button>
-          ) : (
-            <button
-              onClick={
-                pauseSession
-              }
-              className="w-28 h-28 rounded-full bg-gradient-to-r from-[#d6a7b1] to-[#b98fa1] text-white text-4xl shadow-[0_20px_40px_rgba(185,143,161,0.30)]"
-            >
-              ❚❚
-            </button>
-          )}
-        </div>
-
-        <div className="text-6xl mb-3">
-          {totalMinutes}:00
-        </div>
-
-        <p className="text-[#7b6870]">
-          Full guided premium
-          session
+        <p className="text-[#7b6870] mb-8">
+          Exercise{" "}
+          {index + 1} of{" "}
+          {
+            program
+              .exercises
+              .length
+          }
         </p>
 
-        {running && (
-          <div className="mt-8 p-6 rounded-3xl bg-[#fff4f7]">
-            <p className="text-sm text-[#7b6870] mb-2">
-              Current Exercise
-            </p>
-
-            <h2 className="text-3xl mb-4">
-              {active?.name}
-            </h2>
-
-            <div className="text-5xl">
-              {format(
-                secondsLeft
-              )}
-            </div>
-          </div>
-        )}
-
-        {!running && (
+        {!started ? (
           <button
             onClick={
-              resetSession
+              startSession
             }
-            className="btn-outline mt-6"
+            className="w-40 h-40 rounded-full bg-[#d9a8b8] text-white text-5xl mx-auto shadow-xl hover:scale-105 transition"
           >
-            Reset Session
+            ▶
           </button>
+        ) : (
+          <div className="text-6xl">
+            {format(
+              timeLeft
+            )}
+          </div>
         )}
       </section>
 
-      {/* EXERCISES */}
-      <section className="grid md:grid-cols-2 gap-6">
-        {exercises.map(
-          (exercise, index) => (
-            <div
-              key={
-                exercise.name +
-                index
-              }
-              className={`soft-card p-6 ${
-                index ===
-                currentIndex
-                  ? "ring-2 ring-[#d6a7b1]"
-                  : ""
-              }`}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-[#fff1f5] flex items-center justify-center text-[#8f5d6f]">
-                  {index + 1}
-                </div>
+      <section className="soft-card p-8 mb-8">
+        <img
+          src={
+            current.image
+          }
+          alt={
+            current.name
+          }
+          className="w-full h-[360px] object-cover rounded-3xl mb-6"
+        />
 
-                <div>
-                  <h3 className="text-2xl">
-                    {
-                      exercise.name
-                    }
-                  </h3>
+        <h2 className="text-5xl mb-4">
+          {
+            current.name
+          }
+        </h2>
 
-                  <p className="text-[#7b6870]">
-                    2 minutes
-                  </p>
+        <div className="grid md:grid-cols-2 gap-5 text-[#6f5a62] mb-6">
+          <div className="p-5 rounded-3xl bg-white border border-[#f0e3e8]">
+            <strong>
+              Start:
+            </strong>{" "}
+            {
+              current.start
+            }
+          </div>
+
+          <div className="p-5 rounded-3xl bg-white border border-[#f0e3e8]">
+            <strong>
+              Finish:
+            </strong>{" "}
+            {
+              current.end
+            }
+          </div>
+        </div>
+
+        <div className="p-5 rounded-3xl bg-[#fff4f7] mb-6">
+          ✨ {
+            current.why
+          }
+        </div>
+
+        <div className="flex gap-4">
+          <button
+            onClick={
+              skip
+            }
+            className="btn-outline"
+          >
+            Skip
+          </button>
+
+          <button
+            onClick={
+              nextExercise
+            }
+            className="btn-primary"
+          >
+            Next Exercise
+          </button>
+        </div>
+      </section>
+
+      <section className="soft-card p-8">
+        <h3 className="text-3xl mb-5">
+          Up Next
+        </h3>
+
+        <div className="grid gap-3">
+          {program.exercises
+            .slice(
+              index +
+                1
+            )
+            .map(
+              (
+                item,
+                i
+              ) => (
+                <div
+                  key={
+                    item.name +
+                    i
+                  }
+                  className="p-4 rounded-3xl bg-white border border-[#f0e3e8]"
+                >
+                  {index +
+                    i +
+                    2}
+                  .{" "}
+                  {
+                    item.name
+                  }
                 </div>
-              </div>
-            </div>
-          )
-        )}
+              )
+            )}
+        </div>
       </section>
     </main>
   );
