@@ -6,9 +6,8 @@ import {
   calculateNutrition,
   getMealPlan,
   type Activity,
+  type Goal,
 } from "@/lib/nutrition";
-
-type GoalType = "fat_loss" | "maintain" | "tone" | "energy";
 
 type QuizData = {
   symptoms?: string[];
@@ -20,14 +19,13 @@ type QuizData = {
   goal?: string;
 };
 
-// Funkcija koja mapira brojčane vrednosti u tip koji zahteva tvoj lib
+// Mapiranje vrednosti da odgovaraju tvojim tipovima iz lib/nutrition.ts
 const mapActivity = (val: string | undefined): Activity => {
   const num = Number(val);
-  if (num <= 1.2) return "sedentary" as Activity;
-  if (num <= 1.375) return "light" as Activity;
-  if (num <= 1.55) return "moderate" as Activity;
-  if (num <= 1.725) return "active" as Activity;
-  return "active" as Activity; // "active" je siguran fallback
+  if (num <= 1.2) return "sedentary";
+  if (num <= 1.35) return "light"; // Usklađeno sa tvojim multiplier-om 1.35
+  if (num <= 1.5) return "moderate";
+  return "active"; // Fallback na najviši podržani tip u tvom lib-u
 };
 
 export default function ResultsPage() {
@@ -37,7 +35,7 @@ export default function ResultsPage() {
     age: "48",
     height: "168",
     weight: "72",
-    activity: "1.375",
+    activity: "1.35",
     goal: "tone",
   });
 
@@ -47,7 +45,7 @@ export default function ResultsPage() {
       try {
         setData(JSON.parse(raw));
       } catch (err) {
-        console.error("Failed to load quiz data", err);
+        console.error("Error loading quiz data", err);
       }
     }
   }, []);
@@ -58,14 +56,15 @@ export default function ResultsPage() {
       height: Number(data.height) || 168,
       weight: Number(data.weight) || 72,
       activity: mapActivity(data.activity),
-      goal: (data.goal as GoalType) || "tone",
+      goal: (data.goal as Goal) || "tone",
       symptoms: data.symptoms || [],
     });
   }, [data]);
 
   const meals = useMemo(() => {
-    return getMealPlan(data.symptoms || []);
-  }, [data]);
+    // getMealPlan prima BROJ (kalorije), što sada ispravno šaljemo
+    return getMealPlan(nutrition.calories);
+  }, [nutrition.calories]);
 
   return (
     <main className="max-w-6xl mx-auto px-6 py-14">
@@ -73,20 +72,14 @@ export default function ResultsPage() {
         <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
           Your Personalized Result
         </p>
-
-        <h1 className="text-5xl mb-4">
-          Balanced Glow Reset
-        </h1>
-
+        <h1 className="text-5xl mb-4">Balanced Glow Reset</h1>
         <p className="text-[#7b6870] text-xl">
           Your custom movement + nutrition system is ready.
         </p>
       </section>
 
       <section className="soft-card p-10 mb-8">
-        <h2 className="text-4xl mb-6">
-          Nutrition Blueprint
-        </h2>
+        <h2 className="text-4xl mb-6">Nutrition Blueprint</h2>
 
         <div className="grid md:grid-cols-4 gap-4 mb-8">
           {[
@@ -99,46 +92,45 @@ export default function ResultsPage() {
               key={String(label)}
               className="p-5 rounded-3xl bg-white border border-[#f0e3e8] text-center"
             >
-              <div className="text-sm text-[#7b6870]">
-                {label}
-              </div>
-              <div className="text-3xl">
-                {value}
-              </div>
+              <div className="text-sm text-[#7b6870]">{label}</div>
+              <div className="text-3xl">{value}</div>
             </div>
           ))}
         </div>
 
         {meals.length > 0 && (
           <div className="p-6 rounded-3xl bg-white border border-[#f0e3e8] mb-6">
-            <h3 className="text-3xl mb-3">
-              {meals[0].title}
-            </h3>
-
-            <p className="text-[#7b6870] mb-4">
-              {meals[0].subtitle}
-            </p>
-
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="flex justify-between items-start mb-4">
               <div>
-                <h4 className="text-xl mb-3">
-                  Ingredients
-                </h4>
+                <h3 className="text-3xl mb-1">{meals[0].title}</h3>
+                <p className="text-[#7b6870]">{meals[0].subtitle}</p>
+              </div>
+              <div className="text-right">
+                <span className="block text-sm text-[#b98fa1] uppercase">Prep Time</span>
+                <span className="text-xl">{meals[0].prep}</span>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8 mt-6">
+              <div>
+                <h4 className="text-xl mb-3 font-semibold">Ingredients</h4>
                 <ul className="space-y-2">
                   {meals[0].ingredients.map((item) => (
-                    <li key={item}>• {item}</li>
+                    <li key={item} className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#e8c8d3]" />
+                      {item}
+                    </li>
                   ))}
                 </ul>
               </div>
 
               <div>
-                <h4 className="text-xl mb-3">
-                  Method
-                </h4>
-                <ol className="space-y-2">
+                <h4 className="text-xl mb-3 font-semibold">Method</h4>
+                <ol className="space-y-3">
                   {meals[0].steps.map((step, i) => (
-                    <li key={i}>
-                      {i + 1}. {step}
+                    <li key={i} className="flex gap-3">
+                      <span className="font-bold text-[#b98fa1]">{i + 1}.</span>
+                      <span className="text-[#7b6870]">{step}</span>
                     </li>
                   ))}
                 </ol>
@@ -151,17 +143,14 @@ export default function ResultsPage() {
           {["Lunch 🔒", "Dinner 🔒", "Snack 🔒"].map((item) => (
             <div
               key={item}
-              className="p-6 rounded-3xl border border-dashed border-[#e8c8d3] text-center"
+              className="p-6 rounded-3xl border border-dashed border-[#e8c8d3] text-center text-[#b98fa1]"
             >
               {item}
             </div>
           ))}
         </div>
 
-        <Link
-          href="/pricing"
-          className="btn-primary"
-        >
+        <Link href="/pricing" className="btn-primary">
           Unlock Full Meal System
         </Link>
       </section>
