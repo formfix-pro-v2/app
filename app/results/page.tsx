@@ -5,10 +5,9 @@ import Link from "next/link";
 import {
   calculateNutrition,
   getMealPlan,
+  type Activity,
 } from "@/lib/nutrition";
 
-// Definišemo preciznije tipove kako bi TypeScript bio zadovoljan
-type ActivityLevel = "sedentary" | "light" | "moderate" | "active" | "very_active";
 type GoalType = "fat_loss" | "maintain" | "tone" | "energy";
 
 type QuizData = {
@@ -17,18 +16,18 @@ type QuizData = {
   age?: string;
   height?: string;
   weight?: string;
-  activity?: string; // Čuvamo kao string iz localStorage-a
+  activity?: string;
   goal?: string;
 };
 
-// Pomoćna funkcija koja mapira brojeve u "Activity" tip
-const mapActivity = (val: string | undefined): ActivityLevel => {
+// Funkcija koja mapira brojčane vrednosti u tip koji zahteva tvoj lib
+const mapActivity = (val: string | undefined): Activity => {
   const num = Number(val);
-  if (num <= 1.2) return "sedentary";
-  if (num <= 1.375) return "light";
-  if (num <= 1.55) return "moderate";
-  if (num <= 1.725) return "active";
-  return "very_active";
+  if (num <= 1.2) return "sedentary" as Activity;
+  if (num <= 1.375) return "light" as Activity;
+  if (num <= 1.55) return "moderate" as Activity;
+  if (num <= 1.725) return "active" as Activity;
+  return "active" as Activity; // "active" je siguran fallback
 };
 
 export default function ResultsPage() {
@@ -48,7 +47,7 @@ export default function ResultsPage() {
       try {
         setData(JSON.parse(raw));
       } catch (err) {
-        console.error("Error parsing quiz data", err);
+        console.error("Failed to load quiz data", err);
       }
     }
   }, []);
@@ -58,7 +57,6 @@ export default function ResultsPage() {
       age: Number(data.age) || 48,
       height: Number(data.height) || 168,
       weight: Number(data.weight) || 72,
-      // Ovde šaljemo string tip ("light", "moderate" itd.) umesto broja
       activity: mapActivity(data.activity),
       goal: (data.goal as GoalType) || "tone",
       symptoms: data.symptoms || [],
