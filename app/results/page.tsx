@@ -7,73 +7,67 @@ import {
   getMealPlan,
 } from "@/lib/nutrition";
 
+// Definišemo preciznije tipove kako bi TypeScript bio zadovoljan
+type ActivityLevel = "sedentary" | "light" | "moderate" | "active" | "very_active";
+type GoalType = "fat_loss" | "maintain" | "tone" | "energy";
+
 type QuizData = {
   symptoms?: string[];
   time?: string;
   age?: string;
   height?: string;
   weight?: string;
-  activity?: string;
+  activity?: string; // Čuvamo kao string iz localStorage-a
   goal?: string;
 };
 
+// Pomoćna funkcija koja mapira brojeve u "Activity" tip
+const mapActivity = (val: string | undefined): ActivityLevel => {
+  const num = Number(val);
+  if (num <= 1.2) return "sedentary";
+  if (num <= 1.375) return "light";
+  if (num <= 1.55) return "moderate";
+  if (num <= 1.725) return "active";
+  return "very_active";
+};
+
 export default function ResultsPage() {
-  const [data, setData] =
-    useState<QuizData>({
-      symptoms: [],
-      time: "10 min",
-      age: "48",
-      height: "168",
-      weight: "72",
-      activity: "1.375",
-      goal: "tone",
-    });
+  const [data, setData] = useState<QuizData>({
+    symptoms: [],
+    time: "10 min",
+    age: "48",
+    height: "168",
+    weight: "72",
+    activity: "1.375",
+    goal: "tone",
+  });
 
   useEffect(() => {
-    const raw =
-      localStorage.getItem(
-        "quizData"
-      );
-
+    const raw = localStorage.getItem("quizData");
     if (raw) {
       try {
-        setData(
-          JSON.parse(raw)
-        );
-      } catch {}
+        setData(JSON.parse(raw));
+      } catch (err) {
+        console.error("Error parsing quiz data", err);
+      }
     }
   }, []);
 
-  const nutrition =
-    useMemo(() => {
-      return calculateNutrition({
-        age:
-          Number(data.age) || 48,
-        height:
-          Number(data.height) || 168,
-        weight:
-          Number(data.weight) || 72,
-        activity:
-          Number(data.activity) ||
-          1.375,
-        goal:
-          (data.goal as
-            | "fat_loss"
-            | "maintain"
-            | "tone"
-            | "energy") ||
-          "tone",
-        symptoms:
-          data.symptoms || [],
-      });
-    }, [data]);
+  const nutrition = useMemo(() => {
+    return calculateNutrition({
+      age: Number(data.age) || 48,
+      height: Number(data.height) || 168,
+      weight: Number(data.weight) || 72,
+      // Ovde šaljemo string tip ("light", "moderate" itd.) umesto broja
+      activity: mapActivity(data.activity),
+      goal: (data.goal as GoalType) || "tone",
+      symptoms: data.symptoms || [],
+    });
+  }, [data]);
 
-  const meals =
-    useMemo(() => {
-      return getMealPlan(
-        data.symptoms || []
-      );
-    }, [data]);
+  const meals = useMemo(() => {
+    return getMealPlan(data.symptoms || []);
+  }, [data]);
 
   return (
     <main className="max-w-6xl mx-auto px-6 py-14">
@@ -87,8 +81,7 @@ export default function ResultsPage() {
         </h1>
 
         <p className="text-[#7b6870] text-xl">
-          Your custom movement +
-          nutrition system is ready.
+          Your custom movement + nutrition system is ready.
         </p>
       </section>
 
@@ -99,91 +92,65 @@ export default function ResultsPage() {
 
         <div className="grid md:grid-cols-4 gap-4 mb-8">
           {[
-            [
-              "Calories",
-              nutrition.calories,
-            ],
-            [
-              "Protein",
-              `${nutrition.protein}g`,
-            ],
-            [
-              "Fiber",
-              `${nutrition.fiber}g`,
-            ],
-            [
-              "Water",
-              `${nutrition.water}L`,
-            ],
-          ].map(([a, b]) => (
+            ["Calories", nutrition.calories],
+            ["Protein", `${nutrition.protein}g`],
+            ["Fiber", `${nutrition.fiber}g`],
+            ["Water", `${nutrition.water}L`],
+          ].map(([label, value]) => (
             <div
-              key={String(a)}
+              key={String(label)}
               className="p-5 rounded-3xl bg-white border border-[#f0e3e8] text-center"
             >
               <div className="text-sm text-[#7b6870]">
-                {a}
+                {label}
               </div>
-
               <div className="text-3xl">
-                {b}
+                {value}
               </div>
             </div>
           ))}
         </div>
 
-        <div className="p-6 rounded-3xl bg-white border border-[#f0e3e8] mb-6">
-          <h3 className="text-3xl mb-3">
-            {meals[0].title}
-          </h3>
+        {meals.length > 0 && (
+          <div className="p-6 rounded-3xl bg-white border border-[#f0e3e8] mb-6">
+            <h3 className="text-3xl mb-3">
+              {meals[0].title}
+            </h3>
 
-          <p className="text-[#7b6870] mb-4">
-            {meals[0].subtitle}
-          </p>
+            <p className="text-[#7b6870] mb-4">
+              {meals[0].subtitle}
+            </p>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="text-xl mb-3">
-                Ingredients
-              </h4>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="text-xl mb-3">
+                  Ingredients
+                </h4>
+                <ul className="space-y-2">
+                  {meals[0].ingredients.map((item) => (
+                    <li key={item}>• {item}</li>
+                  ))}
+                </ul>
+              </div>
 
-              <ul className="space-y-2">
-                {meals[0].ingredients.map(
-                  (item) => (
-                    <li key={item}>
-                      • {item}
-                    </li>
-                  )
-                )}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-xl mb-3">
-                Method
-              </h4>
-
-              <ol className="space-y-2">
-                {meals[0].steps.map(
-                  (
-                    step,
-                    i
-                  ) => (
-                    <li key={step}>
+              <div>
+                <h4 className="text-xl mb-3">
+                  Method
+                </h4>
+                <ol className="space-y-2">
+                  {meals[0].steps.map((step, i) => (
+                    <li key={i}>
                       {i + 1}. {step}
                     </li>
-                  )
-                )}
-              </ol>
+                  ))}
+                </ol>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div className="grid md:grid-cols-3 gap-4 mb-8">
-          {[
-            "Lunch 🔒",
-            "Dinner 🔒",
-            "Snack 🔒",
-          ].map((item) => (
+          {["Lunch 🔒", "Dinner 🔒", "Snack 🔒"].map((item) => (
             <div
               key={item}
               className="p-6 rounded-3xl border border-dashed border-[#e8c8d3] text-center"
