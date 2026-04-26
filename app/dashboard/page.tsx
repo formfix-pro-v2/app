@@ -1,251 +1,301 @@
+app/dashboard/page.tsx
+
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { getPlan } from "@/lib/programs";
+import { useEffect, useMemo, useState } from "react";
+import { getTodayProgram } from "@/lib/programs";
+import {
+  calculateNutrition,
+  getMealPlan,
+} from "@/lib/nutrition";
 
 type QuizData = {
   symptoms?: string[];
   time?: string;
+  age?: string;
+  height?: string;
+  weight?: string;
+  activity?: string;
+  goal?: string;
 };
 
 export default function DashboardPage() {
-  const [day, setDay] = useState(1);
-  const [premium, setPremium] = useState(false);
-  const [planName, setPlanName] = useState("free");
-  const [quiz, setQuiz] = useState<QuizData>({});
+  const [day, setDay] =
+    useState(1);
+
+  const [plan, setPlan] =
+    useState("free");
+
+  const [data, setData] =
+    useState<QuizData>({
+      symptoms: [],
+      age: "48",
+      height: "168",
+      weight: "72",
+      activity: "light",
+      goal: "tone",
+    });
 
   useEffect(() => {
-    setDay(Number(localStorage.getItem("day") || "1"));
-    setPremium(localStorage.getItem("premium") === "true");
-    setPlanName(localStorage.getItem("plan") || "free");
+    const savedDay =
+      localStorage.getItem(
+        "day"
+      );
 
-    const raw = localStorage.getItem("quizData");
+    const savedPlan =
+      localStorage.getItem(
+        "plan"
+      );
+
+    const raw =
+      localStorage.getItem(
+        "quizData"
+      );
+
+    if (savedDay)
+      setDay(
+        Number(
+          savedDay
+        )
+      );
+
+    if (savedPlan)
+      setPlan(
+        savedPlan
+      );
+
     if (raw) {
       try {
-        setQuiz(JSON.parse(raw));
+        setData(
+          JSON.parse(raw)
+        );
       } catch {}
     }
   }, []);
 
-  const plan = useMemo(() => {
-    return getPlan(
-      day,
-      quiz.symptoms || [],
-      quiz.time || "10 min"
-    );
-  }, [day, quiz]);
+  const program =
+    useMemo(() => {
+      return getTodayProgram(
+        day
+      );
+    }, [day]);
 
-  const totalDays =
-    planName === "elite" ? 90 : premium ? 30 : 7;
+  const nutrition =
+    useMemo(() => {
+      return calculateNutrition({
+        age:
+          Number(
+            data.age
+          ) || 48,
+        height:
+          Number(
+            data.height
+          ) || 168,
+        weight:
+          Number(
+            data.weight
+          ) || 72,
+        activity:
+          data.activity ||
+          "light",
+        goal:
+          (data.goal as any) ||
+          "tone",
+        symptoms:
+          data.symptoms ||
+          [],
+      });
+    }, [data]);
 
-  const progress = Math.min(
-    Math.round((day / totalDays) * 100),
-    100
-  );
-
-  const totalMinutes =
-    plan.exercises.length * 2;
+  const meals =
+    useMemo(() => {
+      return getMealPlan(
+        data.symptoms ||
+          []
+      );
+    }, [data]);
 
   return (
-    <main className="max-w-7xl mx-auto px-6 py-10">
-      {/* HERO */}
-      <section className="soft-card p-8 md:p-10 mb-8">
-        <div className="grid lg:grid-cols-2 gap-8">
-          <div>
-            <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
-              {premium
-                ? `${planName.toUpperCase()} Membership`
-                : "Free Program"}
-            </p>
+    <main className="max-w-6xl mx-auto px-6 py-14">
+      <section className="soft-card p-10 mb-8">
+        <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-3">
+          Today Program
+        </p>
 
-            <h1 className="text-5xl md:text-6xl mb-4">
-              Day {day}
-            </h1>
+        <h1 className="text-5xl mb-3">
+          {program.title}
+        </h1>
 
-            <h2 className="text-3xl mb-4">
-              {plan.title}
-            </h2>
+        <p className="text-[#7b6870] mb-5">
+          {program.theme}
+        </p>
 
-            <p className="text-[#7b6870] text-lg leading-relaxed mb-8">
-              {plan.description}
-            </p>
-
-            <div className="flex flex-wrap gap-4">
-              <Link
-                href="/session"
-                className="btn-primary"
-              >
-                Start Guided Session
-              </Link>
-
-              {!premium && (
-                <Link
-                  href="/pricing"
-                  className="btn-outline"
-                >
-                  Upgrade Now
-                </Link>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="soft-card p-5">
-              <div className="text-sm text-[#7b6870] mb-2">
-                Session Time
-              </div>
-              <div className="text-3xl font-semibold">
-                {totalMinutes} min
-              </div>
-            </div>
-
-            <div className="soft-card p-5">
-              <div className="text-sm text-[#7b6870] mb-2">
-                Exercises
-              </div>
-              <div className="text-3xl font-semibold">
-                {plan.exercises.length}
-              </div>
-            </div>
-
-            <div className="soft-card p-5">
-              <div className="text-sm text-[#7b6870] mb-2">
-                Program Length
-              </div>
-              <div className="text-3xl font-semibold">
-                {totalDays} Days
-              </div>
-            </div>
-
-            <div className="soft-card p-5">
-              <div className="text-sm text-[#7b6870] mb-2">
-                Progress
-              </div>
-              <div className="text-3xl font-semibold">
-                {progress}%
-              </div>
-            </div>
-          </div>
+        <div className="text-3xl mb-8">
+          {program.exercises.length *
+            2}
+          :00
         </div>
+
+        <Link
+          href="/session"
+          className="btn-primary"
+        >
+          Start Full Session
+        </Link>
       </section>
 
-      {/* PROGRESS */}
       <section className="soft-card p-8 mb-8">
-        <div className="flex justify-between mb-4">
-          <h3 className="text-3xl">
-            Transformation Progress
-          </h3>
+        <h2 className="text-4xl mb-6">
+          Today's Exercises
+        </h2>
 
-          <span className="text-[#7b6870]">
-            Day {day} / {totalDays}
-          </span>
-        </div>
-
-        <div className="h-4 bg-white rounded-full overflow-hidden border border-[#f0e3e8]">
-          <div
-            className="h-full bg-gradient-to-r from-[#d6a7b1] to-[#b98fa1]"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-      </section>
-
-      {/* PREMIUM BENEFITS */}
-      {premium && (
-        <section className="soft-card p-8 mb-8">
-          <h3 className="text-4xl mb-6">
-            Premium Benefits Active ✨
-          </h3>
-
-          <div className="grid md:grid-cols-2 gap-4">
-            {planName === "elite"
-              ? [
-                  "90-Day Full Transformation",
-                  "Monthly Reassessment Engine",
-                  "VIP Workout Library",
-                  "Advanced Symptom Protocols",
-                  "Priority Updates",
-                  "Elite Guided Sessions",
-                ].map((item) => (
-                  <div
-                    key={item}
-                    className="p-4 rounded-2xl bg-white border border-[#f0e3e8]"
-                  >
-                    ✓ {item}
-                  </div>
-                ))
-              : [
-                  "30-Day Premium Program",
-                  "Guided Sessions",
-                  "Symptom Smart Plans",
-                  "Weight + Sleep Support",
-                ].map((item) => (
-                  <div
-                    key={item}
-                    className="p-4 rounded-2xl bg-white border border-[#f0e3e8]"
-                  >
-                    ✓ {item}
-                  </div>
-                ))}
-          </div>
-        </section>
-      )}
-
-      {/* EXERCISES */}
-      <section>
-        <h3 className="text-4xl mb-6">
-          Today’s Exercises
-        </h3>
-
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {plan.exercises.map((item, i) => (
-            <div
-              key={i}
-              className="soft-card p-5"
-            >
-              <div className="relative w-full h-[260px] rounded-3xl overflow-hidden bg-[#f9eef2] mb-5">
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  fill
-                  className="object-contain p-4"
-                />
-              </div>
-
-              <h4 className="text-2xl mb-3">
-                {item.name}
-              </h4>
-
-              <p className="text-sm text-[#7b6870] mb-2">
-                <strong>Start:</strong>{" "}
-                {item.start}
-              </p>
-
-              <p className="text-sm text-[#7b6870] mb-2">
-                <strong>Finish:</strong>{" "}
-                {item.end}
-              </p>
-
-              <p className="text-sm text-[#7b6870] mb-4">
-                {item.why}
-              </p>
-
-              <div className="flex justify-between items-center">
-                <span className="px-3 py-2 rounded-full bg-[#fff3f6] border border-[#ead8de] text-sm">
-                  2 min
+        <div className="grid gap-3">
+          {program.exercises.map(
+            (
+              item,
+              i
+            ) => (
+              <div
+                key={
+                  item.name +
+                  i
+                }
+                className="p-5 rounded-3xl bg-white border border-[#f0e3e8] flex justify-between"
+              >
+                <span>
+                  {i + 1}.{" "}
+                  {
+                    item.name
+                  }
                 </span>
 
-                <Link
-                  href="/session"
-                  className="text-[#b98fa1] font-medium"
-                >
-                  Start →
-                </Link>
+                <span>
+                  2 min
+                </span>
               </div>
-            </div>
-          ))}
+            )
+          )}
         </div>
+      </section>
+
+      <section className="soft-card p-8">
+        <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-3">
+          Daily Nutrition
+        </p>
+
+        <div className="grid md:grid-cols-4 gap-4 mb-6">
+          {[
+            [
+              "Calories",
+              nutrition.calories,
+            ],
+            [
+              "Protein",
+              `${nutrition.protein}g`,
+            ],
+            [
+              "Fiber",
+              `${nutrition.fiber}g`,
+            ],
+            [
+              "Water",
+              `${nutrition.water}L`,
+            ],
+          ].map(
+            (
+              [
+                a,
+                b,
+              ]
+            ) => (
+              <div
+                key={
+                  String(
+                    a
+                  )
+                }
+                className="p-4 rounded-3xl bg-white border border-[#f0e3e8] text-center"
+              >
+                <div className="text-sm text-[#7b6870]">
+                  {a}
+                </div>
+
+                <div className="text-2xl">
+                  {b}
+                </div>
+              </div>
+            )
+          )}
+        </div>
+
+        <div className="p-5 rounded-3xl bg-white border border-[#f0e3e8] mb-4">
+          <div className="text-xl mb-2">
+            {
+              meals[0]
+                .title
+            }
+          </div>
+
+          <div className="text-[#7b6870]">
+            {
+              meals[0]
+                .subtitle
+            }
+          </div>
+        </div>
+
+        {plan ===
+        "free" ? (
+          <div className="grid md:grid-cols-3 gap-4">
+            {[
+              "Lunch 🔒",
+              "Dinner 🔒",
+              "Snack 🔒",
+            ].map(
+              (
+                item
+              ) => (
+                <div
+                  key={
+                    item
+                  }
+                  className="p-5 rounded-3xl border border-dashed border-[#e8c8d3] text-center"
+                >
+                  {
+                    item
+                  }
+                </div>
+              )
+            )}
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-3 gap-4">
+            {[
+              meals[1]
+                ?.title,
+              meals[2]
+                ?.title,
+              meals[3]
+                ?.title,
+            ].map(
+              (
+                item
+              ) => (
+                <div
+                  key={
+                    item
+                  }
+                  className="p-5 rounded-3xl bg-white border border-[#f0e3e8] text-center"
+                >
+                  {
+                    item
+                  }
+                </div>
+              )
+            )}
+          </div>
+        )}
       </section>
     </main>
   );
