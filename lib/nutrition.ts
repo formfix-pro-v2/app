@@ -1,248 +1,341 @@
-export type GoalType =
+export type Activity =
+  | "sedentary"
+  | "light"
+  | "moderate"
+  | "active";
+
+export type Goal =
   | "fat_loss"
-  | "maintain"
   | "tone"
+  | "maintain"
   | "energy";
 
-export type UserProfile = {
+export type UserData = {
   age: number;
   height: number;
   weight: number;
-  activity?: number;
-  goal: GoalType;
-  symptoms?: string[];
-};
-
-export type NutritionPlan = {
-  calories: number;
-  protein: number;
-  carbs: number;
-  fats: number;
-  fiber: number;
-  water: number;
+  activity: Activity;
+  goal: Goal;
+  symptoms: string[];
 };
 
 export type Meal = {
-  key: string;
-  type:
-    | "breakfast"
-    | "lunch"
-    | "dinner"
-    | "snack";
   title: string;
   subtitle: string;
   kcal: number;
   protein: number;
   prep: string;
-  benefits: string;
   ingredients: string[];
   steps: string[];
 };
 
 export function calculateNutrition(
-  user: UserProfile
-): NutritionPlan {
-  const activity =
-    user.activity || 1.35;
-
+  data: UserData
+) {
   const bmr =
-    10 * user.weight +
-    6.25 * user.height -
-    5 * user.age -
+    10 * data.weight +
+    6.25 * data.height -
+    5 * data.age -
     161;
 
-  let calories =
-    bmr * activity;
+  const multipliers = {
+    sedentary: 1.2,
+    light: 1.35,
+    moderate: 1.5,
+    active: 1.7,
+  };
+
+  let calories = Math.round(
+    bmr *
+      multipliers[
+        data.activity
+      ]
+  );
 
   if (
-    user.goal ===
+    data.goal ===
     "fat_loss"
   )
-    calories *= 0.85;
+    calories -= 350;
 
   if (
-    user.goal === "tone"
+    data.goal ===
+    "tone"
   )
-    calories *= 0.92;
+    calories -= 150;
 
   if (
-    user.goal ===
+    data.goal ===
     "energy"
   )
-    calories *= 1.03;
-
-  const finalCalories =
-    Math.round(calories);
+    calories += 150;
 
   const protein =
     Math.round(
-      user.weight * 1.8
+      data.weight * 1.7
     );
 
-  const fats =
-    Math.round(
-      (finalCalories *
-        0.28) /
-        9
-    );
+  const fiber = 28;
 
-  const carbs =
-    Math.round(
-      (finalCalories -
-        protein * 4 -
-        fats * 9) /
-        4
-    );
-
-  const fiber = Math.max(
-    28,
-    Math.round(
-      finalCalories / 60
-    )
-  );
-
-  const water = Number(
+  const water =
     (
-      user.weight *
+      data.weight *
       0.033
-    ).toFixed(1)
-  );
+    ).toFixed(1);
 
   return {
-    calories:
-      finalCalories,
+    calories,
     protein,
-    carbs,
-    fats,
     fiber,
     water,
   };
 }
 
 export function getMealPlan(
-  symptoms: string[] = []
+  calories: number
 ): Meal[] {
-  const sleep =
-    symptoms.includes(
-      "Poor sleep"
-    );
+  if (calories < 1650) {
+    return lowPlan();
+  }
 
-  const bloat =
-    symptoms.includes(
-      "Bloating"
-    );
+  if (calories < 2100) {
+    return mediumPlan();
+  }
 
-  const energy =
-    symptoms.includes(
-      "Low energy"
-    );
+  return highPlan();
+}
 
+function lowPlan(): Meal[] {
   return [
     {
-      key: "b1",
-      type: "breakfast",
       title:
-        sleep
-          ? "Sleep Support Yogurt Bowl"
-          : "Protein Berry Oats",
+        "Greek Yogurt Berry Bowl",
       subtitle:
-        "Balanced start with fiber + protein",
-      kcal: 420,
-      protein: 31,
+        "High protein metabolism breakfast",
+      kcal: 390,
+      protein: 28,
       prep: "5 min",
-      benefits:
-        "Stable blood sugar, satiety, hormone support",
       ingredients: [
-        "220g Greek yogurt",
-        "40g oats",
+        "200g greek yogurt",
         "80g berries",
-        "10g chia",
-        "Cinnamon",
+        "20g oats",
+        "1 tsp chia",
       ],
       steps: [
-        "Add yogurt to bowl.",
-        "Mix oats and chia.",
-        "Top with berries.",
-        "Finish with cinnamon.",
+        "Add yogurt to bowl",
+        "Top with berries",
+        "Add oats + chia",
       ],
     },
-
     {
-      key: "l1",
-      type: "lunch",
       title:
-        bloat
-          ? "Anti-Bloat Salmon Rice Bowl"
-          : "Chicken Quinoa Power Bowl",
+        "Chicken Salad Bowl",
       subtitle:
-        "Lean protein + quality carbs",
-      kcal: 560,
+        "Lean lunch for fat loss",
+      kcal: 470,
       protein: 42,
-      prep: "15 min",
-      benefits:
-        "Energy support and appetite control",
+      prep: "10 min",
       ingredients: [
-        "140g protein source",
-        "70g dry rice/quinoa",
-        "Spinach",
-        "Cucumber",
-        "Olive oil",
+        "130g chicken breast",
+        "greens",
+        "tomato",
+        "olive oil",
       ],
       steps: [
-        "Cook grains.",
-        "Cook protein.",
-        "Slice vegetables.",
-        "Assemble bowl.",
+        "Cook chicken",
+        "Slice vegetables",
+        "Combine and season",
       ],
     },
-
     {
-      key: "d1",
-      type: "dinner",
       title:
-        energy
-          ? "Turkey Sweet Potato Plate"
-          : "Mediterranean Protein Dinner",
+        "Salmon Vegetables",
       subtitle:
-        "Recovery focused evening meal",
+        "Omega-3 hormone support",
       kcal: 520,
-      protein: 40,
+      protein: 38,
       prep: "20 min",
-      benefits:
-        "Supports recovery and evening satiety",
       ingredients: [
-        "150g turkey/chicken",
-        "220g sweet potato",
-        "Green vegetables",
-        "Herbs",
+        "150g salmon",
+        "broccoli",
+        "sweet potato",
       ],
       steps: [
-        "Roast potato.",
-        "Cook protein.",
-        "Steam vegetables.",
-        "Serve warm.",
+        "Bake salmon",
+        "Steam broccoli",
+        "Roast potato",
       ],
     },
-
     {
-      key: "s1",
-      type: "snack",
       title:
-        "Apple Almond Energy Snack",
+        "Apple + Almonds",
       subtitle:
-        "Simple hunger control option",
-      kcal: 240,
-      protein: 8,
-      prep: "2 min",
-      benefits:
-        "Craving control between meals",
+        "Smart snack",
+      kcal: 220,
+      protein: 7,
+      prep: "1 min",
       ingredients: [
         "1 apple",
         "20g almonds",
       ],
       steps: [
-        "Slice apple.",
-        "Serve with almonds.",
+        "Serve together",
+      ],
+    },
+  ];
+}
+
+function mediumPlan(): Meal[] {
+  return [
+    {
+      title:
+        "Protein Oats Bowl",
+      subtitle:
+        "Balanced energy breakfast",
+      kcal: 520,
+      protein: 34,
+      prep: "7 min",
+      ingredients: [
+        "50g oats",
+        "protein yogurt",
+        "banana",
+      ],
+      steps: [
+        "Cook oats",
+        "Top with yogurt",
+        "Add banana",
+      ],
+    },
+    {
+      title:
+        "Turkey Rice Bowl",
+      subtitle:
+        "Lean lunch",
+      kcal: 610,
+      protein: 45,
+      prep: "15 min",
+      ingredients: [
+        "150g turkey",
+        "rice",
+        "vegetables",
+      ],
+      steps: [
+        "Cook turkey",
+        "Cook rice",
+        "Mix vegetables",
+      ],
+    },
+    {
+      title:
+        "Beef Power Plate",
+      subtitle:
+        "Strength dinner",
+      kcal: 650,
+      protein: 48,
+      prep: "20 min",
+      ingredients: [
+        "150g beef",
+        "potatoes",
+        "greens",
+      ],
+      steps: [
+        "Cook beef",
+        "Bake potatoes",
+        "Serve greens",
+      ],
+    },
+    {
+      title:
+        "Protein Shake",
+      subtitle:
+        "Recovery snack",
+      kcal: 260,
+      protein: 25,
+      prep: "1 min",
+      ingredients: [
+        "protein powder",
+        "milk",
+      ],
+      steps: [
+        "Blend and serve",
+      ],
+    },
+  ];
+}
+
+function highPlan(): Meal[] {
+  return [
+    {
+      title:
+        "Athlete Breakfast",
+      subtitle:
+        "High output start",
+      kcal: 650,
+      protein: 38,
+      prep: "10 min",
+      ingredients: [
+        "eggs",
+        "toast",
+        "fruit",
+      ],
+      steps: [
+        "Cook eggs",
+        "Toast bread",
+        "Serve fruit",
+      ],
+    },
+    {
+      title:
+        "Chicken Pasta Bowl",
+      subtitle:
+        "Performance lunch",
+      kcal: 760,
+      protein: 50,
+      prep: "20 min",
+      ingredients: [
+        "chicken",
+        "pasta",
+        "veg",
+      ],
+      steps: [
+        "Cook pasta",
+        "Cook chicken",
+        "Combine",
+      ],
+    },
+    {
+      title:
+        "Salmon Rice Dinner",
+      subtitle:
+        "Recovery dinner",
+      kcal: 790,
+      protein: 48,
+      prep: "20 min",
+      ingredients: [
+        "salmon",
+        "rice",
+        "veg",
+      ],
+      steps: [
+        "Cook salmon",
+        "Cook rice",
+        "Serve together",
+      ],
+    },
+    {
+      title:
+        "Greek Yogurt Snack",
+      subtitle:
+        "Extra protein",
+      kcal: 280,
+      protein: 22,
+      prep: "1 min",
+      ingredients: [
+        "greek yogurt",
+        "berries",
+      ],
+      steps: [
+        "Serve chilled",
       ],
     },
   ];
