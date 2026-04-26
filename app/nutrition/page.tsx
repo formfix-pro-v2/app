@@ -1,114 +1,215 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import {
   calculateNutrition,
   getMealPlan,
 } from "@/lib/nutrition";
 
-type Meal = ReturnType<
-  typeof getMealPlan
->[number];
-
 export default function NutritionPage() {
-  const [openMeal, setOpenMeal] =
-    useState<string | null>(
-      "b1"
+  const [saved, setSaved] =
+    useState(false);
+
+  const [form, setForm] =
+    useState({
+      age: "48",
+      height: "168",
+      weight: "72",
+      activity: "light",
+      goal: "tone",
+    });
+
+  const data = useMemo(() => {
+    return calculateNutrition({
+      age:
+        Number(
+          form.age
+        ) || 48,
+      height:
+        Number(
+          form.height
+        ) || 168,
+      weight:
+        Number(
+          form.weight
+        ) || 72,
+      activity:
+        form.activity as any,
+      goal:
+        form.goal as any,
+      symptoms: [],
+    });
+  }, [form]);
+
+  const meals =
+    useMemo(() => {
+      return getMealPlan(
+        data.calories
+      );
+    }, [data]);
+
+  function savePlan() {
+    localStorage.setItem(
+      "nutritionData",
+      JSON.stringify(form)
     );
 
-  const [premium, setPremium] =
-    useState(true);
-
-  /* demo profile – kasnije povuci iz kviza */
-  const profile = {
-    age: 48,
-    height: 168,
-    weight: 72,
-    goal: "tone" as const,
-    symptoms: [
-      "Poor sleep",
-      "Bloating",
-    ],
-  };
-
-  const plan = useMemo(
-    () =>
-      calculateNutrition(
-        profile
-      ),
-    []
-  );
-
-  const meals = useMemo(
-    () =>
-      getMealPlan(
-        profile.symptoms
-      ),
-    []
-  );
-
-  function toggleMeal(
-    id: string
-  ) {
-    setOpenMeal((prev) =>
-      prev === id
-        ? null
-        : id
-    );
+    setSaved(true);
   }
 
   return (
-    <main className="max-w-7xl mx-auto px-6 py-14">
+    <main className="max-w-6xl mx-auto px-6 py-14">
       {/* HERO */}
-      <section className="soft-card p-10 mb-10">
+      <section className="soft-card p-10 mb-8">
         <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
-          Adaptive Nutrition System
+          Daily Nutrition
         </p>
 
-        <h1 className="text-6xl mb-5">
-          Your Personalized Meal Plan
+        <h1 className="text-5xl mb-4">
+          Personalized Meal Engine
         </h1>
 
-        <p className="text-[#7b6870] text-xl max-w-3xl">
-          Designed for your age,
-          body metrics, goals and
-          menopause symptoms.
+        <p className="text-[#7b6870] text-lg">
+          Enter your body stats and lifestyle.
+          We calculate calories and generate
+          your Day 1 meal plan.
         </p>
       </section>
 
-      {/* TARGETS */}
-      <section className="grid md:grid-cols-6 gap-4 mb-10">
+      {/* FORM */}
+      <section className="soft-card p-8 mb-8">
+        <h2 className="text-4xl mb-6">
+          Your Details
+        </h2>
+
+        <div className="grid md:grid-cols-2 gap-5">
+          <input
+            value={form.age}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                age: e.target.value,
+              })
+            }
+            placeholder="Age"
+            className="input-premium"
+          />
+
+          <input
+            value={form.height}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                height:
+                  e.target.value,
+              })
+            }
+            placeholder="Height cm"
+            className="input-premium"
+          />
+
+          <input
+            value={form.weight}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                weight:
+                  e.target.value,
+              })
+            }
+            placeholder="Weight kg"
+            className="input-premium"
+          />
+
+          <select
+            value={form.activity}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                activity:
+                  e.target.value,
+              })
+            }
+            className="input-premium"
+          >
+            <option value="sedentary">
+              Sedentary
+            </option>
+            <option value="light">
+              Light Activity
+            </option>
+            <option value="moderate">
+              Moderate
+            </option>
+            <option value="active">
+              Active
+            </option>
+          </select>
+
+          <select
+            value={form.goal}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                goal:
+                  e.target.value,
+              })
+            }
+            className="input-premium md:col-span-2"
+          >
+            <option value="fat_loss">
+              Fat Loss
+            </option>
+            <option value="tone">
+              Tone Body
+            </option>
+            <option value="maintain">
+              Maintain
+            </option>
+            <option value="energy">
+              More Energy
+            </option>
+          </select>
+        </div>
+
+        <button
+          onClick={savePlan}
+          className="btn-primary mt-6"
+        >
+          Build My Plan
+        </button>
+
+        {saved && (
+          <p className="mt-4 text-[#7b6870]">
+            Plan saved successfully.
+          </p>
+        )}
+      </section>
+
+      {/* MACROS */}
+      <section className="grid md:grid-cols-4 gap-5 mb-8">
         {[
           [
             "Calories",
-            `${plan.calories}`,
+            data.calories,
           ],
           [
             "Protein",
-            `${plan.protein}g`,
-          ],
-          [
-            "Carbs",
-            `${plan.carbs}g`,
-          ],
-          [
-            "Fats",
-            `${plan.fats}g`,
+            `${data.protein}g`,
           ],
           [
             "Fiber",
-            `${plan.fiber}g`,
+            `${data.fiber}g`,
           ],
           [
             "Water",
-            `${plan.water}L`,
+            `${data.water}L`,
           ],
         ].map(
           ([label, val]) => (
             <div
               key={label}
-              className="soft-card p-5 text-center"
+              className="soft-card p-6 text-center"
             >
               <div className="text-sm text-[#7b6870] mb-2">
                 {label}
@@ -122,191 +223,114 @@ export default function NutritionPage() {
         )}
       </section>
 
-      {/* MEALS */}
-      <section className="space-y-6 mb-12">
-        {meals.map(
-          (
-            meal,
-            index
-          ) => {
-            const locked =
-              !premium &&
-              index > 0;
+      {/* DAY 1 FULL PLAN */}
+      <section className="soft-card p-8 mb-8">
+        <h2 className="text-4xl mb-8">
+          Day 1 Full Meal Plan
+        </h2>
 
-            return (
+        <div className="grid gap-6">
+          {meals.map(
+            (meal) => (
               <div
-                key={meal.key}
-                className="soft-card p-6"
+                key={meal.title}
+                className="p-6 rounded-3xl bg-white border border-[#f0e3e8]"
               >
-                {/* HEADER */}
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                  <div>
-                    <p className="uppercase text-xs tracking-[0.25em] text-[#b98fa1] mb-2">
-                      {
-                        meal.type
-                      }
-                    </p>
+                <h3 className="text-3xl mb-2">
+                  {meal.title}
+                </h3>
 
-                    <h2 className="text-4xl mb-2">
-                      {
-                        meal.title
-                      }
-                    </h2>
-
-                    <p className="text-[#7b6870]">
-                      {
-                        meal.subtitle
-                      }
-                    </p>
-                  </div>
-
-                  <div className="text-right">
-                    <div className="text-2xl">
-                      {
-                        meal.kcal
-                      }{" "}
-                      kcal
-                    </div>
-
-                    <div className="text-[#7b6870]">
-                      {
-                        meal.protein
-                      }
-                      g protein
-                    </div>
-
-                    <div className="text-[#7b6870]">
-                      Prep{" "}
-                      {
-                        meal.prep
-                      }
-                    </div>
-                  </div>
-                </div>
-
-                {/* BENEFITS */}
-                <div className="mt-5 p-4 rounded-2xl bg-[#fff4f7] text-[#7a646d]">
-                  ✨ {
-                    meal.benefits
+                <p className="text-[#7b6870] mb-5">
+                  {
+                    meal.subtitle
                   }
+                </p>
+
+                <div className="grid md:grid-cols-3 gap-3 mb-5">
+                  <div className="p-3 rounded-2xl bg-[#fff4f7]">
+                    {meal.kcal} kcal
+                  </div>
+
+                  <div className="p-3 rounded-2xl bg-[#fff4f7]">
+                    {meal.protein}g protein
+                  </div>
+
+                  <div className="p-3 rounded-2xl bg-[#fff4f7]">
+                    {meal.prep}
+                  </div>
                 </div>
 
-                {/* LOCKED */}
-                {locked ? (
-                  <div className="mt-6 p-6 rounded-3xl border border-dashed border-[#e8c8d3] text-center">
-                    <p className="text-xl mb-4">
-                      Premium meal details
-                      locked 🔒
-                    </p>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="text-xl mb-3">
+                      Ingredients
+                    </h4>
 
-                    <Link
-                      href="/pricing"
-                      className="btn-primary"
-                    >
-                      Unlock Full Nutrition
-                    </Link>
-                  </div>
-                ) : (
-                  <>
-                    {/* TOGGLE */}
-                    <button
-                      onClick={() =>
-                        toggleMeal(
-                          meal.key
+                    <ul className="space-y-2 text-[#6f5a62]">
+                      {meal.ingredients.map(
+                        (
+                          item
+                        ) => (
+                          <li
+                            key={
+                              item
+                            }
+                          >
+                            • {item}
+                          </li>
                         )
-                      }
-                      className="btn-outline mt-6"
-                    >
-                      {openMeal ===
-                      meal.key
-                        ? "Hide Recipe"
-                        : "View Recipe"}
-                    </button>
+                      )}
+                    </ul>
+                  </div>
 
-                    {/* DETAILS */}
-                    {openMeal ===
-                      meal.key && (
-                      <div className="grid md:grid-cols-2 gap-6 mt-6">
-                        <div className="p-5 rounded-3xl bg-white border border-[#f0e3e8]">
-                          <h3 className="text-2xl mb-4">
-                            Ingredients
-                          </h3>
+                  <div>
+                    <h4 className="text-xl mb-3">
+                      Preparation
+                    </h4>
 
-                          <ul className="space-y-2 text-[#6f5a62]">
-                            {meal.ingredients.map(
-                              (
-                                item
-                              ) => (
-                                <li
-                                  key={
-                                    item
-                                  }
-                                >
-                                  •{" "}
-                                  {
-                                    item
-                                  }
-                                </li>
-                              )
-                            )}
-                          </ul>
-                        </div>
-
-                        <div className="p-5 rounded-3xl bg-white border border-[#f0e3e8]">
-                          <h3 className="text-2xl mb-4">
-                            Method
-                          </h3>
-
-                          <ol className="space-y-2 text-[#6f5a62]">
-                            {meal.steps.map(
-                              (
-                                step,
-                                i
-                              ) => (
-                                <li
-                                  key={
-                                    step
-                                  }
-                                >
-                                  {i + 1}
-                                  .{" "}
-                                  {
-                                    step
-                                  }
-                                </li>
-                              )
-                            )}
-                          </ol>
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
+                    <ol className="space-y-2 text-[#6f5a62]">
+                      {meal.steps.map(
+                        (
+                          step,
+                          i
+                        ) => (
+                          <li
+                            key={
+                              step
+                            }
+                          >
+                            {i + 1}.{" "}
+                            {step}
+                          </li>
+                        )
+                      )}
+                    </ol>
+                  </div>
+                </div>
               </div>
-            );
-          }
-        )}
+            )
+          )}
+        </div>
       </section>
 
-      {/* CTA */}
+      {/* PREMIUM LOCK */}
       <section className="soft-card p-10 text-center">
         <h2 className="text-5xl mb-4">
-          Want 30 / 90 Rotating Days?
+          Unlock Days 2–30
         </h2>
 
         <p className="text-[#7b6870] text-lg mb-8">
-          Unlock adaptive premium
-          menus, symptom-based meals,
-          shopping lists and weekly
-          adjustments.
+          Premium members receive rotating
+          meal plans, shopping lists and
+          symptom-based nutrition.
         </p>
 
-        <Link
+        <a
           href="/pricing"
           className="btn-primary"
         >
-          Upgrade Now
-        </Link>
+          Upgrade Premium
+        </a>
       </section>
     </main>
   );
