@@ -30,7 +30,7 @@ export default function DashboardPage() {
       age: "48",
       height: "168",
       weight: "72",
-      activity: "1.375",
+      activity: "light",
       goal: "tone",
     });
 
@@ -87,21 +87,33 @@ export default function DashboardPage() {
           Number(
             data.age
           ) || 48,
+
         height:
           Number(
             data.height
           ) || 168,
+
         weight:
           Number(
             data.weight
           ) || 72,
+
         activity:
-          Number(
-            data.activity
-          ) || 1.375,
+          (data.activity as
+            | "sedentary"
+            | "light"
+            | "moderate"
+            | "active") ||
+          "light",
+
         goal:
-          (data.goal as any) ||
+          (data.goal as
+            | "fat_loss"
+            | "tone"
+            | "maintain"
+            | "energy") ||
           "tone",
+
         symptoms:
           data.symptoms ||
           [],
@@ -111,13 +123,13 @@ export default function DashboardPage() {
   const meals =
     useMemo(() => {
       return getMealPlan(
-        data.symptoms ||
-          []
+        nutrition.calories
       );
-    }, [data]);
+    }, [nutrition]);
 
   return (
     <main className="max-w-6xl mx-auto px-6 py-14">
+      {/* TODAY PLAN */}
       <section className="soft-card p-10 mb-8">
         <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-3">
           Today Program
@@ -132,7 +144,11 @@ export default function DashboardPage() {
         </p>
 
         <div className="text-3xl mb-8">
-          {program.exercises.length * 2}:00
+          {
+            program.exercises
+              .length * 2
+          }
+          :00
         </div>
 
         <Link
@@ -143,6 +159,7 @@ export default function DashboardPage() {
         </Link>
       </section>
 
+      {/* EXERCISES */}
       <section className="soft-card p-8 mb-8">
         <h2 className="text-4xl mb-6">
           Today's Exercises
@@ -159,7 +176,7 @@ export default function DashboardPage() {
                   item.name +
                   i
                 }
-                className="p-5 rounded-3xl bg-white border border-[#f0e3e8] flex justify-between"
+                className="p-5 rounded-3xl bg-white border border-[#f0e3e8] flex justify-between items-center"
               >
                 <span>
                   {i + 1}.{" "}
@@ -177,11 +194,13 @@ export default function DashboardPage() {
         </div>
       </section>
 
+      {/* NUTRITION */}
       <section className="soft-card p-8">
         <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-3">
           Daily Nutrition
         </p>
 
+        {/* macros */}
         <div className="grid md:grid-cols-4 gap-4 mb-6">
           {[
             [
@@ -208,11 +227,9 @@ export default function DashboardPage() {
               ]
             ) => (
               <div
-                key={
-                  String(
-                    a
-                  )
-                }
+                key={String(
+                  a
+                )}
                 className="p-4 rounded-3xl bg-white border border-[#f0e3e8] text-center"
               >
                 <div className="text-sm text-[#7b6870]">
@@ -227,22 +244,37 @@ export default function DashboardPage() {
           )}
         </div>
 
+        {/* breakfast */}
         <div className="p-5 rounded-3xl bg-white border border-[#f0e3e8] mb-4">
           <div className="text-xl mb-2">
             {
               meals[0]
-                .title
+                ?.title
             }
           </div>
 
-          <div className="text-[#7b6870]">
+          <div className="text-[#7b6870] mb-2">
             {
               meals[0]
-                .subtitle
+                ?.subtitle
             }
+          </div>
+
+          <div className="text-sm text-[#7b6870]">
+            {
+              meals[0]
+                ?.kcal
+            }{" "}
+            kcal •{" "}
+            {
+              meals[0]
+                ?.protein
+            }
+            g protein
           </div>
         </div>
 
+        {/* locked/free or premium */}
         {plan ===
         "free" ? (
           <div className="grid md:grid-cols-3 gap-4">
@@ -278,11 +310,13 @@ export default function DashboardPage() {
                 ?.title,
             ].map(
               (
-                item
+                item,
+                i
               ) => (
                 <div
                   key={
-                    item
+                    item ||
+                    i
                   }
                   className="p-5 rounded-3xl bg-white border border-[#f0e3e8] text-center"
                 >
@@ -292,6 +326,18 @@ export default function DashboardPage() {
                 </div>
               )
             )}
+          </div>
+        )}
+
+        {plan ===
+          "free" && (
+          <div className="mt-6">
+            <Link
+              href="/pricing"
+              className="btn-primary"
+            >
+              Unlock Full Meal Plan
+            </Link>
           </div>
         )}
       </section>
