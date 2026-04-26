@@ -13,6 +13,7 @@ type QuizData = {
   age?: string;
   height?: string;
   weight?: string;
+  activity?: string;
   goal?: string;
 };
 
