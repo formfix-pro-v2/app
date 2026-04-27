@@ -5,31 +5,19 @@
 @tailwind utilities;
 
 /* =======================================================
-   FORMFIX PREMIUM LUXURY THEME
-   Dubai / Kuwait feminine wellness aesthetic
+   VELORA PREMIUM THEME - GLOBAL STYLES
 ======================================================= */
 
 :root {
-  --bg: #fffaf7;
-  --bg-2: #fff5f8;
-
-  --card: rgba(255, 255, 255, 0.88);
-  --card-strong: #ffffff;
-
+  --bg-base: #fffcfd;
+  --card: rgba(255, 255, 255, 0.9);
   --rose: #d8a7b5;
-  --rose-dark: #c58d9d;
-
-  --champagne: #f4e6da;
+  --rose-light: #fdf2f5;
   --gold: #c9a46a;
-
-  --text: #38292f;
-  --muted: #7d6971;
-
-  --line: #f0dfe5;
-  --line-strong: #ead2db;
-
-  --shadow-soft: 0 18px 50px rgba(115, 72, 87, 0.08);
-  --shadow-premium: 0 24px 70px rgba(216, 167, 181, 0.14);
+  --text-main: #4a3f44;
+  --text-muted: #7b6870;
+  --line: #f0e3e8;
+  --shadow-soft: 0 15px 45px rgba(115, 72, 87, 0.06);
 }
 
 html {
@@ -37,212 +25,132 @@ html {
 }
 
 body {
-  background:
-    radial-gradient(circle at top left, rgba(244,230,218,.75), transparent 35%),
-    radial-gradient(circle at top right, rgba(216,167,181,.18), transparent 28%),
-    linear-gradient(180deg, var(--bg), var(--bg-2));
-  color: var(--text);
+  background-color: var(--bg-base);
+  /* Ubacujemo tvoj novi pattern ruža */
+  background-image: url("/velora-bg-pattern.png");
+  background-repeat: repeat;
+  background-size: 380px; /* Smanjeno za prefinjeniji izgled */
+  background-attachment: fixed;
+  color: var(--text-main);
   font-family: "Inter", sans-serif;
   min-height: 100vh;
 }
 
-/* elegant headings */
+/* Elegantni naslovi */
 h1, h2, h3, h4, h5, h6 {
   font-family: "Cormorant Garamond", serif;
-  letter-spacing: 0.01em;
   font-weight: 600;
-  color: var(--text);
+  color: var(--text-main);
+  letter-spacing: -0.01em;
 }
 
-/* selection */
-::selection {
-  background: rgba(216, 167, 181, 0.28);
-  color: var(--text);
-}
-
-/* scrollbar */
+/* Tanji scrollbar za luksuzniji osećaj */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #fff8fa;
+  background: var(--bg-base);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(
-    180deg,
-    rgba(216,167,181,.9),
-    rgba(201,164,106,.8)
-  );
-  border-radius: 999px;
+  background: var(--rose);
+  border-radius: 10px;
 }
 
 /* =======================================================
-   LAYOUT HELPERS
-======================================================= */
-
-.section-space {
-  @apply py-16 md:py-20;
-}
-
-.page-wrap {
-  @apply max-w-6xl mx-auto px-6;
-}
-
-/* =======================================================
-   PREMIUM CARD SYSTEM
+   PREMIUM COMPONENTS (Kompaktniji razmaci)
 ======================================================= */
 
 .soft-card {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 32px;
+  border-radius: 28px; /* Malo zategnutije ivice */
   box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: transform 0.3s ease;
 }
 
-.lux-card {
-  background: linear-gradient(
-    180deg,
-    rgba(255,255,255,.96),
-    rgba(255,248,251,.92)
-  );
-  border: 1px solid var(--line);
-  border-radius: 34px;
-  box-shadow: var(--shadow-premium);
-  backdrop-filter: blur(14px);
-}
-
-.gold-card {
-  background: linear-gradient(
-    135deg,
-    rgba(255,255,255,.96),
-    rgba(244,230,218,.92)
-  );
-  border: 1px solid rgba(201,164,106,.25);
-  border-radius: 34px;
-  box-shadow: 0 24px 70px rgba(201,164,106,.12);
-}
-
-/* =======================================================
-   BUTTONS
-======================================================= */
-
+/* Glavna dugmad - Velora stil */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 14px 30px;
+  padding: 12px 28px;
   border-radius: 999px;
-  background: linear-gradient(135deg, var(--rose), var(--gold));
+  background: linear-gradient(135deg, var(--rose), #eac8d1);
   color: white !important;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  box-shadow: 0 16px 35px rgba(216,167,181,.22);
-  transition: all 0.22s ease;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(216, 167, 181, 0.25);
+  transition: all 0.25s ease;
   cursor: pointer;
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px) scale(1.015);
-  filter: brightness(1.03);
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px rgba(216, 167, 181, 0.35);
+  filter: brightness(1.05);
 }
 
 .btn-outline {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 14px 30px;
+  padding: 12px 28px;
   border-radius: 999px;
-  border: 1px solid var(--line-strong);
-  background: rgba(255,255,255,.82);
-  color: var(--text);
-  font-weight: 600;
-  transition: all 0.22s ease;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--text-main);
+  font-weight: 500;
+  transition: all 0.25s ease;
   cursor: pointer;
 }
 
 .btn-outline:hover {
-  transform: translateY(-2px);
+  background: var(--rose-light);
   border-color: var(--rose);
-  box-shadow: 0 10px 30px rgba(216,167,181,.10);
 }
 
 /* =======================================================
-   INPUTS & BADGES
+   UTILITIES & ANIMATIONS
 ======================================================= */
 
-.input-lux {
-  width: 100%;
-  padding: 14px 18px;
-  border-radius: 18px;
-  background: rgba(255,255,255,.9);
-  border: 1px solid var(--line);
-  color: var(--text);
-  outline: none;
-  transition: all .18s ease;
-}
-
-.input-lux:focus {
-  border-color: var(--rose);
-  box-shadow: 0 0 0 4px rgba(216,167,181,.10);
-}
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.9);
-  border: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-}
-
-/* =======================================================
-   ANIMATIONS & DECOR
-======================================================= */
-
-@keyframes float {
-  0% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-15px) rotate(5deg); }
-  100% { transform: translateY(0px) rotate(0deg); }
+/* Smanjujemo paddinge sekcija da nema previše rupa */
+.section-space {
+  @apply py-8 md:py-12;
 }
 
 .animate-float {
-  animation: float 8s ease-in-out infinite;
+  animation: float 10s ease-in-out infinite;
 }
 
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(3deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+/* Sakrivanje starog rose-bg sistema jer sad imamo body background */
 .rose-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: -1;
-  opacity: 0.04;
-  background-image: url('https://www.svgrepo.com/show/402439/rose.svg');
-  background-repeat: space;
-  background-size: 150px;
+  display: none;
 }
 
 /* =======================================================
-   MEDIA QUERIES
+   RESPONSIVE
 ======================================================= */
 
 @media (max-width: 768px) {
-  .soft-card, .lux-card, .gold-card {
-    border-radius: 26px;
+  body {
+    background-size: 250px; /* Manji pattern na mobilnom */
   }
+  
+  .soft-card {
+    border-radius: 20px;
+  }
+  
   .btn-primary, .btn-outline {
     width: 100%;
+    padding: 14px;
   }
 }
