@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { getTodayProgram } from "@/lib/programs";
-import { calculateNutrition, getMealPlan } from "@/lib/nutrition";
+import {
+  calculateNutrition,
+  getMealPlan,
+} from "@/lib/nutrition";
 
 type QuizData = {
   symptoms?: string[];
@@ -15,201 +18,338 @@ type QuizData = {
 };
 
 export default function DashboardPage() {
-  const [day, setDay] = useState(1);
-  const [plan, setPlan] = useState("free");
+  const [day, setDay] =
+    useState(1);
 
-  const [data, setData] = useState<QuizData>({
-    symptoms: [],
-    age: "48",
-    height: "168",
-    weight: "72",
-    activity: "light",
-    goal: "tone",
-  });
+  const [plan, setPlan] =
+    useState("free");
+
+  const [data, setData] =
+    useState<QuizData>({
+      symptoms: [],
+      age: "48",
+      height: "168",
+      weight: "72",
+      activity: "light",
+      goal: "tone",
+    });
 
   useEffect(() => {
-    const savedDay = localStorage.getItem("day");
-    const savedPlan = localStorage.getItem("plan");
-    const raw = localStorage.getItem("quizData");
+    const savedDay =
+      localStorage.getItem(
+        "day"
+      );
 
-    if (savedDay) setDay(Number(savedDay));
-    if (savedPlan) setPlan(savedPlan);
+    const savedPlan =
+      localStorage.getItem(
+        "plan"
+      );
+
+    const raw =
+      localStorage.getItem(
+        "quizData"
+      );
+
+    if (savedDay)
+      setDay(
+        Number(
+          savedDay
+        )
+      );
+
+    if (savedPlan)
+      setPlan(savedPlan);
 
     if (raw) {
       try {
-        setData(JSON.parse(raw));
+        setData(
+          JSON.parse(raw)
+        );
       } catch {}
     }
   }, []);
 
-  const program = useMemo(() => {
-    return getTodayProgram(day);
-  }, [day]);
+  const program =
+    useMemo(() => {
+      return getTodayProgram(
+        day
+      );
+    }, [day]);
 
-  const nutrition = useMemo(() => {
-    return calculateNutrition({
-      age: Number(data.age) || 48,
-      height: Number(data.height) || 168,
-      weight: Number(data.weight) || 72,
-      activity: (data.activity as any) || "light",
-      goal: (data.goal as any) || "tone",
-      symptoms: data.symptoms || [],
-    });
-  }, [data]);
+  const nutrition =
+    useMemo(() => {
+      return calculateNutrition({
+        age:
+          Number(
+            data.age
+          ) || 48,
+        height:
+          Number(
+            data.height
+          ) || 168,
+        weight:
+          Number(
+            data.weight
+          ) || 72,
+        activity:
+          (data.activity as any) ||
+          "light",
+        goal:
+          (data.goal as any) ||
+          "tone",
+        symptoms:
+          data.symptoms || [],
+      });
+    }, [data]);
 
-  const meals = useMemo(() => {
-    return getMealPlan(nutrition.calories);
-  }, [nutrition]);
+  const meals =
+    useMemo(() => {
+      return getMealPlan(
+        nutrition.calories
+      );
+    }, [nutrition]);
 
   return (
-    <main className="max-w-7xl mx-auto px-6 py-14 space-y-8">
+    <main className="max-w-6xl mx-auto px-6 py-14">
+      {/* TODAY PROGRAM */}
+      <section className="soft-card p-10 mb-8">
+        <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-3 font-semibold">
+          Today Program • Day{" "}
+          {day}
+        </p>
 
-      {/* HERO */}
-      <section className="soft-card p-10 md:p-14 overflow-hidden relative">
-        <div className="absolute right-0 top-0 w-72 h-72 bg-[#fbe9ef] rounded-full blur-3xl opacity-60" />
+        <h1 className="text-5xl mb-3 text-[#4a3f44]">
+          {program.title}
+        </h1>
 
-        <div className="grid md:grid-cols-2 gap-10 items-center relative z-10">
-          <div>
-            <p className="uppercase tracking-[0.35em] text-xs text-[#b98fa1] mb-4">
-              Today Program • Day {day}
-            </p>
+        <p className="text-[#7b6870] text-lg italic mb-5">
+          {program.theme}
+        </p>
 
-            <h1 className="text-5xl md:text-6xl text-[#3d2b32] mb-4 leading-tight">
-              {program.title}
-            </h1>
+        <div className="flex flex-wrap gap-4 text-[#b98fa1] text-xl mb-8">
+          <span>
+            ⏱{" "}
+            {program.exercises
+              .length *
+              2}
+            :00 min
+          </span>
 
-            <p className="text-[#7b6870] text-lg mb-8 italic">
-              {program.theme}
-            </p>
-
-            <div className="flex flex-wrap gap-3 mb-8">
-              <span className="px-4 py-2 rounded-full bg-white border border-[#f0e3e8]">
-                ⏱ {program.exercises.length * 2} min
-              </span>
-
-              <span className="px-4 py-2 rounded-full bg-white border border-[#f0e3e8]">
-                🔥 {program.exercises.length} Exercises
-              </span>
-
-              <span className="px-4 py-2 rounded-full bg-white border border-[#f0e3e8]">
-                ✨ {plan.toUpperCase()}
-              </span>
-            </div>
-
-            <Link href="/session" className="btn-primary text-lg px-10 py-4">
-              Start Full Session
-            </Link>
-          </div>
-
-          <div className="hidden md:flex justify-center">
-            <div className="w-72 h-72 rounded-full bg-gradient-to-br from-[#fff4f7] to-white shadow-[0_25px_60px_rgba(185,143,161,0.18)] flex items-center justify-center text-7xl">
-              🧘‍♀️
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* NUTRITION */}
-      <section className="soft-card p-10">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <p className="uppercase tracking-[0.35em] text-xs text-[#b98fa1] mb-3">
-              Daily Nutrition
-            </p>
-
-            <h2 className="text-4xl text-[#3d2b32]">
-              Personalized Fuel Plan
-            </h2>
-          </div>
-
-          <span className="hidden md:block px-4 py-2 rounded-full bg-[#fff4f7] text-[#b98fa1]">
-            Hormone Balanced
+          <span>
+            •{" "}
+            {
+              program
+                .exercises
+                .length
+            }{" "}
+            Exercises
           </span>
         </div>
 
-        {/* stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <Link
+          href="/session"
+          className="btn-primary"
+        >
+          Start Full Session
+        </Link>
+      </section>
+
+      {/* DAILY NUTRITION */}
+      <section className="soft-card p-10 mb-8">
+        <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-6 font-semibold">
+          Daily Nutrition
+        </p>
+
+        {/* macros */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
           {[
-            ["Calories", nutrition.calories],
-            ["Protein", `${nutrition.protein}g`],
-            ["Fiber", `${nutrition.fiber}g`],
-            ["Water", `${nutrition.water}L`],
-          ].map(([label, val]) => (
-            <div
-              key={String(label)}
-              className="p-6 rounded-3xl bg-white border border-[#f0e3e8] text-center shadow-sm"
-            >
-              <div className="text-xs tracking-widest uppercase text-[#b98fa1] mb-2">
-                {label}
-              </div>
-
-              <div className="text-3xl text-[#3d2b32]">
-                {val}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* first meal */}
-        <div className="p-8 rounded-[34px] bg-white border border-[#f0e3e8] mb-6">
-          <div className="flex justify-between gap-6 flex-wrap">
-            <div>
-              <h3 className="text-2xl text-[#3d2b32] mb-2">
-                {meals[0]?.title}
-              </h3>
-
-              <p className="text-[#7b6870] mb-4">
-                {meals[0]?.subtitle}
-              </p>
-
-              <div className="text-[#b98fa1] font-medium">
-                {meals[0]?.kcal} kcal • {meals[0]?.protein}g protein
-              </div>
-            </div>
-
-            <span className="px-4 py-2 h-fit rounded-full bg-[#fff4f7] text-[#b98fa1]">
-              Breakfast
-            </span>
-          </div>
-        </div>
-
-        {/* other meals */}
-        <div className="grid md:grid-cols-3 gap-4">
-          {plan === "free" ? (
-            ["Lunch 🔒", "Dinner 🔒", "Snack 🔒"].map((item) => (
+            [
+              "Calories",
+              nutrition.calories,
+            ],
+            [
+              "Protein",
+              `${nutrition.protein}g`,
+            ],
+            [
+              "Fiber",
+              `${nutrition.fiber}g`,
+            ],
+            [
+              "Water",
+              `${nutrition.water}L`,
+            ],
+          ].map(
+            ([a, b]) => (
               <div
-                key={item}
-                className="p-6 rounded-3xl border-2 border-dashed border-[#f0e3e8] text-center bg-[#fffdfd]"
-              >
-                {item}
-              </div>
-            ))
-          ) : (
-            [meals[1], meals[2], meals[3]].map((meal, i) => (
-              <div
-                key={i}
+                key={String(
+                  a
+                )}
                 className="p-6 rounded-3xl bg-white border border-[#f0e3e8] text-center"
               >
                 <div className="text-xs uppercase tracking-widest text-[#b98fa1] mb-2">
-                  {i === 0 ? "Lunch" : i === 1 ? "Dinner" : "Snack"}
+                  {a}
                 </div>
 
-                <div className="text-[#3d2b32] font-medium">
-                  {meal?.title}
+                <div className="text-3xl text-[#4a3f44]">
+                  {b}
                 </div>
               </div>
-            ))
+            )
           )}
         </div>
 
-        {plan === "free" && (
-          <div className="mt-8 p-8 rounded-3xl bg-[#fff4f7] border border-[#f0d7e0] text-center">
+        {/* all meals visible */}
+        <div className="grid md:grid-cols-2 gap-5">
+          {meals.map(
+            (
+              meal,
+              i
+            ) => (
+              <div
+                key={
+                  meal.title +
+                  i
+                }
+                className="p-7 rounded-[34px] bg-white border border-[#f0e3e8]"
+              >
+                <div className="flex justify-between gap-3 mb-3">
+                  <h3 className="text-2xl text-[#4a3f44]">
+                    {
+                      meal.title
+                    }
+                  </h3>
+
+                  <span className="text-xs px-3 py-1 rounded-full bg-[#fff4f7] border border-[#f7dfe7] text-[#b98fa1] h-fit">
+                    {i === 0
+                      ? "Breakfast"
+                      : i === 1
+                      ? "Lunch"
+                      : i === 2
+                      ? "Dinner"
+                      : "Snack"}
+                  </span>
+                </div>
+
+                <p className="text-[#7b6870] mb-4">
+                  {
+                    meal.subtitle
+                  }
+                </p>
+
+                <div className="text-sm text-[#b98fa1] mb-5">
+                  {
+                    meal.kcal
+                  }{" "}
+                  kcal •{" "}
+                  {
+                    meal.protein
+                  }
+                  g protein • Prep{" "}
+                  {
+                    meal.prep
+                  }
+                </div>
+
+                <div className="mb-4">
+                  <h4 className="font-semibold mb-2">
+                    Ingredients
+                  </h4>
+
+                  <ul className="space-y-1 text-[#6f5a62] text-sm">
+                    {meal.ingredients.map(
+                      (
+                        item
+                      ) => (
+                        <li
+                          key={
+                            item
+                          }
+                        >
+                          •{" "}
+                          {
+                            item
+                          }
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
+
+                <div className="mb-4">
+                  <h4 className="font-semibold mb-2">
+                    Preparation
+                  </h4>
+
+                  <ol className="space-y-1 text-[#6f5a62] text-sm">
+                    {meal.steps.map(
+                      (
+                        step,
+                        idx
+                      ) => (
+                        <li
+                          key={
+                            step
+                          }
+                        >
+                          {idx + 1}
+                          .{" "}
+                          {
+                            step
+                          }
+                        </li>
+                      )
+                    )}
+                  </ol>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold mb-2">
+                    Benefits
+                  </h4>
+
+                  <ul className="space-y-1 text-[#6f5a62] text-sm">
+                    {meal.benefits.map(
+                      (
+                        item
+                      ) => (
+                        <li
+                          key={
+                            item
+                          }
+                        >
+                          ✨{" "}
+                          {
+                            item
+                          }
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
+              </div>
+            )
+          )}
+        </div>
+
+        {plan ===
+          "free" && (
+          <div className="mt-8 text-center p-8 rounded-3xl bg-[#fff4f7] border border-dashed border-[#d9a8b8]">
             <p className="text-[#7b6870] mb-4">
-              Unlock full meal plans, recipes and premium hormone nutrition.
+              Upgrade for
+              weekly rotating
+              menus,
+              shopping
+              lists &
+              premium
+              hormone plans.
             </p>
 
-            <Link href="/pricing" className="btn-primary">
-              Upgrade Membership ✨
+            <Link
+              href="/pricing"
+              className="btn-primary inline-block"
+            >
+              Upgrade Plan
             </Link>
           </div>
         )}
@@ -217,31 +357,44 @@ export default function DashboardPage() {
 
       {/* EXERCISES */}
       <section className="soft-card p-10">
-        <h2 className="text-4xl text-[#3d2b32] mb-8">
-          Today's Exercises
+        <h2 className="text-3xl mb-8 text-[#4a3f44]">
+          Today's
+          Exercises
         </h2>
 
         <div className="grid gap-4">
-          {program.exercises.map((item, i) => (
-            <div
-              key={item.name + i}
-              className="p-5 rounded-3xl bg-white border border-[#f0e3e8] flex justify-between items-center hover:shadow-md transition"
-            >
-              <div className="flex items-center gap-4">
-                <span className="w-9 h-9 rounded-full bg-[#fff4f7] flex items-center justify-center text-[#b98fa1] font-semibold">
-                  {i + 1}
-                </span>
+          {program.exercises.map(
+            (
+              item,
+              i
+            ) => (
+              <div
+                key={
+                  item.name +
+                  i
+                }
+                className="p-5 rounded-2xl bg-white border border-[#f0e3e8] flex justify-between items-center"
+              >
+                <div className="flex items-center gap-4">
+                  <span className="w-8 h-8 rounded-full bg-[#f0e3e8] flex items-center justify-center text-sm text-[#b98fa1] font-bold">
+                    {i + 1}
+                  </span>
 
-                <span className="text-lg text-[#3d2b32]">
-                  {item.name}
-                </span>
+                  <span className="text-lg text-[#4a3f44] font-medium">
+                    {
+                      item.name
+                    }
+                  </span>
+                </div>
+
+                <div className="text-[#7b6870]">
+                  {
+                    item.reps
+                  }
+                </div>
               </div>
-
-              <span className="text-[#7b6870]">
-                {item.reps}
-              </span>
-            </div>
-          ))}
+            )
+          )}
         </div>
       </section>
     </main>
