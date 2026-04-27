@@ -47,12 +47,7 @@ body {
 }
 
 /* elegant headings */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
   font-family: "Cormorant Garamond", serif;
   letter-spacing: 0.01em;
   font-weight: 600;
@@ -140,22 +135,15 @@ h6 {
   align-items: center;
   justify-content: center;
   gap: 10px;
-
   padding: 14px 30px;
   border-radius: 999px;
-
-  background: linear-gradient(
-    135deg,
-    var(--rose),
-    var(--gold)
-  );
-
-  color: white;
+  background: linear-gradient(135deg, var(--rose), var(--gold));
+  color: white !important;
   font-weight: 700;
   letter-spacing: 0.02em;
-
   box-shadow: 0 16px 35px rgba(216,167,181,.22);
   transition: all 0.22s ease;
+  cursor: pointer;
 }
 
 .btn-primary:hover {
@@ -163,25 +151,18 @@ h6 {
   filter: brightness(1.03);
 }
 
-.btn-primary:active {
-  transform: translateY(0);
-}
-
 .btn-outline {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   padding: 14px 30px;
   border-radius: 999px;
-
   border: 1px solid var(--line-strong);
   background: rgba(255,255,255,.82);
-
   color: var(--text);
   font-weight: 600;
-
   transition: all 0.22s ease;
+  cursor: pointer;
 }
 
 .btn-outline:hover {
@@ -190,75 +171,18 @@ h6 {
   box-shadow: 0 10px 30px rgba(216,167,181,.10);
 }
 
-.btn-gold {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 14px 30px;
-  border-radius: 999px;
-
-  background: linear-gradient(
-    135deg,
-    #d9b980,
-    #c9a46a
-  );
-
-  color: white;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-
-  box-shadow: 0 18px 38px rgba(201,164,106,.24);
-  transition: all .22s ease;
-}
-
-.btn-gold:hover {
-  transform: translateY(-2px);
-}
-
 /* =======================================================
-   BADGES / PILLS
-======================================================= */
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-
-  padding: 8px 16px;
-  border-radius: 999px;
-
-  background: rgba(255,255,255,.9);
-  border: 1px solid var(--line);
-  color: var(--muted);
-
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-}
-
-.badge-gold {
-  background: rgba(201,164,106,.12);
-  border: 1px solid rgba(201,164,106,.24);
-  color: #8f6c37;
-}
-
-/* =======================================================
-   PREMIUM INPUTS
+   INPUTS & BADGES
 ======================================================= */
 
 .input-lux {
   width: 100%;
   padding: 14px 18px;
   border-radius: 18px;
-
   background: rgba(255,255,255,.9);
   border: 1px solid var(--line);
-
   color: var(--text);
   outline: none;
-
   transition: all .18s ease;
 }
 
@@ -267,73 +191,33 @@ h6 {
   box-shadow: 0 0 0 4px rgba(216,167,181,.10);
 }
 
-/* =======================================================
-   TEXT HELPERS
-======================================================= */
-
-.text-muted {
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.9);
+  border: 1px solid var(--line);
   color: var(--muted);
-}
-
-.text-gold {
-  color: var(--gold);
-}
-
-.hero-title {
-  font-size: clamp(3rem, 7vw, 5.8rem);
-  line-height: .95;
-}
-
-.section-title {
-  font-size: clamp(2.2rem, 5vw, 4rem);
-  line-height: 1;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
 }
 
 /* =======================================================
-   ANIMATION
+   ANIMATIONS & DECOR
 ======================================================= */
 
-.float-soft {
-  animation: floatSoft 4s ease-in-out infinite;
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(5deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
 }
 
-@keyframes floatSoft {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-/* =======================================================
-   MEDIA
-======================================================= */
-
-img {
-  border-radius: 28px;
-}
-
-@media (max-width: 768px) {
-  .soft-card,
-  .lux-card,
-  .gold-card {
-    border-radius: 26px;
-  }
-
-  .btn-primary,
-  .btn-outline,
-  .btn-gold {
-    width: 100%;
-  }
-}
-@layer base {
-  body {
-    @apply bg-[#fffcfd] text-[#4a3f44];
-    /* Dodajemo suptilnu teksturu ili pattern ako želiš preko celog sajta */
-    background-image: url("https://www.transparenttextures.com/patterns/cubes.png"); /* Opciono: veoma svetla tekstura papira */
-  }
+.animate-float {
+  animation: float 8s ease-in-out infinite;
 }
 
 .rose-bg {
@@ -344,19 +228,21 @@ img {
   height: 100%;
   pointer-events: none;
   z-index: -1;
-  opacity: 0.04; /* Jako nizak opacity za suptilnost */
+  opacity: 0.04;
   background-image: url('https://www.svgrepo.com/show/402439/rose.svg');
   background-repeat: space;
   background-size: 150px;
 }
 
-}
-@keyframes float {
-  0% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-15px) rotate(5deg); }
-  100% { transform: translateY(0px) rotate(0deg); }
-}
+/* =======================================================
+   MEDIA QUERIES
+======================================================= */
 
-.animate-float {
-  animation: float 8s ease-in-out infinite;
+@media (max-width: 768px) {
+  .soft-card, .lux-card, .gold-card {
+    border-radius: 26px;
+  }
+  .btn-primary, .btn-outline {
+    width: 100%;
+  }
 }
