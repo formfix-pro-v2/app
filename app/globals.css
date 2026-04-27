@@ -25,26 +25,29 @@ html {
 }
 
 @layer base {
-  body {
-    background-color: #fffcfd !important;
-    background-image: url("/velora-bg-pattern.png") !important;
-    background-repeat: repeat !important;
-    background-size: 400px !important;
-    background-attachment: fixed !important;
-    color: #4a3f44;
-  }
+ body {
+  /* Koristimo !important da osiguramo da Next.js ne prelepi boju */
+  background-color: #fffcfd !important;
+  background-image: url("/velora-bg-pattern.png") !important;
+  background-repeat: repeat !important;
+  background-size: 500px !important; /* Podesi veličinu po želji */
+  background-attachment: fixed !important;
+  color: #4a3f44;
 }
 
-/* Ovo osigurava da main i dashboard stranice budu providne */
-main, .dashboard-wrapper {
+/* Ključni deo: Svi glavni kontejneri moraju biti providni */
+main, section {
   background: transparent !important;
 }
 
-/* Smanjujemo neprovidnost kartica da bi se pozadina blago nazirala kroz njih */
+/* Kartice postaju "staklene" - propuštaju ruže koje su ispod */
 .soft-card {
-  @apply bg-white/80 backdrop-blur-md; /* 80% bela, ostalo providno */
+  background: rgba(255, 255, 255, 0.65) !important; /* 65% bela, 35% providna */
+  backdrop-filter: blur(8px); /* Blago zamućenje za premium izgled */
+  border: 1px solid rgba(240, 227, 232, 0.5);
+  border-radius: 32px;
+  box-shadow: 0 10px 40px rgba(115, 72, 87, 0.04);
 }
-
 /* Elegantni naslovi */
 h1, h2, h3, h4, h5, h6 {
   font-family: "Cormorant Garamond", serif;
