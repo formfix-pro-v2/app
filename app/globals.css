@@ -24,16 +24,25 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
-  background-color: var(--bg-base);
-  /* Ubacujemo tvoj novi pattern ruža */
-  background-image: url("/velora-bg-pattern.png");
-  background-repeat: repeat;
-  background-size: 380px; /* Smanjeno za prefinjeniji izgled */
-  background-attachment: fixed;
-  color: var(--text-main);
-  font-family: "Inter", sans-serif;
-  min-height: 100vh;
+@layer base {
+  body {
+    background-color: #fffcfd !important;
+    background-image: url("/velora-bg-pattern.png") !important;
+    background-repeat: repeat !important;
+    background-size: 400px !important;
+    background-attachment: fixed !important;
+    color: #4a3f44;
+  }
+}
+
+/* Ovo osigurava da main i dashboard stranice budu providne */
+main, .dashboard-wrapper {
+  background: transparent !important;
+}
+
+/* Smanjujemo neprovidnost kartica da bi se pozadina blago nazirala kroz njih */
+.soft-card {
+  @apply bg-white/80 backdrop-blur-md; /* 80% bela, ostalo providno */
 }
 
 /* Elegantni naslovi */
