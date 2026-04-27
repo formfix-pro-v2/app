@@ -328,3 +328,35 @@ img {
     width: 100%;
   }
 }
+@layer base {
+  body {
+    @apply bg-[#fffcfd] text-[#4a3f44];
+    /* Dodajemo suptilnu teksturu ili pattern ako želiš preko celog sajta */
+    background-image: url("https://www.transparenttextures.com/patterns/cubes.png"); /* Opciono: veoma svetla tekstura papira */
+  }
+}
+
+.rose-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.04; /* Jako nizak opacity za suptilnost */
+  background-image: url('https://www.svgrepo.com/show/402439/rose.svg');
+  background-repeat: space;
+  background-size: 150px;
+}
+
+/* Animacija za nežno plutanje */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
