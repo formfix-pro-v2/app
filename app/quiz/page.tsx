@@ -4,11 +4,17 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 type QuizData = {
+  // Nutrition-critical fields
   age: string;
+  height: string;
+  weight: string;
+  activity: string;
+  goal: string;
+  
+  // Program-critical fields
   time: string;
   symptoms: string[];
   severity: Record<string, number>;
-  goal: string;
   confidence: number;
   sleep: number;
 };
@@ -19,71 +25,49 @@ export default function QuizPage() {
   const [step, setStep] = useState(1);
 
   const [form, setForm] = useState<QuizData>({
-    age: "",
-    time: "",
+    age: "48",
+    height: "168",
+    weight: "72",
+    activity: "light",
+    goal: "tone",
+    time: "20 min",
     symptoms: [],
     severity: {},
-    goal: "",
     confidence: 5,
     sleep: 5,
   });
 
-  const totalSteps = 6;
+  const totalSteps = 7; // Povećali smo broj koraka za biometriju
 
-  const ageOptions = [
-    "35-39",
-    "40-44",
-    "45-49",
-    "50-54",
-    "55+",
-  ];
-
-  const timeOptions = [
-    "10 min",
-    "20 min",
-    "30+ min",
+  const activityOptions = [
+    { id: "sedentary", label: "Sedentary", desc: "Office job, little exercise" },
+    { id: "light", label: "Lightly Active", desc: "1-3 days of light movement" },
+    { id: "moderate", label: "Moderately Active", desc: "3-5 days of exercise" },
+    { id: "active", label: "Very Active", desc: "6-7 days of intense sport" },
   ];
 
   const goals = [
-    "Lose belly fat",
-    "Sleep better",
-    "Reduce hot flashes",
-    "Feel feminine again",
-    "More energy",
-    "Less pain & stiffness",
+    { id: "fat_loss", label: "Lose belly fat" },
+    { id: "tone", label: "Tone & Sculpt" },
+    { id: "energy", label: "Boost Energy" },
+    { id: "maintain", label: "Hormone Balance" },
   ];
 
   const symptomOptions = [
-    "Hot flashes",
-    "Poor sleep",
-    "Weight gain",
-    "Low energy",
-    "Joint pain",
-    "Low confidence",
-    "Stress",
-    "Bloating",
-    "Back pain",
-    "Mood swings",
-    "Dry skin",
-    "Pelvic floor weakness",
+    "Hot flashes", "Poor sleep", "Weight gain", "Low energy", 
+    "Joint pain", "Bloating", "Back pain", "Mood swings"
   ];
 
   function next() {
-    if (step === 1 && !form.age) return;
-    if (step === 2 && !form.time) return;
-    if (step === 3 && form.symptoms.length === 0) return;
-    if (step === 4 && !form.goal) return;
-
+    // Validacija (opciono, ali dobro za UX)
+    if (step === 1 && (!form.age || !form.height || !form.weight)) return;
+    
     if (step < totalSteps) {
       setStep(step + 1);
       return;
     }
 
-    localStorage.setItem(
-      "quizData",
-      JSON.stringify(form)
-    );
-
+    localStorage.setItem("quizData", JSON.stringify(form));
     router.push("/results");
   }
 
@@ -93,314 +77,206 @@ export default function QuizPage() {
 
   function toggleSymptom(item: string) {
     if (form.symptoms.includes(item)) {
-      const next = form.symptoms.filter(
-        (x) => x !== item
-      );
-
+      const nextSymptoms = form.symptoms.filter((x) => x !== item);
       const sev = { ...form.severity };
       delete sev[item];
-
-      setForm({
-        ...form,
-        symptoms: next,
-        severity: sev,
-      });
+      setForm({ ...form, symptoms: nextSymptoms, severity: sev });
     } else {
       setForm({
         ...form,
         symptoms: [...form.symptoms, item],
-        severity: {
-          ...form.severity,
-          [item]: 3,
-        },
+        severity: { ...form.severity, [item]: 3 },
       });
     }
   }
 
-  function setSeverity(
-    symptom: string,
-    value: number
-  ) {
-    setForm({
-      ...form,
-      severity: {
-        ...form.severity,
-        [symptom]: value,
-      },
-    });
-  }
-
-  const progress = useMemo(
-    () => (step / totalSteps) * 100,
-    [step]
-  );
+  const progress = useMemo(() => (step / totalSteps) * 100, [step]);
 
   return (
-    <main className="max-w-5xl mx-auto px-6 py-14">
+    <main className="max-w-4xl mx-auto px-6 py-14">
       {/* HEADER */}
-      <section className="soft-card p-8 mb-8">
-        <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
-          Premium Assessment
-        </p>
-
-        <h1 className="text-5xl mb-5">
-          Build Your Personalized Plan
-        </h1>
-
-        <div className="h-3 bg-white rounded-full overflow-hidden border border-[#f0e3e8]">
-          <div
-            className="h-full bg-gradient-to-r from-[#d6a7b1] to-[#b98fa1]"
-            style={{
-              width: `${progress}%`,
-            }}
-          />
-        </div>
-
-        <p className="text-[#7b6870] mt-4">
+      <section className="soft-card p-8 mb-8 border border-[#f0e3e8]">
+        <p className="uppercase tracking-[0.25em] text-xs text-[#b98fa1] mb-4 font-bold">
           Step {step} of {totalSteps}
         </p>
+
+        <div className="h-2 bg-white rounded-full overflow-hidden border border-[#f0e3e8]">
+          <div
+            className="h-full bg-[#d6a7b1] transition-all duration-500"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
       </section>
 
-      {/* STEP 1 */}
+      {/* STEP 1: BIOMETRICS (Ključno za Nutrition) */}
       {step === 1 && (
-        <section className="soft-card p-8">
-          <h2 className="text-4xl mb-6">
-            What is your age range?
-          </h2>
-
-          <div className="grid md:grid-cols-2 gap-4">
-            {ageOptions.map((item) => (
-              <button
-                key={item}
-                onClick={() =>
-                  setForm({
-                    ...form,
-                    age: item,
-                  })
-                }
-                className={`p-5 rounded-3xl border text-left ${
-                  form.age === item
-                    ? "bg-[#fff1f5] border-[#d6a7b1]"
-                    : "bg-white border-[#f0e3e8]"
-                }`}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* STEP 2 */}
-      {step === 2 && (
-        <section className="soft-card p-8">
-          <h2 className="text-4xl mb-6">
-            How much time per day?
-          </h2>
-
-          <div className="grid gap-4">
-            {timeOptions.map((item) => (
-              <button
-                key={item}
-                onClick={() =>
-                  setForm({
-                    ...form,
-                    time: item,
-                  })
-                }
-                className={`p-5 rounded-3xl border text-left ${
-                  form.time === item
-                    ? "bg-[#fff1f5] border-[#d6a7b1]"
-                    : "bg-white border-[#f0e3e8]"
-                }`}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* STEP 3 */}
-      {step === 3 && (
-        <section className="soft-card p-8">
-          <h2 className="text-4xl mb-6">
-            Which symptoms affect you?
-          </h2>
-
-          <div className="grid md:grid-cols-2 gap-4">
-            {symptomOptions.map((item) => {
-              const active =
-                form.symptoms.includes(item);
-
-              return (
-                <button
-                  key={item}
-                  onClick={() =>
-                    toggleSymptom(item)
-                  }
-                  className={`p-5 rounded-3xl border text-left ${
-                    active
-                      ? "bg-[#fff1f5] border-[#d6a7b1]"
-                      : "bg-white border-[#f0e3e8]"
-                  }`}
-                >
-                  {active ? "✓ " : ""}
-                  {item}
-                </button>
-              );
-            })}
-          </div>
-        </section>
-      )}
-
-      {/* STEP 4 */}
-      {step === 4 && (
-        <section className="soft-card p-8">
-          <h2 className="text-4xl mb-6">
-            What is your main goal?
-          </h2>
-
-          <div className="grid gap-4">
-            {goals.map((item) => (
-              <button
-                key={item}
-                onClick={() =>
-                  setForm({
-                    ...form,
-                    goal: item,
-                  })
-                }
-                className={`p-5 rounded-3xl border text-left ${
-                  form.goal === item
-                    ? "bg-[#fff1f5] border-[#d6a7b1]"
-                    : "bg-white border-[#f0e3e8]"
-                }`}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* STEP 5 */}
-      {step === 5 && (
-        <section className="soft-card p-8">
-          <h2 className="text-4xl mb-6">
-            Rate symptom intensity
-          </h2>
-
-          <div className="space-y-6">
-            {form.symptoms.map((item) => (
-              <div key={item}>
-                <div className="mb-2">
-                  {item}
-                </div>
-
-                <input
-                  type="range"
-                  min="1"
-                  max="5"
-                  value={
-                    form.severity[item] || 3
-                  }
-                  onChange={(e) =>
-                    setSeverity(
-                      item,
-                      Number(e.target.value)
-                    )
-                  }
-                  className="w-full"
+        <section className="soft-card p-8 animate-in fade-in slide-in-from-bottom-4">
+          <h2 className="text-3xl text-[#4a3f44] mb-8">Tell us about yourself</h2>
+          <div className="grid gap-6">
+            <div>
+              <label className="block text-sm text-[#b98fa1] mb-2 font-bold uppercase tracking-widest">Age</label>
+              <input 
+                type="number" 
+                value={form.age}
+                onChange={(e) => setForm({...form, age: e.target.value})}
+                className="w-full p-4 rounded-2xl border border-[#f0e3e8] outline-none focus:border-[#d6a7b1]"
+                placeholder="e.g. 48"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm text-[#b98fa1] mb-2 font-bold uppercase tracking-widest">Height (cm)</label>
+                <input 
+                  type="number" 
+                  value={form.height}
+                  onChange={(e) => setForm({...form, height: e.target.value})}
+                  className="w-full p-4 rounded-2xl border border-[#f0e3e8] outline-none focus:border-[#d6a7b1]"
+                  placeholder="168"
                 />
+              </div>
+              <div>
+                <label className="block text-sm text-[#b98fa1] mb-2 font-bold uppercase tracking-widest">Weight (kg)</label>
+                <input 
+                  type="number" 
+                  value={form.weight}
+                  onChange={(e) => setForm({...form, weight: e.target.value})}
+                  className="w-full p-4 rounded-2xl border border-[#f0e3e8] outline-none focus:border-[#d6a7b1]"
+                  placeholder="72"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
-                <div className="text-sm text-[#7b6870] mt-1">
-                  Level:{" "}
-                  {form.severity[item] || 3}/5
+      {/* STEP 2: ACTIVITY LEVEL */}
+      {step === 2 && (
+        <section className="soft-card p-8 animate-in fade-in">
+          <h2 className="text-3xl text-[#4a3f44] mb-8">How active are you?</h2>
+          <div className="grid gap-4">
+            {activityOptions.map((opt) => (
+              <button
+                key={opt.id}
+                onClick={() => setForm({ ...form, activity: opt.id })}
+                className={`p-6 rounded-3xl border text-left transition-all ${
+                  form.activity === opt.id ? "bg-[#fdf2f5] border-[#d6a7b1] shadow-sm" : "bg-white border-[#f0e3e8]"
+                }`}
+              >
+                <div className="font-semibold text-[#4a3f44]">{opt.label}</div>
+                <div className="text-sm text-[#7b6870]">{opt.desc}</div>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* STEP 3: GOALS */}
+      {step === 3 && (
+        <section className="soft-card p-8 animate-in fade-in">
+          <h2 className="text-3xl text-[#4a3f44] mb-8">Your primary goal?</h2>
+          <div className="grid gap-4">
+            {goals.map((g) => (
+              <button
+                key={g.id}
+                onClick={() => setForm({ ...form, goal: g.id })}
+                className={`p-6 rounded-3xl border text-left transition-all ${
+                  form.goal === g.id ? "bg-[#fdf2f5] border-[#d6a7b1]" : "bg-white border-[#f0e3e8]"
+                }`}
+              >
+                {g.label}
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* STEP 4: SYMPTOMS (Multi-select) */}
+      {step === 4 && (
+        <section className="soft-card p-8 animate-in fade-in">
+          <h2 className="text-3xl text-[#4a3f44] mb-8">What are you feeling?</h2>
+          <div className="grid md:grid-cols-2 gap-3">
+            {symptomOptions.map((s) => (
+              <button
+                key={s}
+                onClick={() => toggleSymptom(s)}
+                className={`p-5 rounded-2xl border text-left transition-all ${
+                  form.symptoms.includes(s) ? "bg-[#fdf2f5] border-[#d6a7b1]" : "bg-white border-[#f0e3e8]"
+                }`}
+              >
+                {form.symptoms.includes(s) ? "✨ " : ""}{s}
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* STEP 5: INTENSITY */}
+      {step === 5 && (
+        <section className="soft-card p-8 animate-in fade-in">
+          <h2 className="text-3xl text-[#4a3f44] mb-8">Symptom Intensity</h2>
+          <div className="space-y-8">
+            {form.symptoms.map((s) => (
+              <div key={s}>
+                <div className="flex justify-between text-sm mb-2 font-bold text-[#4a3f44] uppercase tracking-widest">
+                  <span>{s}</span>
+                  <span>{form.severity[s]}/5</span>
                 </div>
+                <input
+                  type="range" min="1" max="5"
+                  value={form.severity[s] || 3}
+                  onChange={(e) => setForm({
+                    ...form,
+                    severity: { ...form.severity, [s]: Number(e.target.value) }
+                  })}
+                  className="w-full accent-[#d6a7b1]"
+                />
               </div>
             ))}
           </div>
         </section>
       )}
 
-      {/* STEP 6 */}
+      {/* STEP 6: TIME & LIFESTYLE */}
       {step === 6 && (
-        <section className="soft-card p-8">
-          <h2 className="text-4xl mb-8">
-            Lifestyle Snapshot
-          </h2>
-
-          <div className="mb-8">
-            <p className="mb-3">
-              Confidence level
-            </p>
-
-            <input
-              type="range"
-              min="1"
-              max="10"
-              value={form.confidence}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  confidence: Number(
-                    e.target.value
-                  ),
-                })
-              }
-              className="w-full"
-            />
-
-            <p className="text-[#7b6870] mt-2">
-              {form.confidence}/10
-            </p>
+        <section className="soft-card p-8 animate-in fade-in">
+          <h2 className="text-3xl text-[#4a3f44] mb-8">Lifestyle Snapshot</h2>
+          <div className="space-y-8">
+            <div>
+              <p className="mb-4 text-[#7b6870]">Training time available per day?</p>
+              <div className="flex gap-4">
+                {["10 min", "20 min", "30 min"].map(t => (
+                  <button key={t} onClick={() => setForm({...form, time: t})}
+                    className={`flex-1 py-3 rounded-xl border ${form.time === t ? "bg-[#d6a7b1] text-white border-[#d6a7b1]" : "bg-white text-[#7b6870] border-[#f0e3e8]"}`}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="mb-2 text-[#7b6870]">Sleep Quality ({form.sleep}/10)</p>
+              <input type="range" min="1" max="10" value={form.sleep} onChange={(e) => setForm({...form, sleep: Number(e.target.value)})} className="w-full accent-[#d6a7b1]" />
+            </div>
           </div>
+        </section>
+      )}
 
-          <div>
-            <p className="mb-3">
-              Sleep quality
-            </p>
-
-            <input
-              type="range"
-              min="1"
-              max="10"
-              value={form.sleep}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  sleep: Number(
-                    e.target.value
-                  ),
-                })
-              }
-              className="w-full"
-            />
-
-            <p className="text-[#7b6870] mt-2">
-              {form.sleep}/10
-            </p>
-          </div>
+      {/* STEP 7: FINAL (Confirmation) */}
+      {step === 7 && (
+        <section className="soft-card p-10 text-center animate-in zoom-in-95">
+          <div className="text-6xl mb-6">🥗</div>
+          <h2 className="text-3xl text-[#4a3f44] mb-4">Almost there!</h2>
+          <p className="text-[#7b6870] max-w-sm mx-auto mb-8">
+            We've calculated your metabolic rate and budget-friendly hormone menu. Ready to see your dashboard?
+          </p>
         </section>
       )}
 
       {/* NAV */}
       <section className="flex justify-between mt-8">
-        <button
-          onClick={back}
-          className="btn-outline"
-        >
-          Back
-        </button>
-
-        <button
-          onClick={next}
-          className="btn-primary"
-        >
-          {step === totalSteps
-            ? "See My Results"
-            : "Continue"}
+        <button onClick={back} className="btn-outline px-8 py-3 rounded-2xl">Back</button>
+        <button onClick={next} className="btn-primary px-10 py-3 rounded-2xl shadow-md">
+          {step === totalSteps ? "Generate My Plan" : "Continue"}
         </button>
       </section>
     </main>
