@@ -5,164 +5,103 @@
 @tailwind utilities;
 
 /* =======================================================
-   VELORA PREMIUM THEME - GLOBAL STYLES
+   VELORA PREMIUM THEME - FIXED & CLEANED
 ======================================================= */
 
 :root {
   --bg-base: #fffcfd;
-  --card: rgba(255, 255, 255, 0.9);
   --rose: #d8a7b5;
   --rose-light: #fdf2f5;
-  --gold: #c9a46a;
   --text-main: #4a3f44;
-  --text-muted: #7b6870;
-  --line: #f0e3e8;
-  --shadow-soft: 0 15px 45px rgba(115, 72, 87, 0.06);
-}
-
-html {
-  scroll-behavior: smooth;
+  --line: rgba(240, 227, 232, 0.5);
 }
 
 @layer base {
- body {
-  /* Koristimo !important da osiguramo da Next.js ne prelepi boju */
-  background-color: #fffcfd !important;
-  background-image: url("/velora-bg-pattern.png") !important;
-  background-repeat: repeat !important;
-  background-size: 500px !important; /* Podesi veličinu po želji */
-  background-attachment: fixed !important;
-  color: #4a3f44;
+  body {
+    background-color: var(--bg-base) !important;
+    /* Putanja mora biti tačna u public folderu */
+    background-image: url("/velora-bg-pattern.png") !important;
+    background-repeat: repeat !important;
+    background-size: 550px !important;
+    background-attachment: fixed !important;
+    color: var(--text-main);
+    font-family: "Inter", sans-serif;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 600;
+  }
 }
 
-/* Ključni deo: Svi glavni kontejneri moraju biti providni */
-main, section {
-  background: transparent !important;
-}
+@layer components {
+  /* SVE sekcije i glavni kontejneri MORAJU biti providni */
+  main, section, .page-wrapper {
+    background-color: transparent !important;
+  }
 
-/* Kartice postaju "staklene" - propuštaju ruže koje su ispod */
-.soft-card {
-  background: rgba(255, 255, 255, 0.65) !important; /* 65% bela, 35% providna */
-  backdrop-filter: blur(8px); /* Blago zamućenje za premium izgled */
-  border: 1px solid rgba(240, 227, 232, 0.5);
-  border-radius: 32px;
-  box-shadow: 0 10px 40px rgba(115, 72, 87, 0.04);
-}
-/* Elegantni naslovi */
-h1, h2, h3, h4, h5, h6 {
-  font-family: "Cormorant Garamond", serif;
-  font-weight: 600;
-  color: var(--text-main);
-  letter-spacing: -0.01em;
-}
+  /* Kartice koje propuštaju pozadinu (Rose Pattern) */
+  .soft-card {
+    background: rgba(255, 255, 255, 0.65) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--line);
+    border-radius: 32px;
+    box-shadow: 0 10px 40px rgba(115, 72, 87, 0.03);
+    transition: all 0.3s ease;
+  }
 
-/* Tanji scrollbar za luksuzniji osećaj */
-::-webkit-scrollbar {
-  width: 6px;
-}
+  /* Dugmad */
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-8 py-3 rounded-full font-bold transition-all;
+    background: linear-gradient(135deg, var(--rose), #eac8d1);
+    color: white !important;
+    box-shadow: 0 8px 20px rgba(216, 167, 181, 0.2);
+  }
 
-::-webkit-scrollbar-track {
-  background: var(--bg-base);
-}
+  .btn-primary:hover {
+    @apply scale-[1.02];
+    filter: brightness(1.05);
+  }
 
-::-webkit-scrollbar-thumb {
-  background: var(--rose);
-  border-radius: 10px;
-}
+  .btn-outline {
+    @apply inline-flex items-center justify-center px-8 py-3 rounded-full font-medium border transition-all;
+    border-color: var(--rose);
+    background: rgba(255, 255, 255, 0.5);
+    color: var(--text-main);
+  }
 
-/* =======================================================
-   PREMIUM COMPONENTS (Kompaktniji razmaci)
-======================================================= */
-
-.soft-card {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 28px; /* Malo zategnutije ivice */
-  box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition: transform 0.3s ease;
-}
-
-/* Glavna dugmad - Velora stil */
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 28px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--rose), #eac8d1);
-  color: white !important;
-  font-weight: 600;
-  box-shadow: 0 10px 25px rgba(216, 167, 181, 0.25);
-  transition: all 0.25s ease;
-  cursor: pointer;
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 15px 30px rgba(216, 167, 181, 0.35);
-  filter: brightness(1.05);
-}
-
-.btn-outline {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 28px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.6);
-  color: var(--text-main);
-  font-weight: 500;
-  transition: all 0.25s ease;
-  cursor: pointer;
-}
-
-.btn-outline:hover {
-  background: var(--rose-light);
-  border-color: var(--rose);
+  .btn-outline:hover {
+    background: var(--rose-light);
+  }
 }
 
 /* =======================================================
-   UTILITIES & ANIMATIONS
+   ANIMACIJE & RAZMACI
 ======================================================= */
 
-/* Smanjujemo paddinge sekcija da nema previše rupa */
 .section-space {
-  @apply py-8 md:py-12;
-}
-
-.animate-float {
-  animation: float 10s ease-in-out infinite;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
 }
 
 @keyframes float {
-  0% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-10px) rotate(3deg); }
-  100% { transform: translateY(0px) rotate(0deg); }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
 }
 
-/* Sakrivanje starog rose-bg sistema jer sad imamo body background */
-.rose-bg {
-  display: none;
+.animate-float {
+  animation: float 8s ease-in-out infinite;
 }
 
-/* =======================================================
-   RESPONSIVE
-======================================================= */
-
+/* Responzivnost */
 @media (max-width: 768px) {
   body {
-    background-size: 250px; /* Manji pattern na mobilnom */
+    background-size: 300px !important;
   }
-  
-  .soft-card {
-    border-radius: 20px;
-  }
-  
-  .btn-primary, .btn-outline {
-    width: 100%;
-    padding: 14px;
+  .section-space {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
   }
 }
