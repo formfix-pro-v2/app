@@ -2,7 +2,6 @@ import "./globals.css";
 import type { Metadata } from "next";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import PageTransition from "@/components/PageTransition";
 
 export const metadata: Metadata = {
   title: "Velora | Luxury Women Wellness",
@@ -61,7 +60,7 @@ export default function RootLayout({
           <Header />
 
           <main className="relative z-10 flex-1">
-            <PageTransition>{children}</PageTransition>
+            {children}
           </main>
 
           <Footer />
