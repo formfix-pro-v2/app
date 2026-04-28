@@ -23,11 +23,10 @@ export function useTranslation() {
   // t("Hello") → returns "Zdravo" if locale=sr, or "Hello" if en or not found
   const t = useCallback(
     (text: string): string => {
-      if (locale === "en") return text;
-      const dict = translations[locale];
-      return dict?.[text] || text;
+      // Language switcher is hidden — always return English
+      return text;
     },
-    [locale]
+    []
   );
 
   return { t, locale, setLocale };
