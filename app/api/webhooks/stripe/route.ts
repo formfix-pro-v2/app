@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 import { createClient } from "@supabase/supabase-js";
+
+export const dynamic = "force-dynamic";
 
 // Use service-level Supabase client for webhooks (no user session)
 function getAdminSupabase() {
@@ -21,6 +23,7 @@ export async function POST(request: Request) {
 
   try {
     if (webhookSecret && sig) {
+      const stripe = getStripe();
       event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
     } else {
       // For development without webhook secret
