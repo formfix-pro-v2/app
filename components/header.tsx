@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { getMembership } from "@/lib/subscription";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import type { User } from "@supabase/supabase-js";
 
 type Plan = "free" | "glow" | "elite";
@@ -80,7 +81,8 @@ export default function Header() {
           </nav>
 
           {/* RIGHT */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher />
             {user ? (
               premium && badgeText ? (
                 <Link

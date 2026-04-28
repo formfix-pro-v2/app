@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import {
+  getUnlockedAchievements,
+  getNextAchievements,
+  loadAchievementStats,
+  type Achievement,
+} from "@/lib/achievements";
 
 type CheckinEntry = {
   sleep: number;
@@ -154,6 +160,8 @@ function calculateStats(entries: CheckinEntry[]): Stats {
 export default function ProgressPage() {
   const [entries, setEntries] = useState<CheckinEntry[]>([]);
   const [day, setDay] = useState(1);
+  const [unlocked, setUnlocked] = useState<Achievement[]>([]);
+  const [nextUp, setNextUp] = useState<Achievement[]>([]);
 
   useEffect(() => {
     // Load check-in history from localStorage
@@ -196,6 +204,11 @@ export default function ProgressPage() {
 
     const savedDay = localStorage.getItem("day");
     if (savedDay) setDay(Number(savedDay));
+
+    // Load achievements
+    const achStats = loadAchievementStats();
+    setUnlocked(getUnlockedAchievements(achStats));
+    setNextUp(getNextAchievements(achStats));
   }, []);
 
   const stats = calculateStats(entries);
@@ -331,6 +344,51 @@ export default function ProgressPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* ACHIEVEMENTS */}
+      <section className="soft-card p-8 mb-8">
+        <h3 className="text-2xl text-[#4a3f44] mb-6">Achievements</h3>
+
+        {unlocked.length > 0 && (
+          <div className="mb-6">
+            <p className="text-xs font-bold uppercase text-[#b98fa1] tracking-widest mb-3">
+              Unlocked ({unlocked.length})
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {unlocked.map((a) => (
+                <div
+                  key={a.id}
+                  className="p-4 rounded-2xl bg-[#fdf2f5] border border-[#f0e3e8] text-center"
+                >
+                  <div className="text-3xl mb-2">{a.icon}</div>
+                  <div className="text-sm font-medium text-[#4a3f44]">{a.title}</div>
+                  <div className="text-[10px] text-[#b98fa1]">{a.description}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {nextUp.length > 0 && (
+          <div>
+            <p className="text-xs font-bold uppercase text-[#7b6870] tracking-widest mb-3">
+              Next Up
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              {nextUp.map((a) => (
+                <div
+                  key={a.id}
+                  className="p-4 rounded-2xl bg-white/40 border border-dashed border-[#f0e3e8] text-center opacity-60"
+                >
+                  <div className="text-2xl mb-2 grayscale">{a.icon}</div>
+                  <div className="text-sm text-[#7b6870]">{a.title}</div>
+                  <div className="text-[10px] text-[#b98fa1]">{a.description}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
 
       {/* CTA */}

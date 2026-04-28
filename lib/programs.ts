@@ -145,11 +145,20 @@ const EXERCISES: Exercise[] = [
     reps: "10 reps", seconds: 120,
     category: "core", intensity: 2,
   },
+  {
+    name: "Bird-Dog",
+    image: img("birddog.jpg"),
+    start: "Get onto all fours, hands under shoulders, knees under hips. Keep back flat.",
+    end: "Simultaneously extend the opposite arm and leg until they are parallel with the body, keeping core tight.",
+    why: "Strengthens core muscles (abs and lower back), glutes, and improves balance.",
+    reps: "12 each side", seconds: 120,
+    category: "core", intensity: 2,
+  },
 
   // --- LOWER BODY ---
   {
     name: "Chair Squat",
-    image: img("squat.jpg"),
+    image: img("chairsquat.jpg"),
     start: "Stand in front of a sturdy chair, feet hip-width.",
     end: "Lower hips back until you lightly touch the chair, then stand. Keep chest lifted.",
     why: "Builds functional leg strength safely, supports bone density.",
@@ -303,7 +312,7 @@ const EXERCISES: Exercise[] = [
   // --- POSTURE ---
   {
     name: "Wall Posture Reset",
-    image: img("wall.jpg"),
+    image: img("wallposture.jpg"),
     start: "Stand with back against wall, heels 2 inches from wall.",
     end: "Press head, shoulders, and hips to wall. Tuck chin slightly. Hold.",
     why: "Resets posture alignment, builds awareness of correct standing position.",
