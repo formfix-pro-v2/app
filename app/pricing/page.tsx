@@ -161,6 +161,95 @@ function PricingContent() {
         </div>
       </section>
 
+      {/* TESTIMONIALS */}
+      <section className="mb-14">
+        <h2 className="text-4xl text-center mb-8 text-[#4a3f44] italic">
+          What Women Are Saying
+        </h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          {[
+            {
+              quote: "I sleep through the night for the first time in 2 years. The evening breathing routines changed everything.",
+              name: "Marina, 52",
+              plan: "Glow Member",
+            },
+            {
+              quote: "The meal plans are so simple and cheap. I spend less than €6 a day and feel more energized than ever.",
+              name: "Jelena, 47",
+              plan: "Elite Member",
+            },
+            {
+              quote: "My joint pain reduced significantly after week 2. The mobility exercises are gentle but effective.",
+              name: "Ana, 55",
+              plan: "Glow Member",
+            },
+          ].map((t) => (
+            <div key={t.name} className="soft-card p-6">
+              <p className="text-[#6f5a62] text-sm leading-relaxed mb-4 italic">
+                &ldquo;{t.quote}&rdquo;
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-[#fdf2f5] flex items-center justify-center text-[#d8a7b5] text-sm font-bold">
+                  {t.name[0]}
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-[#4a3f44]">{t.name}</p>
+                  <p className="text-[10px] text-[#b98fa1] uppercase tracking-widest">{t.plan}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="soft-card p-10 mb-14">
+        <h2 className="text-4xl text-center mb-8 text-[#4a3f44]">
+          Frequently Asked Questions
+        </h2>
+        <div className="space-y-4 max-w-3xl mx-auto">
+          {[
+            {
+              q: "Is this suitable for complete beginners?",
+              a: "Absolutely. The program starts with a Foundation phase (gentle exercises only) and gradually increases intensity based on your fitness level and age.",
+            },
+            {
+              q: "How much does the meal plan cost per day?",
+              a: "All our meal plans are designed to cost under €7 per day. Most days average €5-6 using budget-friendly ingredients like canned fish, beans, oats and seasonal vegetables.",
+            },
+            {
+              q: "What if I have specific health conditions?",
+              a: "Velora is a wellness program, not medical treatment. The quiz personalizes your plan based on symptoms, but always consult your doctor before starting any new exercise or nutrition program.",
+            },
+            {
+              q: "Can I cancel anytime?",
+              a: "Yes. You can cancel from your Account page at any time. We also offer a 30-day money-back guarantee — no questions asked.",
+            },
+            {
+              q: "What's the difference between Glow and Elite?",
+              a: "Glow is a 30-day program perfect for getting started. Elite is 90 days with advanced phases, pelvic floor recovery, monthly reassessments and a premium exercise library.",
+            },
+            {
+              q: "Do I need any equipment?",
+              a: "No equipment needed. All exercises use bodyweight only. A chair and a wall are the only things you'll need.",
+            },
+          ].map((faq) => (
+            <details
+              key={faq.q}
+              className="group p-5 rounded-2xl bg-white border border-[#f0e3e8] hover:border-[#d8a7b5] transition-colors"
+            >
+              <summary className="cursor-pointer text-[#4a3f44] font-medium flex items-center justify-between">
+                {faq.q}
+                <span className="text-[#d8a7b5] group-open:rotate-45 transition-transform text-xl">+</span>
+              </summary>
+              <p className="mt-3 text-sm text-[#7b6870] leading-relaxed">
+                {faq.a}
+              </p>
+            </details>
+          ))}
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="soft-card p-10 text-center">
         <h2 className="text-5xl mb-5">

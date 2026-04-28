@@ -1,62 +1,19 @@
-import { NextResponse } from "next/server";
+import { updateSession } from "@/lib/supabase/middleware";
 import type { NextRequest } from "next/server";
 
-const premiumRoutes = [
-  "/dashboard",
-  "/session",
-  "/account",
-];
-
-export function middleware(
-  request: NextRequest
-) {
-  const { pathname } =
-    request.nextUrl;
-
-  const protectedRoute =
-    premiumRoutes.some(
-      (route) =>
-        pathname.startsWith(
-          route
-        )
-    );
-
-  if (!protectedRoute) {
-    return NextResponse.next();
-  }
-
-  // ✅ POPRAVLJENO: Middleware cita informacije iz Cookija, ne iz localStorage-a
-  const premium =
-    request.cookies.get(
-      "premium"
-    )?.value;
-
-  if (
-    premium !== "true"
-  ) {
-    const url =
-      request.nextUrl.clone();
-
-    url.pathname =
-      "/pricing";
-
-    url.searchParams.set(
-      "locked",
-      "true"
-    );
-
-    return NextResponse.redirect(
-      url
-    );
-  }
-
-  return NextResponse.next();
+export async function middleware(request: NextRequest) {
+  return await updateSession(request);
 }
 
 export const config = {
   matcher: [
-    "/dashboard/:path*",
-    "/session/:path*",
-    "/account/:path*",
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder assets
+     */
+    "/((?!_next/static|_next/image|favicon.ico|exercises/|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

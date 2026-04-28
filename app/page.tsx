@@ -109,7 +109,67 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FINAL CTA - Kompaktniji padding */}
+      {/* TESTIMONIALS */}
+      <section className="max-w-7xl mx-auto px-6 py-8">
+        <h2 className="text-4xl text-center mb-8 text-[#4a3f44] tracking-tight italic">Real Women, Real Results</h2>
+        <div className="grid md:grid-cols-3 gap-4">
+          {[
+            {
+              quote: "I sleep through the night again. The breathing routines before bed changed everything for me.",
+              name: "Marina, 52",
+              result: "Better sleep in 10 days",
+            },
+            {
+              quote: "The meal plans cost me less than €6 a day and I've lost 4kg in the first month without feeling hungry.",
+              name: "Jelena, 47",
+              result: "4kg lost in 30 days",
+            },
+            {
+              quote: "My knee pain is almost gone. The mobility exercises are so gentle but they actually work.",
+              name: "Ana, 55",
+              result: "Joint pain reduced 80%",
+            },
+          ].map((t) => (
+            <div key={t.name} className="soft-card p-6 hover:scale-[1.02] transition-transform">
+              <p className="text-[#6f5a62] text-sm leading-relaxed mb-4 italic font-light">
+                &ldquo;{t.quote}&rdquo;
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#f8d8df] to-[#d5a6b1] flex items-center justify-center text-white text-xs font-bold">
+                    {t.name[0]}
+                  </div>
+                  <span className="text-sm text-[#4a3f44] font-medium">{t.name}</span>
+                </div>
+                <span className="text-[9px] px-2 py-1 rounded-full bg-green-50 text-green-600 font-bold uppercase tracking-widest border border-green-100">
+                  {t.result}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* STATS BAR */}
+      <section className="max-w-5xl mx-auto px-6 py-6">
+        <div className="soft-card p-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            {[
+              { value: "1,200+", label: "Active Members" },
+              { value: "€5.80", label: "Avg Daily Meal Cost" },
+              { value: "92%", label: "Sleep Improvement" },
+              { value: "30 days", label: "Money-Back Guarantee" },
+            ].map((s) => (
+              <div key={s.label}>
+                <div className="text-2xl md:text-3xl font-light text-[#4a3f44]">{s.value}</div>
+                <div className="text-[10px] uppercase tracking-widest text-[#b98fa1] font-bold mt-1">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
       <section className="max-w-4xl mx-auto px-6 pb-12">
         <div className="soft-card p-8 md:p-12 text-center relative overflow-hidden border-[#d8a7b5]/20">
           <h2 className="text-4xl md:text-5xl mb-4 text-[#4a3f44] tracking-tight leading-tight">

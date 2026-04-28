@@ -4,14 +4,17 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { getTodayProgram } from "@/lib/programs";
 
-type Exercise = {
-  name: string;
-  image: string;
-  start: string;
-  end: string;
-  why: string;
-  reps: string;
-  seconds: number;
+const CATEGORY_LABELS: Record<string, string> = {
+  warmup: "Warm-Up",
+  cooldown: "Cool-Down",
+  core: "Core",
+  lower: "Lower Body",
+  upper: "Upper Body",
+  mobility: "Mobility",
+  balance: "Balance",
+  breathing: "Breathing",
+  pelvic: "Pelvic Floor",
+  posture: "Posture",
 };
 
 export default function SessionPage() {
@@ -19,16 +22,11 @@ export default function SessionPage() {
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
   const [index, setIndex] = useState(0);
-  
-  // Postavljamo inicijalno vreme na osnovu vežbe ili fallback na 120
   const [timeLeft, setTimeLeft] = useState(120);
-  const TOTAL_TIME = 120; 
 
   useEffect(() => {
     const savedDay = localStorage.getItem("day");
-    if (savedDay) {
-      setDay(Number(savedDay));
-    }
+    if (savedDay) setDay(Number(savedDay));
   }, []);
 
   const program = useMemo(() => {
@@ -36,6 +34,14 @@ export default function SessionPage() {
   }, [day]);
 
   const current = program.exercises[index];
+  const currentTime = current?.seconds || 120;
+
+  // Reset timer when exercise changes
+  useEffect(() => {
+    if (current) {
+      setTimeLeft(current.seconds);
+    }
+  }, [index, current]);
 
   useEffect(() => {
     if (!started || finished) return;
@@ -43,33 +49,96 @@ export default function SessionPage() {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
-          nextExercise();
-          return TOTAL_TIME;
+          handleNext();
+          return current?.seconds || 120;
         }
         return prev - 1;
       });
     }, 1000);
 
     return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [started, index, finished]);
 
-  function startSession() {
-    setStarted(true);
-  }
+  // Play soft gong sound when exercise ends
+  function playBeep() {
+    try {
+      const ctx = new AudioContext();
 
-  function nextExercise() {
-    if (index < program.exercises.length - 1) {
-      setIndex((prev) => prev + 1);
-      setTimeLeft(TOTAL_TIME);
-    } else {
-      setFinished(true);
-      setStarted(false);
-      localStorage.setItem("day", String(day + 1));
+      // Layer 1: deep warm tone
+      const osc1 = ctx.createOscillator();
+      const gain1 = ctx.createGain();
+      osc1.type = "sine";
+      osc1.frequency.value = 220;
+      gain1.gain.setValueAtTime(0.35, ctx.currentTime);
+      gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.5);
+      osc1.connect(gain1);
+      gain1.connect(ctx.destination);
+      osc1.start();
+      osc1.stop(ctx.currentTime + 2.5);
+
+      // Layer 2: mid harmonic shimmer
+      const osc2 = ctx.createOscillator();
+      const gain2 = ctx.createGain();
+      osc2.type = "sine";
+      osc2.frequency.value = 440;
+      gain2.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.0);
+      osc2.connect(gain2);
+      gain2.connect(ctx.destination);
+      osc2.start();
+      osc2.stop(ctx.currentTime + 2.0);
+
+      // Layer 3: high overtone sparkle
+      const osc3 = ctx.createOscillator();
+      const gain3 = ctx.createGain();
+      osc3.type = "sine";
+      osc3.frequency.value = 660;
+      gain3.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain3.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.5);
+      osc3.connect(gain3);
+      gain3.connect(ctx.destination);
+      osc3.start();
+      osc3.stop(ctx.currentTime + 1.5);
+    } catch {
+      // Audio not supported
     }
   }
 
-  function skip() {
-    nextExercise();
+  function handleStart() {
+    setStarted(true);
+    setTimeLeft(current.seconds);
+  }
+
+  function handleNext() {
+    playBeep();
+    if (index < program.exercises.length - 1) {
+      setIndex((prev) => prev + 1);
+    } else {
+      setFinished(true);
+      setStarted(false);
+      // Advance day
+      const nextDay = day + 1;
+      localStorage.setItem("day", String(nextDay));
+      // Auto-save a basic check-in for progress tracking
+      try {
+        const entry = {
+          sleep: 0,
+          energy: 0,
+          stress: 0,
+          symptoms: [],
+          date: new Date().toISOString(),
+          completedSession: true,
+        };
+        const history = JSON.parse(localStorage.getItem("checkinHistory") || "[]");
+        history.push(entry);
+        localStorage.setItem("checkinHistory", JSON.stringify(history.slice(-90)));
+      } catch { /* ignore */ }
+    }
+  }
+
+  function handleSkip() {
+    handleNext();
   }
 
   function format(sec: number) {
@@ -78,21 +147,28 @@ export default function SessionPage() {
     return `${m}:${String(s).padStart(2, "0")}`;
   }
 
-  // Računamo širinu progres bara
-  const progressWidth = (timeLeft / TOTAL_TIME) * 100;
+  const progressWidth = (timeLeft / currentTime) * 100;
 
   if (finished) {
     return (
       <main className="max-w-4xl mx-auto px-6 py-20">
         <section className="soft-card p-12 text-center">
           <div className="text-7xl mb-6">✅</div>
-          <h1 className="text-5xl mb-4">Session Complete</h1>
-          <p className="text-xl text-[#7b6870] mb-8">
-            Amazing work today. Your next day is unlocked.
+          <h1 className="text-5xl mb-4 text-[#4a3f44]">Session Complete!</h1>
+          <p className="text-xl text-[#7b6870] mb-4">
+            Amazing work today. Day {day + 1} is now unlocked.
           </p>
-          <Link href="/dashboard" className="btn-primary">
-            Return Dashboard
-          </Link>
+          <p className="text-sm text-[#b98fa1] mb-8">
+            You completed {program.exercises.length} exercises in ~{program.totalMinutes} minutes.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/dashboard" className="btn-primary">
+              Return to Dashboard
+            </Link>
+            <Link href="/checkin" className="btn-outline">
+              Daily Check-In
+            </Link>
+          </div>
         </section>
       </main>
     );
@@ -100,21 +176,31 @@ export default function SessionPage() {
 
   return (
     <main className="max-w-6xl mx-auto px-6 py-14">
-      {/* Header sekcija sa tajmerom i progres barom */}
+      {/* Header with timer */}
       <section className="soft-card overflow-hidden text-center mb-8">
         <div className="p-10">
-          <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1] mb-4">
-            Live Session
-          </p>
-          <h1 className="text-5xl mb-3">{program.title}</h1>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1]">
+              Live Session
+            </p>
+            <span className="text-[10px] px-3 py-1 rounded-full bg-[#fdf2f5] text-[#b98fa1] font-bold uppercase tracking-widest border border-[#f0e3e8]">
+              {program.phase}
+            </span>
+          </div>
+
+          <h1 className="text-4xl mb-3 text-[#4a3f44]">{program.title}</h1>
           <p className="text-[#7b6870] mb-8">
-            Exercise {index + 1} of {program.exercises.length}
+            Exercise {index + 1} of {program.exercises.length} •{" "}
+            <span className="text-[#b98fa1]">
+              {CATEGORY_LABELS[current.category]}
+            </span>
           </p>
 
           {!started ? (
             <button
-              onClick={startSession}
+              onClick={handleStart}
               className="w-40 h-40 rounded-full bg-[#d9a8b8] text-white text-5xl mx-auto shadow-xl hover:scale-105 transition flex items-center justify-center"
+              aria-label="Start session"
             >
               ▶
             </button>
@@ -125,10 +211,9 @@ export default function SessionPage() {
           )}
         </div>
 
-        {/* PROGRESS BAR LINIJA */}
         {started && (
           <div className="w-full h-2 bg-[#f0e3e8]">
-            <div 
+            <div
               className="h-full bg-[#d9a8b8] transition-all duration-1000 ease-linear"
               style={{ width: `${progressWidth}%` }}
             />
@@ -136,7 +221,7 @@ export default function SessionPage() {
         )}
       </section>
 
-      {/* Aktivna vežba */}
+      {/* Current exercise */}
       <section className="soft-card p-8 mb-8">
         <div className="w-full h-[400px] rounded-3xl overflow-hidden mb-8 border border-[#f0e3e8] bg-white">
           <img
@@ -146,19 +231,30 @@ export default function SessionPage() {
           />
         </div>
 
-        <div className="flex justify-between items-end mb-6">
-          <h2 className="text-5xl">{current.name}</h2>
-          <span className="text-[#b98fa1] text-xl font-medium">{current.reps}</span>
+        <div className="flex flex-wrap justify-between items-end mb-6 gap-4">
+          <div>
+            <h2 className="text-5xl text-[#4a3f44]">{current.name}</h2>
+            <span className="text-[10px] px-3 py-1 rounded-full bg-[#fdf2f5] text-[#b98fa1] font-bold uppercase tracking-widest border border-[#f0e3e8] mt-2 inline-block">
+              {CATEGORY_LABELS[current.category]}
+            </span>
+          </div>
+          <span className="text-[#b98fa1] text-xl font-medium">
+            {current.reps}
+          </span>
         </div>
 
         <div className="grid md:grid-cols-2 gap-5 text-[#6f5a62] mb-6">
           <div className="p-6 rounded-3xl bg-white border border-[#f0e3e8]">
-            <span className="block text-xs uppercase tracking-widest text-[#b98fa1] mb-2">Start Position</span>
+            <span className="block text-xs uppercase tracking-widest text-[#b98fa1] mb-2">
+              Start Position
+            </span>
             <p className="text-lg leading-relaxed">{current.start}</p>
           </div>
 
           <div className="p-6 rounded-3xl bg-white border border-[#f0e3e8]">
-            <span className="block text-xs uppercase tracking-widest text-[#b98fa1] mb-2">Finish Position</span>
+            <span className="block text-xs uppercase tracking-widest text-[#b98fa1] mb-2">
+              Finish Position
+            </span>
             <p className="text-lg leading-relaxed">{current.end}</p>
           </div>
         </div>
@@ -168,16 +264,18 @@ export default function SessionPage() {
         </div>
 
         <div className="flex gap-4">
-          <button onClick={skip} className="btn-outline flex-1">
+          <button onClick={handleSkip} className="btn-outline flex-1">
             Skip
           </button>
-          <button onClick={nextExercise} className="btn-primary flex-[2]">
-            Next Exercise
+          <button onClick={handleNext} className="btn-primary flex-[2]">
+            {index < program.exercises.length - 1
+              ? "Next Exercise"
+              : "Finish Session"}
           </button>
         </div>
       </section>
 
-      {/* Lista sledećih vežbi */}
+      {/* Up next */}
       <section className="soft-card p-8">
         <h3 className="text-3xl mb-5 text-[#4a3f44]">Up Next</h3>
         <div className="grid gap-3">
@@ -186,17 +284,26 @@ export default function SessionPage() {
               key={item.name + i}
               className="p-5 rounded-3xl bg-white border border-[#f0e3e8] flex justify-between items-center hover:border-[#d9a8b8] transition-colors"
             >
-              <span className="text-lg">
-                <span className="text-[#b98fa1] font-medium mr-3">{index + i + 2}.</span>
-                {item.name}
-              </span>
+              <div className="flex items-center gap-3">
+                <span className="text-[#b98fa1] font-medium w-6">
+                  {index + i + 2}.
+                </span>
+                <div>
+                  <span className="text-lg text-[#4a3f44]">{item.name}</span>
+                  <span className="text-[10px] ml-2 px-2 py-0.5 rounded-full bg-[#fdf2f5] text-[#b98fa1] border border-[#f0e3e8]">
+                    {CATEGORY_LABELS[item.category]}
+                  </span>
+                </div>
+              </div>
               <span className="text-sm px-4 py-1 rounded-full bg-[#fff4f7] text-[#b98fa1] border border-[#f8e1e7]">
                 {item.reps}
               </span>
             </div>
           ))}
           {program.exercises.slice(index + 1).length === 0 && (
-            <p className="text-[#b98fa1] italic">No more exercises. You are almost done!</p>
+            <p className="text-[#b98fa1] italic">
+              Last exercise — you&apos;re almost done!
+            </p>
           )}
         </div>
       </section>

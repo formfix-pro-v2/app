@@ -75,6 +75,21 @@
   .btn-outline:hover {
     background: var(--rose-light);
   }
+
+  /* Form inputs */
+  .input-premium {
+    @apply w-full p-4 rounded-2xl border outline-none transition-colors;
+    border-color: #ead8de;
+    background: white;
+  }
+
+  .input-premium:focus {
+    border-color: var(--rose);
+  }
+
+  .input-premium::placeholder {
+    color: #b98fa1;
+  }
 }
 
 /* =======================================================

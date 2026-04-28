@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 export default function CheckinPage() {
   const router = useRouter();
-
+  const [saving, setSaving] = useState(false);
   const [sleep, setSleep] = useState(5);
   const [energy, setEnergy] = useState(5);
   const [stress, setStress] = useState(5);
@@ -23,13 +23,13 @@ export default function CheckinPage() {
 
   function toggle(item: string) {
     setSymptoms((prev) =>
-      prev.includes(item)
-        ? prev.filter((x) => x !== item)
-        : [...prev, item]
+      prev.includes(item) ? prev.filter((x) => x !== item) : [...prev, item]
     );
   }
 
-  function saveCheckin() {
+  async function saveCheckin() {
+    setSaving(true);
+
     const payload = {
       sleep,
       energy,
@@ -39,10 +39,33 @@ export default function CheckinPage() {
       date: new Date().toISOString(),
     };
 
-    localStorage.setItem(
-      "dailyCheckin",
-      JSON.stringify(payload)
-    );
+    // Save locally as fallback
+    localStorage.setItem("dailyCheckin", JSON.stringify(payload));
+
+    // Save to history array for progress tracking
+    try {
+      const history = JSON.parse(localStorage.getItem("checkinHistory") || "[]");
+      // Avoid duplicate dates
+      const today = new Date().toISOString().split("T")[0];
+      const filtered = history.filter(
+        (e: { date: string }) => !e.date.startsWith(today)
+      );
+      filtered.push(payload);
+      // Keep last 90 days
+      const trimmed = filtered.slice(-90);
+      localStorage.setItem("checkinHistory", JSON.stringify(trimmed));
+    } catch { /* ignore */ }
+
+    // Try to save to API
+    try {
+      await fetch("/api/checkin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch {
+      // Silently fail - local storage has the data
+    }
 
     router.push("/dashboard");
   }
@@ -54,104 +77,93 @@ export default function CheckinPage() {
           Daily Check-In
         </p>
 
-        <h1 className="text-5xl mb-8">
-          How Are You Feeling Today?
-        </h1>
+        <h1 className="text-5xl mb-8">How Are You Feeling Today?</h1>
 
         {/* Sleep */}
         <div className="mb-8">
-          <p className="mb-3">Sleep Quality</p>
+          <label htmlFor="sleep-range" className="mb-3 block text-[#4a3f44]">
+            Sleep Quality
+          </label>
           <input
+            id="sleep-range"
             type="range"
             min="1"
             max="10"
             value={sleep}
-            onChange={(e) =>
-              setSleep(Number(e.target.value))
-            }
-            className="w-full"
+            onChange={(e) => setSleep(Number(e.target.value))}
+            className="w-full accent-[#d8a7b5]"
           />
-          <p className="text-[#7b6870] mt-2">
-            {sleep}/10
-          </p>
+          <p className="text-[#7b6870] mt-2">{sleep}/10</p>
         </div>
 
         {/* Energy */}
         <div className="mb-8">
-          <p className="mb-3">Energy Level</p>
+          <label htmlFor="energy-range" className="mb-3 block text-[#4a3f44]">
+            Energy Level
+          </label>
           <input
+            id="energy-range"
             type="range"
             min="1"
             max="10"
             value={energy}
-            onChange={(e) =>
-              setEnergy(Number(e.target.value))
-            }
-            className="w-full"
+            onChange={(e) => setEnergy(Number(e.target.value))}
+            className="w-full accent-[#d8a7b5]"
           />
-          <p className="text-[#7b6870] mt-2">
-            {energy}/10
-          </p>
+          <p className="text-[#7b6870] mt-2">{energy}/10</p>
         </div>
 
         {/* Stress */}
         <div className="mb-8">
-          <p className="mb-3">Stress Level</p>
+          <label htmlFor="stress-range" className="mb-3 block text-[#4a3f44]">
+            Stress Level
+          </label>
           <input
+            id="stress-range"
             type="range"
             min="1"
             max="10"
             value={stress}
-            onChange={(e) =>
-              setStress(Number(e.target.value))
-            }
-            className="w-full"
+            onChange={(e) => setStress(Number(e.target.value))}
+            className="w-full accent-[#d8a7b5]"
           />
-          <p className="text-[#7b6870] mt-2">
-            {stress}/10
-          </p>
+          <p className="text-[#7b6870] mt-2">{stress}/10</p>
         </div>
 
         {/* Time */}
         <div className="mb-8">
-          <p className="mb-3">Today's Time Available</p>
-
+          <p className="mb-3 text-[#4a3f44]">Today&apos;s Time Available</p>
           <div className="grid md:grid-cols-3 gap-4">
-            {["10 min", "20 min", "30+ min"].map(
-              (item) => (
-                <button
-                  key={item}
-                  onClick={() => setTime(item)}
-                  className={`p-4 rounded-2xl border ${
-                    time === item
-                      ? "bg-[#fff1f5] border-[#d6a7b1]"
-                      : "bg-white border-[#f0e3e8]"
-                  }`}
-                >
-                  {item}
-                </button>
-              )
-            )}
+            {["10 min", "20 min", "30+ min"].map((item) => (
+              <button
+                key={item}
+                onClick={() => setTime(item)}
+                className={`p-4 rounded-2xl border transition-colors ${
+                  time === item
+                    ? "bg-[#fff1f5] border-[#d6a7b1]"
+                    : "bg-white border-[#f0e3e8] hover:border-[#d6a7b1]/50"
+                }`}
+              >
+                {item}
+              </button>
+            ))}
           </div>
         </div>
 
         {/* Symptoms */}
         <div className="mb-10">
-          <p className="mb-3">Symptoms Today</p>
-
+          <p className="mb-3 text-[#4a3f44]">Symptoms Today</p>
           <div className="grid md:grid-cols-2 gap-4">
             {options.map((item) => {
-              const active =
-                symptoms.includes(item);
-
+              const active = symptoms.includes(item);
               return (
                 <button
                   key={item}
                   onClick={() => toggle(item)}
-                  className={`p-4 rounded-2xl border text-left ${
+                  className={`p-4 rounded-2xl border text-left transition-colors ${
                     active
                       ? "bg-[#fff1f5] border-[#d6a7b1]"
-                      : "bg-white border-[#f0e3e8]"
+                      : "bg-white border-[#f0e3e8] hover:border-[#d6a7b1]/50"
                   }`}
                 >
                   {active ? "✓ " : ""}
@@ -164,9 +176,10 @@ export default function CheckinPage() {
 
         <button
           onClick={saveCheckin}
-          className="btn-primary w-full"
+          disabled={saving}
+          className="btn-primary w-full py-4 disabled:opacity-60"
         >
-          Save & Update My Plan
+          {saving ? "Saving..." : "Save & Update My Plan"}
         </button>
       </section>
     </main>

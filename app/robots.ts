@@ -1,13 +1,14 @@
 import type { MetadataRoute } from "next";
 
-export const dynamic = "force-static";
-
 export default function robots(): MetadataRoute.Robots {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
   return {
     rules: {
       userAgent: "*",
       allow: "/",
+      disallow: ["/api/", "/checkout/"],
     },
-    sitemap: "https://formfix-pro-v2.github.io/app/sitemap.xml",
+    sitemap: `${baseUrl}/sitemap.xml`,
   };
 }

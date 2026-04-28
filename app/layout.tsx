@@ -1,6 +1,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Header from "@/components/header";
+import Footer from "@/components/footer";
+import PageTransition from "@/components/PageTransition";
 
 export const metadata: Metadata = {
   title: "Velora | Luxury Women Wellness",
@@ -15,8 +17,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#d8a7b5" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Velora" />
+      </head>
       <body className="text-[#3d2b32]">
-        <div className="min-h-screen relative overflow-x-hidden">
+        <div className="min-h-screen relative overflow-x-hidden flex flex-col">
           {/* luxury layered background */}
           <div
             className="fixed inset-0 -z-20"
@@ -51,7 +60,11 @@ export default function RootLayout({
 
           <Header />
 
-          <main className="relative z-10">{children}</main>
+          <main className="relative z-10 flex-1">
+            <PageTransition>{children}</PageTransition>
+          </main>
+
+          <Footer />
         </div>
       </body>
     </html>

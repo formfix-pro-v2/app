@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import {
   calculateNutrition,
-  getMealPlan,
+  getDayMealPlan,
 } from "@/lib/nutrition";
 
 export default function NutritionPage() {
@@ -41,12 +41,15 @@ export default function NutritionPage() {
     });
   }, [form]);
 
-  const meals =
+  const mealPlan =
     useMemo(() => {
-      return getMealPlan(
-        data.calories
+      return getDayMealPlan(
+        1,
+        data.calories,
+        [],
+        form.goal
       );
-    }, [data]);
+    }, [data, form.goal]);
 
   function savePlan() {
     localStorage.setItem(
@@ -230,20 +233,25 @@ export default function NutritionPage() {
         </h2>
 
         <div className="grid gap-6">
-          {meals.map(
-            (meal) => (
+          {mealPlan.meals.map(
+            ({ slot, meal }) => (
               <div
                 key={meal.title}
                 className="p-6 rounded-3xl bg-white border border-[#f0e3e8]"
               >
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-[9px] px-3 py-1 rounded-full bg-[#fdf2f5] text-[#d8a7b5] font-bold uppercase tracking-widest">
+                    {slot}
+                  </span>
+                  <span className="text-sm font-semibold text-[#4a3f44]">€{meal.price.toFixed(2)}</span>
+                </div>
+
                 <h3 className="text-3xl mb-2">
                   {meal.title}
                 </h3>
 
                 <p className="text-[#7b6870] mb-5">
-                  {
-                    meal.subtitle
-                  }
+                  {meal.subtitle}
                 </p>
 
                 <div className="grid md:grid-cols-3 gap-3 mb-5">
@@ -268,15 +276,9 @@ export default function NutritionPage() {
 
                     <ul className="space-y-2 text-[#6f5a62]">
                       {meal.ingredients.map(
-                        (
-                          item
-                        ) => (
-                          <li
-                            key={
-                              item
-                            }
-                          >
-                            • {item}
+                        (item, idx) => (
+                          <li key={item}>
+                            • <span className="font-medium">{meal.amounts?.[idx]}</span> {item}
                           </li>
                         )
                       )}
@@ -290,23 +292,25 @@ export default function NutritionPage() {
 
                     <ol className="space-y-2 text-[#6f5a62]">
                       {meal.steps.map(
-                        (
-                          step,
-                          i
-                        ) => (
-                          <li
-                            key={
-                              step
-                            }
-                          >
-                            {i + 1}.{" "}
-                            {step}
+                        (step, i) => (
+                          <li key={step}>
+                            {i + 1}. {step}
                           </li>
                         )
                       )}
                     </ol>
                   </div>
                 </div>
+
+                {meal.benefits.length > 0 && (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {meal.benefits.map((b) => (
+                      <span key={b} className="text-[10px] px-2 py-1 rounded-full bg-[#fdf2f5] text-[#b98fa1] border border-[#f0e3e8]">
+                        ✨ {b}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             )
           )}

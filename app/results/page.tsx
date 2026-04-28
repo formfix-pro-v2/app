@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   calculateNutrition,
-  getMealPlan,
+  getDayMealPlan,
   type Activity,
   type Goal,
 } from "@/lib/nutrition";
@@ -52,9 +52,11 @@ export default function ResultsPage() {
     });
   }, [data]);
 
-  const meals = useMemo(() => {
-    return getMealPlan(nutrition.calories);
-  }, [nutrition.calories]);
+  const mealPlan = useMemo(() => {
+    return getDayMealPlan(1, nutrition.calories, data.symptoms || [], data.goal || "tone");
+  }, [nutrition.calories, data.symptoms, data.goal]);
+
+  const sampleMeal = mealPlan.meals[0]?.meal;
 
   return (
     <main className="max-w-6xl mx-auto px-6 py-14">
@@ -111,34 +113,34 @@ export default function ResultsPage() {
             <h3 className="text-2xl text-[#4a3f44]">Your Day 1 Breakfast</h3>
           </div>
 
-          {meals.length > 0 && (
+          {sampleMeal && (
             <div className="p-8 rounded-[40px] bg-white border border-[#f0e3e8] shadow-sm">
               <div className="grid md:grid-cols-2 gap-10">
                 <div>
-                  <h4 className="text-3xl text-[#4a3f44] mb-2">{meals[0].title}</h4>
-                  <p className="text-[#7b6870] italic mb-6">"{meals[0].subtitle}"</p>
+                  <h4 className="text-3xl text-[#4a3f44] mb-2">{sampleMeal.title}</h4>
+                  <p className="text-[#7b6870] italic mb-6">&ldquo;{sampleMeal.subtitle}&rdquo;</p>
                   
                   <div className="flex gap-6 mb-8">
                     <div className="text-center">
                       <p className="text-[10px] text-[#b98fa1] uppercase font-bold tracking-widest mb-1">Prep</p>
-                      <p className="text-[#4a3f44] font-medium">{meals[0].prep}</p>
+                      <p className="text-[#4a3f44] font-medium">{sampleMeal.prep}</p>
                     </div>
                     <div className="text-center">
                       <p className="text-[10px] text-[#b98fa1] uppercase font-bold tracking-widest mb-1">Cost</p>
-                      <p className="text-[#4a3f44] font-medium">€{meals[0].price.toFixed(2)}</p>
+                      <p className="text-[#4a3f44] font-medium">€{sampleMeal.price.toFixed(2)}</p>
                     </div>
                     <div className="text-center">
                       <p className="text-[10px] text-[#b98fa1] uppercase font-bold tracking-widest mb-1">Protein</p>
-                      <p className="text-[#4a3f44] font-medium">{meals[0].protein}g</p>
+                      <p className="text-[#4a3f44] font-medium">{sampleMeal.protein}g</p>
                     </div>
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-xs font-bold uppercase text-[#4a3f44] tracking-widest mb-3">Ingredients</p>
-                    {meals[0].ingredients.map((ing) => (
+                    {sampleMeal.ingredients.map((ing, idx) => (
                       <div key={ing} className="flex items-center gap-3 text-[#6f5a62] text-sm">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#d6a7b1]" />
-                        {ing}
+                        <span className="font-medium">{sampleMeal.amounts?.[idx]}</span> {ing}
                       </div>
                     ))}
                   </div>
@@ -147,7 +149,7 @@ export default function ResultsPage() {
                 <div className="bg-[#fffcfd] p-6 rounded-[30px] border border-[#f0e3e8]">
                   <p className="text-xs font-bold uppercase text-[#4a3f44] tracking-widest mb-4">Method</p>
                   <ol className="space-y-4">
-                    {meals[0].steps.map((step, i) => (
+                    {sampleMeal.steps.map((step, i) => (
                       <li key={i} className="flex gap-4 text-sm text-[#6f5a62]">
                         <span className="font-bold text-[#d6a7b1]">{i + 1}.</span>
                         {step}

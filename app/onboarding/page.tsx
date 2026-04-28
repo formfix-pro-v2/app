@@ -1,27 +1,32 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function OnboardingPage() {
-  const router = useRouter();
-
   return (
-    <main className="min-h-screen bg-[#09060f] text-white flex items-center justify-center px-6">
-      <div className="max-w-2xl w-full p-10 rounded-3xl bg-white/5 border border-white/10 text-center">
-        <h1 className="text-5xl font-black mb-6">
-          Your Plan Is Ready
-        </h1>
+    <main className="min-h-[70vh] flex items-center justify-center px-6">
+      <div className="max-w-2xl w-full">
+        <section className="soft-card p-12 text-center">
+          <div className="text-5xl mb-6">✨</div>
 
-        <p className="text-zinc-300 mb-10 text-xl">
-          We created your personalized recovery roadmap.
-        </p>
+          <h1 className="text-5xl mb-4 text-[#4a3f44]">
+            Your Plan Is Ready
+          </h1>
 
-        <button
-          onClick={() => router.push("/pricing")}
-          className="px-10 py-5 rounded-2xl bg-gradient-to-r from-blue-600 to-orange-500 font-bold text-lg"
-        >
-          Unlock Program
-        </button>
+          <p className="text-[#7b6870] text-xl mb-10 leading-relaxed">
+            We&apos;ve created your personalized recovery roadmap based on your
+            assessment results.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/results" className="btn-primary px-10 py-4 text-lg">
+              View My Results
+            </Link>
+            <Link href="/pricing" className="btn-outline px-10 py-4">
+              Unlock Premium
+            </Link>
+          </div>
+        </section>
       </div>
     </main>
   );
