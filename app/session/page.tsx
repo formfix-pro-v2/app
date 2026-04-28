@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { getTodayProgram } from "@/lib/programs";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 
 const CATEGORY_LABELS: Record<string, string> = {
   warmup: "Warm-Up",
@@ -18,6 +19,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 export default function SessionPage() {
+  const { t } = useTranslation();
   const [day, setDay] = useState(1);
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(false);
@@ -154,16 +156,16 @@ export default function SessionPage() {
       <main className="max-w-4xl mx-auto px-6 py-20">
         <section className="soft-card p-12 text-center">
           <div className="text-7xl mb-6">✅</div>
-          <h1 className="text-5xl mb-4 text-[#4a3f44]">Session Complete!</h1>
+          <h1 className="text-5xl mb-4 text-[#4a3f44]">{t("Session Complete!")}</h1>
           <p className="text-xl text-[#7b6870] mb-4">
-            Amazing work today. Day {day + 1} is now unlocked.
+            {t("Amazing work today.")} Day {day + 1} is now unlocked.
           </p>
           <p className="text-sm text-[#b98fa1] mb-8">
             You completed {program.exercises.length} exercises in ~{program.totalMinutes} minutes.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/dashboard" className="btn-primary">
-              Return to Dashboard
+              {t("Return to Dashboard")}
             </Link>
             <Link href="/checkin" className="btn-outline">
               Daily Check-In
@@ -181,7 +183,7 @@ export default function SessionPage() {
         <div className="p-10">
           <div className="flex items-center justify-center gap-3 mb-4">
             <p className="uppercase tracking-[0.25em] text-sm text-[#b98fa1]">
-              Live Session
+              {t("Live Session")}
             </p>
             <span className="text-[10px] px-3 py-1 rounded-full bg-[#fdf2f5] text-[#b98fa1] font-bold uppercase tracking-widest border border-[#f0e3e8]">
               {program.phase}
@@ -190,7 +192,7 @@ export default function SessionPage() {
 
           <h1 className="text-4xl mb-3 text-[#4a3f44]">{program.title}</h1>
           <p className="text-[#7b6870] mb-8">
-            Exercise {index + 1} of {program.exercises.length} •{" "}
+            {t("Exercise")} {index + 1} {t("of")} {program.exercises.length} •{" "}
             <span className="text-[#b98fa1]">
               {CATEGORY_LABELS[current.category]}
             </span>
@@ -246,14 +248,14 @@ export default function SessionPage() {
         <div className="grid md:grid-cols-2 gap-5 text-[#6f5a62] mb-6">
           <div className="p-6 rounded-3xl bg-white border border-[#f0e3e8]">
             <span className="block text-xs uppercase tracking-widest text-[#b98fa1] mb-2">
-              Start Position
+              {t("Start Position")}
             </span>
             <p className="text-lg leading-relaxed">{current.start}</p>
           </div>
 
           <div className="p-6 rounded-3xl bg-white border border-[#f0e3e8]">
             <span className="block text-xs uppercase tracking-widest text-[#b98fa1] mb-2">
-              Finish Position
+              {t("Finish Position")}
             </span>
             <p className="text-lg leading-relaxed">{current.end}</p>
           </div>
@@ -265,19 +267,19 @@ export default function SessionPage() {
 
         <div className="flex gap-4">
           <button onClick={handleSkip} className="btn-outline flex-1">
-            Skip
+            {t("Skip")}
           </button>
           <button onClick={handleNext} className="btn-primary flex-[2]">
             {index < program.exercises.length - 1
-              ? "Next Exercise"
-              : "Finish Session"}
+              ? t("Next Exercise")
+              : t("Finish Session")}
           </button>
         </div>
       </section>
 
       {/* Up next */}
       <section className="soft-card p-8">
-        <h3 className="text-3xl mb-5 text-[#4a3f44]">Up Next</h3>
+        <h3 className="text-3xl mb-5 text-[#4a3f44]">{t("Up Next")}</h3>
         <div className="grid gap-3">
           {program.exercises.slice(index + 1).map((item, i) => (
             <div
@@ -302,7 +304,7 @@ export default function SessionPage() {
           ))}
           {program.exercises.slice(index + 1).length === 0 && (
             <p className="text-[#b98fa1] italic">
-              Last exercise — you&apos;re almost done!
+              {t("Last exercise — you're almost done!")}
             </p>
           )}
         </div>

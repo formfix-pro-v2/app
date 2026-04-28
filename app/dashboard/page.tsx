@@ -6,6 +6,7 @@ import { getTodayProgram, isRestDay } from "@/lib/programs";
 import { calculateNutrition, getDayMealPlan } from "@/lib/nutrition";
 import UpsellBanner from "@/components/UpsellBanner";
 import PrintButton from "@/components/PrintButton";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 
 type QuizData = {
   symptoms?: string[];
@@ -40,6 +41,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 export default function DashboardPage() {
+  const { t } = useTranslation();
   const [day, setDay] = useState(1);
   const [plan, setPlan] = useState("free");
   const [data, setData] = useState<QuizData>({});
@@ -83,19 +85,19 @@ export default function DashboardPage() {
     <main className="max-w-6xl mx-auto px-6 py-6 bg-transparent">
       {/* HEADER */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-[#4a3f44]">Your Dashboard</h1>
+        <h1 className="text-2xl font-bold text-[#4a3f44]">{t("Your Dashboard")}</h1>
         <div className="flex gap-3">
           <Link
             href="/checkin"
             className="btn-outline px-5 py-2 text-xs uppercase tracking-widest"
           >
-            Daily Check-In
+            {t("Daily Check-In")}
           </Link>
           <Link
             href="/"
             className="btn-outline px-5 py-2 text-xs uppercase tracking-widest"
           >
-            Home
+            {t("Home")}
           </Link>
         </div>
       </div>
@@ -168,7 +170,7 @@ export default function DashboardPage() {
             href={isRestDay(day) ? "/rest-day" : "/session"}
             className="btn-primary px-10 py-4 text-sm uppercase tracking-widest shadow-xl"
           >
-            {isRestDay(day) ? "Start Rest Day" : "Start Full Session"}
+            {isRestDay(day) ? t("Start Rest Day") : t("Start Full Session")}
           </Link>
         </div>
       </section>
@@ -178,7 +180,7 @@ export default function DashboardPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
           <div>
             <p className="uppercase tracking-[0.25em] text-[10px] text-[#d8a7b5] mb-1 font-bold">
-              Personalized Nutrition
+              {t("Personalized Nutrition")}
             </p>
             <h2 className="text-3xl text-[#4a3f44] font-light">
               Healthy Eating <span className="italic">On A Budget</span>
@@ -186,10 +188,10 @@ export default function DashboardPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <PrintButton targetId="printable-meals" label="Print Meals" />
+            <PrintButton targetId="printable-meals" label={t("Print Meals")} />
             <div className="bg-[#fdf2f5]/80 border border-[#f8d7e1] p-4 rounded-3xl text-center shadow-sm backdrop-blur-sm">
               <p className="text-[9px] uppercase tracking-widest text-[#d8a7b5] mb-1 font-bold">
-                Today&apos;s Meal Cost
+                {t("Today's Meal Cost")}
               </p>
               <p className="text-2xl font-semibold text-[#4a3f44]">
                 €{mealPlan.totalPrice.toFixed(2)}
@@ -338,7 +340,7 @@ export default function DashboardPage() {
       {/* EXERCISES LIST */}
       <section className="soft-card p-8">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl text-[#4a3f44] italic">Today&apos;s Routine</h2>
+          <h2 className="text-2xl text-[#4a3f44] italic">{t("Today's Routine")}</h2>
           <span className="text-[#d8a7b5] text-[10px] font-bold tracking-widest uppercase">
             {program.exercises.length} Movements
           </span>

@@ -43,19 +43,19 @@ export default function Header() {
     plan === "elite" ? "Elite ✨" : plan === "glow" ? "Glow ✨" : null;
 
   const desktopLinks = [
-    [t("nav.dashboard"), "/dashboard"],
-    [t("nav.assessment"), "/quiz"],
-    [t("nav.plans"), "/pricing"],
+    [t("Dashboard"), "/dashboard"],
+    [t("Assessment"), "/quiz"],
+    [t("Plans"), "/pricing"],
   ];
 
   const mobileLinks = [
-    [t("nav.dashboard"), "/dashboard"],
-    [t("nav.assessment"), "/quiz"],
-    [t("nav.progress"), "/progress"],
-    ["Journal", "/journal"],
-    [t("nav.shopping"), "/shopping"],
-    [t("nav.plans"), "/pricing"],
-    [t("nav.account"), "/account"],
+    [t("Dashboard"), "/dashboard"],
+    [t("Assessment"), "/quiz"],
+    [t("Progress"), "/progress"],
+    [t("Journal"), "/journal"],
+    [t("Shopping List"), "/shopping"],
+    [t("Plans"), "/pricing"],
+    [t("Account"), "/account"],
   ];
 
   return (
@@ -115,7 +115,7 @@ export default function Header() {
                 href="/login"
                 className="hidden sm:inline-flex px-4 py-2 rounded-2xl bg-gradient-to-r from-[#f1d4dc] via-[#ddb5c2] to-[#c897a6] text-white text-sm font-semibold shadow-[0_10px_25px_rgba(185,143,161,0.25)] hover:scale-[1.03] transition"
               >
-                {t("nav.signIn")}
+                {t("Sign In")}
               </Link>
             )}
 
@@ -161,7 +161,7 @@ export default function Header() {
                   onClick={() => setMobileOpen(false)}
                   className="btn-primary text-center mt-2"
                 >
-                  {t("nav.signIn")}
+                  {t("Sign In")}
                 </Link>
               )}
             </nav>

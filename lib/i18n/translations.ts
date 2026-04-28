@@ -14,440 +14,270 @@ export const LOCALE_FLAGS: Record<Locale, string> = {
   es: "🇪🇸",
 };
 
-type TranslationKeys = {
-  // Navigation
-  "nav.dashboard": string;
-  "nav.assessment": string;
-  "nav.progress": string;
-  "nav.shopping": string;
-  "nav.plans": string;
-  "nav.account": string;
-  "nav.signIn": string;
+// Simple dictionary approach: key = English text, value = translation
+// If key not found, returns the key itself (English fallback)
 
-  // Home page
-  "home.badge": string;
-  "home.title1": string;
-  "home.title2": string;
-  "home.title3": string;
-  "home.subtitle": string;
-  "home.cta": string;
-  "home.viewPlans": string;
-  "home.trusted": string;
-  "home.insideReset": string;
-  "home.viewDashboard": string;
-  "home.feature1": string;
-  "home.feature2": string;
-  "home.feature3": string;
-  "home.feature4": string;
-  "home.feature5": string;
-  "home.pillar1": string;
-  "home.pillar1Desc": string;
-  "home.pillar2": string;
-  "home.pillar2Desc": string;
-  "home.pillar3": string;
-  "home.pillar3Desc": string;
-  "home.signatureTitle": string;
-  "home.nextChapter": string;
-  "home.canFeel": string;
-  "home.amazing": string;
-  "home.beginAssessment": string;
-  "home.startAssessment": string;
+const sr: Record<string, string> = {
+  // Nav
+  "Dashboard": "Kontrolna tabla",
+  "Assessment": "Procena",
+  "Progress": "Napredak",
+  "Shopping": "Kupovina",
+  "Plans": "Planovi",
+  "Account": "Nalog",
+  "Sign In": "Prijava",
+  "Journal": "Dnevnik",
+  "Shopping List": "Lista za kupovinu",
+
+  // Home
+  "Menopause Wellness for Women 40+": "Wellness za žene 40+",
+  "Feel Balanced.": "Osećaj ravnotežu.",
+  "Move Gracefully.": "Krećite se graciozno.",
+  "Glow Again.": "Zasijajte ponovo.",
+  "Personalized programs for hot flashes, sleep, belly fat and joint stiffness.": "Personalizovani programi za valunge, san, stomak i ukočenost zglobova.",
+  "Start Free Plan": "Započni besplatno",
+  "View Membership": "Pogledaj članstvo",
+  "Trusted by women building strength through midlife.": "Žene koje grade snagu u srednjim godinama nam veruju.",
+  "Inside Your Reset:": "Šta dobijate:",
+  "View Example Dashboard": "Pogledaj primer",
+  "Daily movement sessions": "Dnevne sesije vežbanja",
+  "Menopause symptom support plans": "Planovi za simptome menopauze",
+  "Posture & confidence routines": "Rutine za držanje i samopouzdanje",
+  "Better sleep reset habits": "Navike za bolji san",
+  "Nutrition guidance": "Nutritivno vođenje",
+  "Hormone Calm": "Hormonski mir",
+  "Support nervous system balance and reduce daily overwhelm.": "Podrška nervnom sistemu i smanjenje svakodnevnog stresa.",
+  "Lean Strength": "Vitka snaga",
+  "Gentle strength sessions to improve shape and metabolism.": "Nežne vežbe snage za poboljšanje oblika i metabolizma.",
+  "Elegant Energy": "Elegantna energija",
+  "Restore vitality without punishing workouts.": "Obnovite vitalnost bez iscrpljujućih treninga.",
+  "Signature Programs": "Programi",
+  "Your Next Chapter": "Vaše sledeće poglavlje",
+  "Can Feel": "može biti",
+  "Amazing": "neverovatno",
+  "Begin with a personalized assessment today.": "Započnite personalizovanu procenu danas.",
+  "Start Assessment": "Započni procenu",
+  "Real Women, Real Results": "Prave žene, pravi rezultati",
 
   // Dashboard
-  "dash.title": string;
-  "dash.todayFocus": string;
-  "dash.startSession": string;
-  "dash.nutrition": string;
-  "dash.mealCost": string;
-  "dash.todayRoutine": string;
-  "dash.movements": string;
-  "dash.dailyCheckin": string;
-  "dash.home": string;
-  "dash.unlockMenu": string;
-  "dash.upgrade": string;
-  "dash.ingredients": string;
-  "dash.howToMake": string;
+  "Your Dashboard": "Vaša kontrolna tabla",
+  "Daily Check-In": "Dnevni check-in",
+  "Home": "Početna",
+  "Today's Focus": "Današnji fokus",
+  "Start Full Session": "Započni sesiju",
+  "Start Rest Day": "Započni dan odmora",
+  "Personalized Nutrition": "Personalizovana ishrana",
+  "Healthy Eating": "Zdrava ishrana",
+  "On A Budget": "po pristupačnoj ceni",
+  "Today's Meal Cost": "Cena obroka danas",
+  "Print Meals": "Štampaj jelovnik",
+  "Ingredients": "Sastojci",
+  "How to Make": "Priprema",
+  "Unlock Your Full Budget Menu": "Otključajte kompletan jelovnik",
+  "Upgrade to Premium Plan": "Nadogradite na Premium",
+  "Today's Routine": "Današnja rutina",
+  "Movements": "Pokreta",
+  "Calories": "Kalorije",
+  "Protein": "Proteini",
+  "Fiber": "Vlakna",
+  "Water": "Voda",
 
   // Session
-  "session.liveSession": string;
-  "session.exercise": string;
-  "session.of": string;
-  "session.complete": string;
-  "session.amazingWork": string;
-  "session.returnDashboard": string;
-  "session.startPosition": string;
-  "session.finishPosition": string;
-  "session.skip": string;
-  "session.next": string;
-  "session.finish": string;
-  "session.upNext": string;
-  "session.lastExercise": string;
+  "Live Session": "Sesija uživo",
+  "Exercise": "Vežba",
+  "of": "od",
+  "Session Complete!": "Sesija završena!",
+  "Amazing work today.": "Odličan posao danas.",
+  "Return to Dashboard": "Nazad na tablu",
+  "Start Position": "Početni položaj",
+  "Finish Position": "Završni položaj",
+  "Skip": "Preskoči",
+  "Next Exercise": "Sledeća vežba",
+  "Finish Session": "Završi sesiju",
+  "Up Next": "Sledeće",
+  "Last exercise — you're almost done!": "Poslednja vežba — skoro ste gotovi!",
 
   // Auth
-  "auth.createAccount": string;
-  "auth.welcomeBack": string;
-  "auth.signIn": string;
-  "auth.signUp": string;
-  "auth.email": string;
-  "auth.password": string;
-  "auth.noAccount": string;
-  "auth.hasAccount": string;
-  "auth.backHome": string;
+  "Create Account": "Napravi nalog",
+  "Welcome Back": "Dobrodošli nazad",
+  "Sign Up": "Registruj se",
+  "Email Address": "Email adresa",
+  "Password": "Lozinka",
+  "Don't have an account? Sign up": "Nemate nalog? Registrujte se",
+  "Already have an account? Sign in": "Već imate nalog? Prijavite se",
+  "← Back to Home": "← Nazad na početnu",
+  "Start your wellness journey today": "Započnite svoj wellness put danas",
+  "Sign in to continue your journey": "Prijavite se da nastavite svoj put",
+
+  // Pricing
+  "Choose Your Membership": "Izaberite članstvo",
+  "Premium Plans Designed For Women 40+": "Premium planovi za žene 40+",
+  "Compare your options, explore benefits and choose the transformation path that fits you best.": "Uporedite opcije i izaberite put transformacije koji vam najviše odgovara.",
+  "Most Popular": "Najpopularniji",
+  "Best Value": "Najbolja vrednost",
+  "Quick Comparison": "Brzo poređenje",
+  "Start Feeling Better Today": "Počnite da se osećate bolje danas",
+  "What Women Are Saying": "Šta žene kažu",
+  "Frequently Asked Questions": "Često postavljana pitanja",
+
+  // Progress
+  "Your Journey": "Vaš put",
+  "Progress Tracker": "Praćenje napretka",
+  "See how your body is responding to the program over time.": "Pogledajte kako vaše telo reaguje na program tokom vremena.",
+  "Current Day": "Trenutni dan",
+  "Check-Ins": "Check-in-ovi",
+  "Streak": "Niz dana",
+  "Avg Sleep": "Prosečan san",
+  "Sleep Quality": "Kvalitet sna",
+  "Energy Level": "Nivo energije",
+  "Stress Level": "Nivo stresa",
+  "Achievements": "Dostignuća",
+
+  // Shopping
+  "Smart Shopping": "Pametna kupovina",
+  "Your Grocery List": "Vaša lista za kupovinu",
+  "Auto-generated from your personalized meal plan. Budget-friendly and hormone-safe.": "Automatski generisana iz vašeg personalizovanog jelovnika. Pristupačna i bezbedna za hormone.",
+  "Print List": "Štampaj listu",
+  "Budget Tips": "Saveti za uštedu",
+  "Generate for:": "Generiši za:",
+  "Items": "Stavki",
+
+  // Journal
+  "Personal Reflection": "Lična refleksija",
+  "Your Journey Journal": "Dnevnik vašeg puta",
+  "Track how you feel at key milestones. Look back and see how far you've come.": "Pratite kako se osećate na ključnim tačkama. Pogledajte koliko ste napredovali.",
+  "Your Transformation": "Vaša transformacija",
+  "Write Entry": "Napiši unos",
+  "Save Entry": "Sačuvaj unos",
+
+  // Rest Day
+  "Rest Day": "Dan odmora",
+  "Complete Rest Day & Advance": "Završi dan odmora i napreduj",
+  "Back to Dashboard": "Nazad na tablu",
+  "Today's Affirmation": "Današnja afirmacija",
+  "Self-Care Ideas": "Ideje za brigu o sebi",
+
+  // Account
+  "My Account": "Moj nalog",
+  "Membership Actions": "Akcije članstva",
+  "Upgrade Now": "Nadogradi sada",
+  "Cancel Membership": "Otkaži članstvo",
+  "Reset Account": "Resetuj nalog",
+  "Sign Out": "Odjavi se",
+  "Plan": "Plan",
+  "Status": "Status",
+  "Days Left": "Preostalo dana",
+  "Expiry": "Ističe",
 
   // Common
-  "common.loading": string;
-  "common.day": string;
-  "common.days": string;
-  "common.min": string;
-  "common.exercises": string;
-  "common.calories": string;
-  "common.protein": string;
-  "common.fiber": string;
-  "common.water": string;
+  "Loading...": "Učitavanje...",
+  "Day": "Dan",
+  "days": "dana",
+  "min": "min",
+  "Exercises": "Vežbi",
+  "Active Members": "Aktivnih članica",
+  "Avg Daily Meal Cost": "Prosečna cena obroka",
+  "Sleep Improvement": "Poboljšanje sna",
+  "Money-Back Guarantee": "Garancija povrata novca",
 };
 
-const en: TranslationKeys = {
-  "nav.dashboard": "Dashboard",
-  "nav.assessment": "Assessment",
-  "nav.progress": "Progress",
-  "nav.shopping": "Shopping",
-  "nav.plans": "Plans",
-  "nav.account": "Account",
-  "nav.signIn": "Sign In",
-
-  "home.badge": "Menopause Wellness for Women 40+",
-  "home.title1": "Feel Balanced.",
-  "home.title2": "Move Gracefully.",
-  "home.title3": "Glow Again.",
-  "home.subtitle": "Personalized programs for hot flashes, sleep, belly fat and joint stiffness.",
-  "home.cta": "Start Free Plan",
-  "home.viewPlans": "View Membership",
-  "home.trusted": "Trusted by women building strength through midlife.",
-  "home.insideReset": "Inside Your Reset:",
-  "home.viewDashboard": "View Example Dashboard",
-  "home.feature1": "Daily movement sessions",
-  "home.feature2": "Menopause symptom support plans",
-  "home.feature3": "Posture & confidence routines",
-  "home.feature4": "Better sleep reset habits",
-  "home.feature5": "Nutrition guidance",
-  "home.pillar1": "Hormone Calm",
-  "home.pillar1Desc": "Support nervous system balance and reduce daily overwhelm.",
-  "home.pillar2": "Lean Strength",
-  "home.pillar2Desc": "Gentle strength sessions to improve shape and metabolism.",
-  "home.pillar3": "Elegant Energy",
-  "home.pillar3Desc": "Restore vitality without punishing workouts.",
-  "home.signatureTitle": "Signature Programs",
-  "home.nextChapter": "Your Next Chapter",
-  "home.canFeel": "Can Feel",
-  "home.amazing": "Amazing",
-  "home.beginAssessment": "Begin with a personalized assessment today.",
-  "home.startAssessment": "Start Assessment",
-
-  "dash.title": "Your Dashboard",
-  "dash.todayFocus": "Today's Focus",
-  "dash.startSession": "Start Full Session",
-  "dash.nutrition": "Personalized Nutrition",
-  "dash.mealCost": "Today's Meal Cost",
-  "dash.todayRoutine": "Today's Routine",
-  "dash.movements": "Movements",
-  "dash.dailyCheckin": "Daily Check-In",
-  "dash.home": "Home",
-  "dash.unlockMenu": "Unlock Your Full Budget Menu",
-  "dash.upgrade": "Upgrade to Premium Plan",
-  "dash.ingredients": "Ingredients",
-  "dash.howToMake": "How to Make",
-
-  "session.liveSession": "Live Session",
-  "session.exercise": "Exercise",
-  "session.of": "of",
-  "session.complete": "Session Complete!",
-  "session.amazingWork": "Amazing work today.",
-  "session.returnDashboard": "Return to Dashboard",
-  "session.startPosition": "Start Position",
-  "session.finishPosition": "Finish Position",
-  "session.skip": "Skip",
-  "session.next": "Next Exercise",
-  "session.finish": "Finish Session",
-  "session.upNext": "Up Next",
-  "session.lastExercise": "Last exercise — you're almost done!",
-
-  "auth.createAccount": "Create Account",
-  "auth.welcomeBack": "Welcome Back",
-  "auth.signIn": "Sign In",
-  "auth.signUp": "Sign Up",
-  "auth.email": "Email Address",
-  "auth.password": "Password",
-  "auth.noAccount": "Don't have an account? Sign up",
-  "auth.hasAccount": "Already have an account? Sign in",
-  "auth.backHome": "← Back to Home",
-
-  "common.loading": "Loading...",
-  "common.day": "Day",
-  "common.days": "days",
-  "common.min": "min",
-  "common.exercises": "Exercises",
-  "common.calories": "Calories",
-  "common.protein": "Protein",
-  "common.fiber": "Fiber",
-  "common.water": "Water",
+const de: Record<string, string> = {
+  "Dashboard": "Dashboard",
+  "Assessment": "Bewertung",
+  "Progress": "Fortschritt",
+  "Shopping": "Einkaufen",
+  "Plans": "Pläne",
+  "Account": "Konto",
+  "Sign In": "Anmelden",
+  "Journal": "Tagebuch",
+  "Shopping List": "Einkaufsliste",
+  "Menopause Wellness for Women 40+": "Wellness für Frauen ab 40",
+  "Feel Balanced.": "Fühle dich ausgeglichen.",
+  "Move Gracefully.": "Bewege dich anmutig.",
+  "Glow Again.": "Strahle wieder.",
+  "Personalized programs for hot flashes, sleep, belly fat and joint stiffness.": "Personalisierte Programme für Hitzewallungen, Schlaf, Bauchfett und Gelenksteifheit.",
+  "Start Free Plan": "Kostenlos starten",
+  "View Membership": "Mitgliedschaft ansehen",
+  "Inside Your Reset:": "In Ihrem Reset:",
+  "View Example Dashboard": "Beispiel ansehen",
+  "Daily movement sessions": "Tägliche Bewegungseinheiten",
+  "Menopause symptom support plans": "Menopause-Symptom-Pläne",
+  "Posture & confidence routines": "Haltung & Selbstvertrauen",
+  "Better sleep reset habits": "Bessere Schlafgewohnheiten",
+  "Nutrition guidance": "Ernährungsberatung",
+  "Hormone Calm": "Hormonelle Ruhe",
+  "Lean Strength": "Schlanke Stärke",
+  "Elegant Energy": "Elegante Energie",
+  "Signature Programs": "Programme",
+  "Your Next Chapter": "Ihr nächstes Kapitel",
+  "Can Feel": "kann sich",
+  "Amazing": "großartig anfühlen",
+  "Start Assessment": "Bewertung starten",
+  "Real Women, Real Results": "Echte Frauen, echte Ergebnisse",
+  "Your Dashboard": "Ihr Dashboard",
+  "Start Full Session": "Sitzung starten",
+  "Personalized Nutrition": "Personalisierte Ernährung",
+  "Today's Routine": "Heutige Routine",
+  "Session Complete!": "Sitzung abgeschlossen!",
+  "Create Account": "Konto erstellen",
+  "Welcome Back": "Willkommen zurück",
+  "Sign Out": "Abmelden",
+  "My Account": "Mein Konto",
+  "Loading...": "Laden...",
+  "Print Meals": "Mahlzeiten drucken",
+  "Print List": "Liste drucken",
 };
 
-const sr: TranslationKeys = {
-  "nav.dashboard": "Kontrolna tabla",
-  "nav.assessment": "Procena",
-  "nav.progress": "Napredak",
-  "nav.shopping": "Kupovina",
-  "nav.plans": "Planovi",
-  "nav.account": "Nalog",
-  "nav.signIn": "Prijava",
-
-  "home.badge": "Wellness za žene 40+",
-  "home.title1": "Osećaj se uravnoteženo.",
-  "home.title2": "Krećite se graciozno.",
-  "home.title3": "Zasijajte ponovo.",
-  "home.subtitle": "Personalizovani programi za valunge, san, stomak i ukočenost zglobova.",
-  "home.cta": "Započni besplatno",
-  "home.viewPlans": "Pogledaj članstvo",
-  "home.trusted": "Žene koje grade snagu u srednjim godinama nam veruju.",
-  "home.insideReset": "Šta dobijate:",
-  "home.viewDashboard": "Pogledaj primer",
-  "home.feature1": "Dnevne sesije vežbanja",
-  "home.feature2": "Planovi za simptome menopauze",
-  "home.feature3": "Rutine za držanje i samopouzdanje",
-  "home.feature4": "Navike za bolji san",
-  "home.feature5": "Nutritivno vođenje",
-  "home.pillar1": "Hormonski mir",
-  "home.pillar1Desc": "Podrška nervnom sistemu i smanjenje svakodnevnog stresa.",
-  "home.pillar2": "Vitka snaga",
-  "home.pillar2Desc": "Nežne vežbe snage za poboljšanje oblika i metabolizma.",
-  "home.pillar3": "Elegantna energija",
-  "home.pillar3Desc": "Obnovite vitalnost bez iscrpljujućih treninga.",
-  "home.signatureTitle": "Programi",
-  "home.nextChapter": "Vaše sledeće poglavlje",
-  "home.canFeel": "može biti",
-  "home.amazing": "neverovatno",
-  "home.beginAssessment": "Započnite personalizovanu procenu danas.",
-  "home.startAssessment": "Započni procenu",
-
-  "dash.title": "Vaša kontrolna tabla",
-  "dash.todayFocus": "Današnji fokus",
-  "dash.startSession": "Započni sesiju",
-  "dash.nutrition": "Personalizovana ishrana",
-  "dash.mealCost": "Cena obroka danas",
-  "dash.todayRoutine": "Današnja rutina",
-  "dash.movements": "Pokreta",
-  "dash.dailyCheckin": "Dnevni check-in",
-  "dash.home": "Početna",
-  "dash.unlockMenu": "Otključajte kompletan jelovnik",
-  "dash.upgrade": "Nadogradite na Premium",
-  "dash.ingredients": "Sastojci",
-  "dash.howToMake": "Priprema",
-
-  "session.liveSession": "Sesija uživo",
-  "session.exercise": "Vežba",
-  "session.of": "od",
-  "session.complete": "Sesija završena!",
-  "session.amazingWork": "Odličan posao danas.",
-  "session.returnDashboard": "Nazad na tablu",
-  "session.startPosition": "Početni položaj",
-  "session.finishPosition": "Završni položaj",
-  "session.skip": "Preskoči",
-  "session.next": "Sledeća vežba",
-  "session.finish": "Završi sesiju",
-  "session.upNext": "Sledeće",
-  "session.lastExercise": "Poslednja vežba — skoro ste gotovi!",
-
-  "auth.createAccount": "Napravi nalog",
-  "auth.welcomeBack": "Dobrodošli nazad",
-  "auth.signIn": "Prijavi se",
-  "auth.signUp": "Registruj se",
-  "auth.email": "Email adresa",
-  "auth.password": "Lozinka",
-  "auth.noAccount": "Nemate nalog? Registrujte se",
-  "auth.hasAccount": "Već imate nalog? Prijavite se",
-  "auth.backHome": "← Nazad na početnu",
-
-  "common.loading": "Učitavanje...",
-  "common.day": "Dan",
-  "common.days": "dana",
-  "common.min": "min",
-  "common.exercises": "Vežbi",
-  "common.calories": "Kalorije",
-  "common.protein": "Proteini",
-  "common.fiber": "Vlakna",
-  "common.water": "Voda",
+const es: Record<string, string> = {
+  "Dashboard": "Panel",
+  "Assessment": "Evaluación",
+  "Progress": "Progreso",
+  "Shopping": "Compras",
+  "Plans": "Planes",
+  "Account": "Cuenta",
+  "Sign In": "Iniciar sesión",
+  "Journal": "Diario",
+  "Shopping List": "Lista de compras",
+  "Menopause Wellness for Women 40+": "Bienestar para mujeres de 40+",
+  "Feel Balanced.": "Siéntete equilibrada.",
+  "Move Gracefully.": "Muévete con gracia.",
+  "Glow Again.": "Brilla de nuevo.",
+  "Personalized programs for hot flashes, sleep, belly fat and joint stiffness.": "Programas personalizados para sofocos, sueño, grasa abdominal y rigidez articular.",
+  "Start Free Plan": "Empezar gratis",
+  "View Membership": "Ver membresía",
+  "Inside Your Reset:": "Dentro de tu Reset:",
+  "View Example Dashboard": "Ver ejemplo",
+  "Daily movement sessions": "Sesiones diarias de movimiento",
+  "Menopause symptom support plans": "Planes de apoyo para síntomas",
+  "Posture & confidence routines": "Rutinas de postura y confianza",
+  "Better sleep reset habits": "Hábitos para dormir mejor",
+  "Nutrition guidance": "Guía nutricional",
+  "Hormone Calm": "Calma Hormonal",
+  "Lean Strength": "Fuerza Esbelta",
+  "Elegant Energy": "Energía Elegante",
+  "Signature Programs": "Programas",
+  "Your Next Chapter": "Tu próximo capítulo",
+  "Can Feel": "puede sentirse",
+  "Amazing": "increíble",
+  "Start Assessment": "Iniciar evaluación",
+  "Real Women, Real Results": "Mujeres reales, resultados reales",
+  "Your Dashboard": "Tu Panel",
+  "Start Full Session": "Iniciar sesión",
+  "Personalized Nutrition": "Nutrición personalizada",
+  "Today's Routine": "Rutina de hoy",
+  "Session Complete!": "¡Sesión completada!",
+  "Create Account": "Crear cuenta",
+  "Welcome Back": "Bienvenida de nuevo",
+  "Sign Out": "Cerrar sesión",
+  "My Account": "Mi Cuenta",
+  "Loading...": "Cargando...",
+  "Print Meals": "Imprimir comidas",
+  "Print List": "Imprimir lista",
 };
 
-const de: TranslationKeys = {
-  "nav.dashboard": "Dashboard",
-  "nav.assessment": "Bewertung",
-  "nav.progress": "Fortschritt",
-  "nav.shopping": "Einkaufen",
-  "nav.plans": "Pläne",
-  "nav.account": "Konto",
-  "nav.signIn": "Anmelden",
-
-  "home.badge": "Wellness für Frauen ab 40",
-  "home.title1": "Fühle dich ausgeglichen.",
-  "home.title2": "Bewege dich anmutig.",
-  "home.title3": "Strahle wieder.",
-  "home.subtitle": "Personalisierte Programme für Hitzewallungen, Schlaf, Bauchfett und Gelenksteifheit.",
-  "home.cta": "Kostenlos starten",
-  "home.viewPlans": "Mitgliedschaft ansehen",
-  "home.trusted": "Vertraut von Frauen, die in der Lebensmitte Stärke aufbauen.",
-  "home.insideReset": "In Ihrem Reset:",
-  "home.viewDashboard": "Beispiel ansehen",
-  "home.feature1": "Tägliche Bewegungseinheiten",
-  "home.feature2": "Menopause-Symptom-Pläne",
-  "home.feature3": "Haltung & Selbstvertrauen",
-  "home.feature4": "Bessere Schlafgewohnheiten",
-  "home.feature5": "Ernährungsberatung",
-  "home.pillar1": "Hormonelle Ruhe",
-  "home.pillar1Desc": "Unterstützung des Nervensystems und Reduzierung täglicher Überforderung.",
-  "home.pillar2": "Schlanke Stärke",
-  "home.pillar2Desc": "Sanfte Kraftübungen zur Verbesserung von Form und Stoffwechsel.",
-  "home.pillar3": "Elegante Energie",
-  "home.pillar3Desc": "Vitalität wiederherstellen ohne anstrengende Workouts.",
-  "home.signatureTitle": "Programme",
-  "home.nextChapter": "Ihr nächstes Kapitel",
-  "home.canFeel": "kann sich",
-  "home.amazing": "großartig anfühlen",
-  "home.beginAssessment": "Beginnen Sie heute mit einer personalisierten Bewertung.",
-  "home.startAssessment": "Bewertung starten",
-
-  "dash.title": "Ihr Dashboard",
-  "dash.todayFocus": "Heutiger Fokus",
-  "dash.startSession": "Sitzung starten",
-  "dash.nutrition": "Personalisierte Ernährung",
-  "dash.mealCost": "Heutige Mahlzeitkosten",
-  "dash.todayRoutine": "Heutige Routine",
-  "dash.movements": "Übungen",
-  "dash.dailyCheckin": "Täglicher Check-In",
-  "dash.home": "Startseite",
-  "dash.unlockMenu": "Vollständiges Menü freischalten",
-  "dash.upgrade": "Auf Premium upgraden",
-  "dash.ingredients": "Zutaten",
-  "dash.howToMake": "Zubereitung",
-
-  "session.liveSession": "Live-Sitzung",
-  "session.exercise": "Übung",
-  "session.of": "von",
-  "session.complete": "Sitzung abgeschlossen!",
-  "session.amazingWork": "Tolle Arbeit heute.",
-  "session.returnDashboard": "Zurück zum Dashboard",
-  "session.startPosition": "Startposition",
-  "session.finishPosition": "Endposition",
-  "session.skip": "Überspringen",
-  "session.next": "Nächste Übung",
-  "session.finish": "Sitzung beenden",
-  "session.upNext": "Als Nächstes",
-  "session.lastExercise": "Letzte Übung — fast geschafft!",
-
-  "auth.createAccount": "Konto erstellen",
-  "auth.welcomeBack": "Willkommen zurück",
-  "auth.signIn": "Anmelden",
-  "auth.signUp": "Registrieren",
-  "auth.email": "E-Mail-Adresse",
-  "auth.password": "Passwort",
-  "auth.noAccount": "Kein Konto? Registrieren",
-  "auth.hasAccount": "Bereits ein Konto? Anmelden",
-  "auth.backHome": "← Zurück zur Startseite",
-
-  "common.loading": "Laden...",
-  "common.day": "Tag",
-  "common.days": "Tage",
-  "common.min": "Min",
-  "common.exercises": "Übungen",
-  "common.calories": "Kalorien",
-  "common.protein": "Protein",
-  "common.fiber": "Ballaststoffe",
-  "common.water": "Wasser",
+export const translations: Record<Locale, Record<string, string>> = {
+  en: {}, // English is the fallback — keys ARE the English text
+  sr,
+  de,
+  es,
 };
-
-const es: TranslationKeys = {
-  "nav.dashboard": "Panel",
-  "nav.assessment": "Evaluación",
-  "nav.progress": "Progreso",
-  "nav.shopping": "Compras",
-  "nav.plans": "Planes",
-  "nav.account": "Cuenta",
-  "nav.signIn": "Iniciar sesión",
-
-  "home.badge": "Bienestar para mujeres de 40+",
-  "home.title1": "Siéntete equilibrada.",
-  "home.title2": "Muévete con gracia.",
-  "home.title3": "Brilla de nuevo.",
-  "home.subtitle": "Programas personalizados para sofocos, sueño, grasa abdominal y rigidez articular.",
-  "home.cta": "Empezar gratis",
-  "home.viewPlans": "Ver membresía",
-  "home.trusted": "Mujeres que construyen fuerza en la mediana edad confían en nosotras.",
-  "home.insideReset": "Dentro de tu Reset:",
-  "home.viewDashboard": "Ver ejemplo",
-  "home.feature1": "Sesiones diarias de movimiento",
-  "home.feature2": "Planes de apoyo para síntomas",
-  "home.feature3": "Rutinas de postura y confianza",
-  "home.feature4": "Hábitos para dormir mejor",
-  "home.feature5": "Guía nutricional",
-  "home.pillar1": "Calma Hormonal",
-  "home.pillar1Desc": "Apoyo al sistema nervioso y reducción del estrés diario.",
-  "home.pillar2": "Fuerza Esbelta",
-  "home.pillar2Desc": "Sesiones suaves de fuerza para mejorar la forma y el metabolismo.",
-  "home.pillar3": "Energía Elegante",
-  "home.pillar3Desc": "Restaura la vitalidad sin entrenamientos agotadores.",
-  "home.signatureTitle": "Programas",
-  "home.nextChapter": "Tu próximo capítulo",
-  "home.canFeel": "puede sentirse",
-  "home.amazing": "increíble",
-  "home.beginAssessment": "Comienza con una evaluación personalizada hoy.",
-  "home.startAssessment": "Iniciar evaluación",
-
-  "dash.title": "Tu Panel",
-  "dash.todayFocus": "Enfoque de hoy",
-  "dash.startSession": "Iniciar sesión",
-  "dash.nutrition": "Nutrición personalizada",
-  "dash.mealCost": "Costo de comida hoy",
-  "dash.todayRoutine": "Rutina de hoy",
-  "dash.movements": "Movimientos",
-  "dash.dailyCheckin": "Check-in diario",
-  "dash.home": "Inicio",
-  "dash.unlockMenu": "Desbloquea el menú completo",
-  "dash.upgrade": "Actualizar a Premium",
-  "dash.ingredients": "Ingredientes",
-  "dash.howToMake": "Preparación",
-
-  "session.liveSession": "Sesión en vivo",
-  "session.exercise": "Ejercicio",
-  "session.of": "de",
-  "session.complete": "¡Sesión completada!",
-  "session.amazingWork": "Increíble trabajo hoy.",
-  "session.returnDashboard": "Volver al panel",
-  "session.startPosition": "Posición inicial",
-  "session.finishPosition": "Posición final",
-  "session.skip": "Saltar",
-  "session.next": "Siguiente ejercicio",
-  "session.finish": "Terminar sesión",
-  "session.upNext": "Siguiente",
-  "session.lastExercise": "Último ejercicio — ¡casi terminas!",
-
-  "auth.createAccount": "Crear cuenta",
-  "auth.welcomeBack": "Bienvenida de nuevo",
-  "auth.signIn": "Iniciar sesión",
-  "auth.signUp": "Registrarse",
-  "auth.email": "Correo electrónico",
-  "auth.password": "Contraseña",
-  "auth.noAccount": "¿No tienes cuenta? Regístrate",
-  "auth.hasAccount": "¿Ya tienes cuenta? Inicia sesión",
-  "auth.backHome": "← Volver al inicio",
-
-  "common.loading": "Cargando...",
-  "common.day": "Día",
-  "common.days": "días",
-  "common.min": "min",
-  "common.exercises": "Ejercicios",
-  "common.calories": "Calorías",
-  "common.protein": "Proteína",
-  "common.fiber": "Fibra",
-  "common.water": "Agua",
-};
-
-export const translations: Record<Locale, TranslationKeys> = { en, sr, de, es };

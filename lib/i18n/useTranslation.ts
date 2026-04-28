@@ -3,11 +3,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { translations, type Locale } from "./translations";
 
-const DEFAULT_LOCALE: Locale = "en";
 const STORAGE_KEY = "velora_locale";
 
 export function useTranslation() {
-  const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE);
+  const [locale, setLocaleState] = useState<Locale>("en");
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY) as Locale | null;
@@ -21,10 +20,12 @@ export function useTranslation() {
     localStorage.setItem(STORAGE_KEY, newLocale);
   }, []);
 
+  // t("Hello") → returns "Zdravo" if locale=sr, or "Hello" if en or not found
   const t = useCallback(
-    (key: string): string => {
-      const dict = translations[locale] || translations.en;
-      return (dict as Record<string, string>)[key] || key;
+    (text: string): string => {
+      if (locale === "en") return text;
+      const dict = translations[locale];
+      return dict?.[text] || text;
     },
     [locale]
   );
