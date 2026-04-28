@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { getMembership } from "@/lib/subscription";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useTranslation } from "@/lib/i18n/useTranslation";
 import type { User } from "@supabase/supabase-js";
 
 type Plan = "free" | "glow" | "elite";
@@ -14,6 +15,7 @@ export default function Header() {
   const [plan, setPlan] = useState<Plan>("free");
   const [premium, setPremium] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const supabase = createClient();
@@ -40,21 +42,20 @@ export default function Header() {
   const badgeText =
     plan === "elite" ? "Elite ✨" : plan === "glow" ? "Glow ✨" : null;
 
-  // Desktop: only key pages. Mobile: full list.
   const desktopLinks = [
-    ["Dashboard", "/dashboard"],
-    ["Assessment", "/quiz"],
-    ["Plans", "/pricing"],
+    [t("nav.dashboard"), "/dashboard"],
+    [t("nav.assessment"), "/quiz"],
+    [t("nav.plans"), "/pricing"],
   ];
 
   const mobileLinks = [
-    ["Dashboard", "/dashboard"],
-    ["Assessment", "/quiz"],
-    ["Progress", "/progress"],
+    [t("nav.dashboard"), "/dashboard"],
+    [t("nav.assessment"), "/quiz"],
+    [t("nav.progress"), "/progress"],
     ["Journal", "/journal"],
-    ["Shopping List", "/shopping"],
-    ["Plans", "/pricing"],
-    ["Account", "/account"],
+    [t("nav.shopping"), "/shopping"],
+    [t("nav.plans"), "/pricing"],
+    [t("nav.account"), "/account"],
   ];
 
   return (
@@ -114,7 +115,7 @@ export default function Header() {
                 href="/login"
                 className="hidden sm:inline-flex px-4 py-2 rounded-2xl bg-gradient-to-r from-[#f1d4dc] via-[#ddb5c2] to-[#c897a6] text-white text-sm font-semibold shadow-[0_10px_25px_rgba(185,143,161,0.25)] hover:scale-[1.03] transition"
               >
-                Sign In
+                {t("nav.signIn")}
               </Link>
             )}
 
@@ -160,7 +161,7 @@ export default function Header() {
                   onClick={() => setMobileOpen(false)}
                   className="btn-primary text-center mt-2"
                 >
-                  Sign In
+                  {t("nav.signIn")}
                 </Link>
               )}
             </nav>
