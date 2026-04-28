@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import InstallPrompt from "@/components/InstallPrompt";
 
 export const metadata: Metadata = {
   title: "Velora | Luxury Women Wellness",
@@ -64,6 +65,7 @@ export default function RootLayout({
           </main>
 
           <Footer />
+          <InstallPrompt />
         </div>
       </body>
     </html>
