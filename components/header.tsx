@@ -92,7 +92,8 @@ export default function Header() {
 
           {/* RIGHT */}
           <div className="flex items-center gap-2">
-            <LanguageSwitcher />
+            {/* Language switcher hidden until all pages are translated */}
+            {/* <LanguageSwitcher /> */}
 
             {user ? (
               premium && badgeText ? (
