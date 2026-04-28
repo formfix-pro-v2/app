@@ -148,6 +148,7 @@ export default function Header() {
                 ["Dashboard", "/dashboard"],
                 ["Assessment", "/quiz"],
                 ["Progress", "/progress"],
+                ["Journal", "/journal"],
                 ["Shopping", "/shopping"],
                 ["Plans", "/pricing"],
                 ["Account", "/account"],

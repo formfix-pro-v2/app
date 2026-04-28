@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { getTodayProgram } from "@/lib/programs";
+import { getTodayProgram, isRestDay } from "@/lib/programs";
 import { calculateNutrition, getDayMealPlan } from "@/lib/nutrition";
+import UpsellBanner from "@/components/UpsellBanner";
 
 type QuizData = {
   symptoms?: string[];
@@ -98,6 +99,9 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* UPSELL */}
+      <UpsellBanner />
+
       {/* TODAY PROGRAM */}
       <section className="soft-card p-8 mb-6 relative overflow-hidden">
         <div className="relative z-10">
@@ -160,10 +164,10 @@ export default function DashboardPage() {
           </div>
 
           <Link
-            href="/session"
+            href={isRestDay(day) ? "/rest-day" : "/session"}
             className="btn-primary px-10 py-4 text-sm uppercase tracking-widest shadow-xl"
           >
-            Start Full Session
+            {isRestDay(day) ? "Start Rest Day" : "Start Full Session"}
           </Link>
         </div>
       </section>

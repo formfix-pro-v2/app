@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import EmailCapture from "@/components/EmailCapture";
 
 export default function HomePage() {
   return (
@@ -183,6 +184,7 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
+      <EmailCapture />
     </main>
   );
 }

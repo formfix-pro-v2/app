@@ -670,3 +670,124 @@ export function getPlan(
 export const plans: DayPlan[] = Array.from({ length: 30 }, (_, i) =>
   buildPlan(i + 1)
 );
+
+// ============================================================
+// REST DAY SYSTEM - Every 7th day is recovery
+// ============================================================
+
+export function isRestDay(day: number): boolean {
+  return day % 7 === 0;
+}
+
+export type RestDayContent = {
+  title: string;
+  theme: string;
+  meditation: { title: string; duration: string; instructions: string[] };
+  journalPrompt: string;
+  selfCareTips: string[];
+  affirmation: string;
+};
+
+const REST_DAYS: RestDayContent[] = [
+  {
+    title: "Restore & Reflect",
+    theme: "Your body heals when you rest",
+    meditation: {
+      title: "Body Scan Relaxation",
+      duration: "10 min",
+      instructions: [
+        "Lie down comfortably. Close your eyes.",
+        "Starting from your toes, notice any tension. Breathe into it and release.",
+        "Slowly move attention up: feet, calves, knees, thighs.",
+        "Continue through hips, belly, chest, shoulders.",
+        "Relax your jaw, forehead, and scalp.",
+        "Stay here for 2 minutes, breathing naturally.",
+        "When ready, gently wiggle fingers and toes. Open your eyes.",
+      ],
+    },
+    journalPrompt: "What is one thing your body did for you this week that you're grateful for?",
+    selfCareTips: [
+      "Take a warm bath with epsom salts (magnesium helps muscle recovery)",
+      "Drink an extra glass of water with lemon today",
+      "Go for a gentle 15-minute walk in nature",
+      "Apply body lotion mindfully — notice how your skin feels",
+    ],
+    affirmation: "I am becoming stronger and more balanced every day. Rest is part of my strength.",
+  },
+  {
+    title: "Nourish & Renew",
+    theme: "Recovery is where transformation happens",
+    meditation: {
+      title: "Gratitude Breathing",
+      duration: "8 min",
+      instructions: [
+        "Sit comfortably with hands on your lap.",
+        "Breathe in for 4 counts. Think of something you're grateful for.",
+        "Hold for 4 counts. Feel the gratitude in your chest.",
+        "Exhale for 6 counts. Release any tension.",
+        "Repeat for 8 cycles, each time choosing a new gratitude.",
+        "End with 3 deep breaths and a gentle smile.",
+      ],
+    },
+    journalPrompt: "How has your energy changed since you started? What surprised you most?",
+    selfCareTips: [
+      "Prepare tomorrow's breakfast tonight (overnight oats are perfect)",
+      "Stretch gently for 5 minutes before bed",
+      "Put your phone away 30 minutes before sleep",
+      "Write down 3 things that went well this week",
+    ],
+    affirmation: "I honor my body's need for rest. Every pause makes me stronger.",
+  },
+  {
+    title: "Gentle Reset",
+    theme: "Stillness is not weakness — it's wisdom",
+    meditation: {
+      title: "Cooling Breath (for hot flashes)",
+      duration: "7 min",
+      instructions: [
+        "Sit tall. Curl your tongue into a tube (or purse lips if you can't).",
+        "Inhale slowly through the curled tongue — feel the cool air.",
+        "Close mouth, exhale through nose for 6 counts.",
+        "Repeat 10 times. Notice your body temperature dropping.",
+        "Finish with 5 normal breaths, eyes closed.",
+      ],
+    },
+    journalPrompt: "What symptom has improved the most? What still needs attention?",
+    selfCareTips: [
+      "Try a cup of chamomile or valerian tea this evening",
+      "Do 5 minutes of gentle neck and shoulder rolls",
+      "Spend 10 minutes doing something purely for pleasure (reading, music, garden)",
+      "Lay on the floor with legs up the wall for 5 minutes (great for circulation)",
+    ],
+    affirmation: "I am patient with my body. Change takes time, and I am on the right path.",
+  },
+  {
+    title: "Celebrate & Recharge",
+    theme: "Look how far you've come",
+    meditation: {
+      title: "Self-Compassion Meditation",
+      duration: "10 min",
+      instructions: [
+        "Place both hands on your heart. Close your eyes.",
+        "Say silently: 'May I be kind to myself.'",
+        "Breathe deeply. Say: 'May I accept where I am right now.'",
+        "Breathe again. Say: 'May I have the strength to keep going.'",
+        "Sit with these words for 5 minutes.",
+        "Open your eyes. Smile. You deserve this moment.",
+      ],
+    },
+    journalPrompt: "If you could tell yourself from Day 1 one thing, what would it be?",
+    selfCareTips: [
+      "Take progress photos or measurements if you'd like (optional, no pressure)",
+      "Cook your favorite healthy meal today — make it special",
+      "Call or message a friend you haven't spoken to in a while",
+      "Plan something to look forward to this week",
+    ],
+    affirmation: "I celebrate every small victory. My consistency is my superpower.",
+  },
+];
+
+export function getRestDayContent(day: number): RestDayContent {
+  const weekNumber = Math.floor(day / 7);
+  return REST_DAYS[weekNumber % REST_DAYS.length];
+}
