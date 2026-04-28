@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { calculateNutrition, getDayMealPlan } from "@/lib/nutrition";
+import PrintButton from "@/components/PrintButton";
 
 type GroceryItem = {
   name: string;
@@ -157,10 +158,12 @@ export default function ShoppingPage() {
               <div className="text-xl text-[#4a3f44]">~€{weeklyBudget}</div>
             </div>
           </div>
+          <PrintButton targetId="printable-grocery" label="Print List" />
         </div>
       </section>
 
       {/* GROCERY LIST */}
+      <div id="printable-grocery">
       {!isPremium && days > 1 ? (
         <section className="soft-card p-10 text-center mb-8">
           <div className="text-4xl mb-4">🔒</div>
@@ -209,6 +212,8 @@ export default function ShoppingPage() {
             ))}
         </section>
       )}
+
+      </div>{/* close printable-grocery */}
 
       {/* TIPS */}
       <section className="soft-card p-8 mt-8">

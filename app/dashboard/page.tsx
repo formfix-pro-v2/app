@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { getTodayProgram, isRestDay } from "@/lib/programs";
 import { calculateNutrition, getDayMealPlan } from "@/lib/nutrition";
 import UpsellBanner from "@/components/UpsellBanner";
+import PrintButton from "@/components/PrintButton";
 
 type QuizData = {
   symptoms?: string[];
@@ -184,16 +185,23 @@ export default function DashboardPage() {
             </h2>
           </div>
 
-          <div className="bg-[#fdf2f5]/80 border border-[#f8d7e1] p-4 rounded-3xl text-center shadow-sm backdrop-blur-sm">
-            <p className="text-[9px] uppercase tracking-widest text-[#d8a7b5] mb-1 font-bold">
-              Today&apos;s Meal Cost
-            </p>
-            <p className="text-2xl font-semibold text-[#4a3f44]">
-              €{mealPlan.totalPrice.toFixed(2)}
-            </p>
-            <p className="text-[9px] text-[#b98fa1] mt-1">{mealPlan.focus}</p>
+          <div className="flex items-center gap-3">
+            <PrintButton targetId="printable-meals" label="Print Meals" />
+            <div className="bg-[#fdf2f5]/80 border border-[#f8d7e1] p-4 rounded-3xl text-center shadow-sm backdrop-blur-sm">
+              <p className="text-[9px] uppercase tracking-widest text-[#d8a7b5] mb-1 font-bold">
+                Today&apos;s Meal Cost
+              </p>
+              <p className="text-2xl font-semibold text-[#4a3f44]">
+                €{mealPlan.totalPrice.toFixed(2)}
+              </p>
+              <p className="text-[9px] text-[#b98fa1] mt-1">{mealPlan.focus}</p>
+            </div>
           </div>
         </div>
+
+        {/* Printable meal content (hidden wrapper for print) */}
+        <div id="printable-meals">
+          <h2 style={{ display: "none" }}>Day {day} Meal Plan — {mealPlan.focus}</h2>
 
         {/* Macros */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -324,6 +332,7 @@ export default function DashboardPage() {
             </Link>
           </div>
         )}
+        </div>{/* close printable-meals */}
       </section>
 
       {/* EXERCISES LIST */}
