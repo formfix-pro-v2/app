@@ -47,6 +47,7 @@ export default function Header() {
     [t("Assessment"), "/quiz"],
     ["Blog", "/blog"],
     [t("Plans"), "/pricing"],
+    ["Affiliate", "/affiliate"],
   ];
 
   const mobileLinks = [
