@@ -82,12 +82,17 @@ export default function ResultsPage() {
             <p className="text-[#b98fa1] font-medium italic">Targeting: {data.goal === 'fat_loss' ? 'Healthy Fat Loss' : 'Body Toning'}</p>
           </div>
           
-          <div className="bg-[#fdf2f5] p-6 rounded-[30px] border border-[#f8d7e1] text-center min-w-[200px]">
-            <p className="text-[10px] uppercase tracking-widest text-[#b98fa1] font-bold mb-1">Weekly Grocery Budget</p>
-            <p className="text-4xl font-semibold text-[#4a3f44]">€{nutrition.weeklyBudget}</p>
-            <p className="text-xs text-[#7b6870] mt-1">Hormone-safe ingredients only</p>
+          <div className="flex items-center gap-3">
+            <PrintButton targetId="printable-nutrition-summary" label="Print Summary" />
+            <div className="bg-[#fdf2f5] p-6 rounded-[30px] border border-[#f8d7e1] text-center min-w-[200px]">
+              <p className="text-[10px] uppercase tracking-widest text-[#b98fa1] font-bold mb-1">Weekly Grocery Budget</p>
+              <p className="text-4xl font-semibold text-[#4a3f44]">€{nutrition.weeklyBudget}</p>
+              <p className="text-xs text-[#7b6870] mt-1">Hormone-safe ingredients only</p>
+            </div>
           </div>
         </div>
+
+        <div id="printable-nutrition-summary">
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
           {[
@@ -194,6 +199,7 @@ export default function ResultsPage() {
         </div>
 
         {/* 4. CTA SECTION */}
+        </div>{/* close printable-nutrition-summary */}
         <div className="text-center">
           <Link href="/pricing" className="btn-primary px-12 py-5 text-xl inline-block shadow-xl hover:scale-105 transition-transform mb-4">
             Get My Full 28-Day Plan
