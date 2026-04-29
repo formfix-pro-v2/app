@@ -70,7 +70,7 @@ export default function Header() {
             <img
               src="/logo.png"
               alt="Veronica Method"
-              className="w-10 h-10 rounded-xl shadow-md object-contain"
+              className="w-14 h-14 rounded-xl shadow-md object-contain"
             />
             <div className="hidden sm:block">
               <div className="text-xl font-semibold leading-none tracking-tight text-[#7f5665]">
