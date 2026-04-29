@@ -10,14 +10,14 @@ export default function HomePage() {
   return (
     <main className="relative min-h-screen bg-transparent">
       {/* HERO */}
-      <section className="max-w-7xl mx-auto px-6 pt-6 pb-8 grid lg:grid-cols-2 gap-6 items-center">
-        <div className="space-y-4">
-          <div className="space-y-2">
+      <section className="max-w-7xl mx-auto pt-4 pb-6 grid lg:grid-cols-2 gap-5 items-center">
+        <div className="space-y-3">
+          <div className="space-y-1.5">
             <p className="uppercase tracking-[0.2em] text-[10px] font-bold text-[#d8a7b5] bg-[#fdf2f5]/60 w-fit px-3 py-1 rounded-full">
               {t("Menopause Wellness for Women 40+")}
             </p>
 
-            <h1 className="text-5xl md:text-[62px] leading-[1.05] text-[#4a3f44] tracking-tight">
+            <h1 className="text-4xl md:text-[52px] leading-[1.08] text-[#4a3f44] tracking-tight">
               {t("Feel Balanced.")}
               <br />
               <span className="italic font-light text-[#d8a7b5]">{t("Move Gracefully.")}</span>
@@ -25,7 +25,7 @@ export default function HomePage() {
               {t("Glow Again.")}
             </h1>
 
-            <p className="text-lg text-[#7b6870] max-w-xl leading-relaxed font-light">
+            <p className="text-base text-[#7b6870] max-w-xl leading-relaxed font-light">
               {t("Personalized programs for hot flashes, sleep, belly fat and joint stiffness.")}
             </p>
           </div>
@@ -47,8 +47,8 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="soft-card p-6 md:p-8">
-          <h2 className="text-2xl text-[#4a3f44] mb-4 font-light italic text-center lg:text-left">
+        <div className="soft-card p-5 md:p-6">
+          <h2 className="text-xl text-[#4a3f44] mb-3 font-light italic text-center lg:text-left">
             {t("Inside Your Reset:")}
           </h2>
           <div className="space-y-3">
@@ -59,20 +59,20 @@ export default function HomePage() {
               t("Better sleep reset habits"),
               t("Nutrition guidance"),
             ].map((text) => (
-              <div key={text} className="flex items-center gap-3 text-[15px] text-[#4a3f44]">
-                <span className="w-5 h-5 rounded-full bg-[#fdf2f5] flex items-center justify-center text-[#d8a7b5] text-[10px] font-bold">✓</span>
+              <div key={text} className="flex items-center gap-2.5 text-sm text-[#4a3f44]">
+                <span className="w-4 h-4 rounded-full bg-[#fdf2f5] flex items-center justify-center text-[#d8a7b5] text-[9px] font-bold shrink-0">✓</span>
                 {text}
               </div>
             ))}
           </div>
-          <Link href="/dashboard" className="btn-primary w-full mt-6 py-3 text-sm uppercase tracking-widest bg-gradient-to-r from-[#d8a7b5] to-[#c58d9d]">
+          <Link href="/dashboard" className="btn-primary w-full mt-4 py-2.5 text-xs uppercase tracking-widest bg-gradient-to-r from-[#d8a7b5] to-[#c58d9d]">
             {t("View Example Dashboard")}
           </Link>
         </div>
       </section>
 
       {/* THREE PILLARS */}
-      <section className="max-w-7xl mx-auto px-6 py-4">
+      <section className="max-w-7xl mx-auto px-6 py-3">
         <div className="grid md:grid-cols-3 gap-4">
           {[
             { title: t("Hormone Calm"), desc: t("Support nervous system balance and reduce daily overwhelm.") },
