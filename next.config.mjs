@@ -3,6 +3,10 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  experimental: {
+    optimizeCss: true,
+  },
+  compress: true,
 };
 
 export default nextConfig;

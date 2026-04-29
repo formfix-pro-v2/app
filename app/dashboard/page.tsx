@@ -8,6 +8,8 @@ import UpsellBanner from "@/components/UpsellBanner";
 import PrintButton from "@/components/PrintButton";
 import StreakFreeze from "@/components/StreakFreeze";
 import MilestoneCelebration from "@/components/MilestoneCelebration";
+import OnboardingTutorial from "@/components/OnboardingTutorial";
+import FavoriteButton from "@/components/FavoriteButton";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 
 type QuizData = {
@@ -262,9 +264,12 @@ export default function DashboardPage() {
                   <span className="text-[9px] px-3 py-1 rounded-full bg-[#fdf2f5] text-[#d8a7b5] font-bold uppercase tracking-widest">
                     {slotLabels[slot]}
                   </span>
-                  <span className="text-sm font-semibold text-[#4a3f44]">
-                    €{meal.price.toFixed(2)}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <FavoriteButton type="meal" name={meal.title} />
+                    <span className="text-sm font-semibold text-[#4a3f44]">
+                      €{meal.price.toFixed(2)}
+                    </span>
+                  </div>
                 </div>
 
                 <h3 className="text-xl text-[#4a3f44] mb-1 font-medium">
@@ -397,8 +402,11 @@ export default function DashboardPage() {
                   </div>
                 </div>
               </div>
-              <div className="text-[#7b6870] font-light text-xs italic opacity-60">
-                {Math.floor(item.seconds / 60)}:{String(item.seconds % 60).padStart(2, "0")}
+              <div className="flex items-center gap-2">
+                <FavoriteButton type="exercise" name={item.name} />
+                <div className="text-[#7b6870] font-light text-xs italic opacity-60">
+                  {Math.floor(item.seconds / 60)}:{String(item.seconds % 60).padStart(2, "0")}
+                </div>
               </div>
             </div>
           ))}
@@ -406,6 +414,7 @@ export default function DashboardPage() {
       </section>
 
       <MilestoneCelebration />
+      <OnboardingTutorial />
     </main>
   );
 }

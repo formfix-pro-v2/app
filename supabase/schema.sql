@@ -104,3 +104,19 @@ CREATE TRIGGER on_auth_user_created
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_checkins_user_date ON public.checkins(user_id, date);
 CREATE INDEX IF NOT EXISTS idx_profiles_plan ON public.profiles(plan);
+
+-- ============================================================
+-- BACKUP STRATEGY
+-- ============================================================
+-- Supabase Pro plan includes automatic daily backups.
+-- For free tier, run this manually or via cron:
+--
+-- Export profiles:
+-- SELECT * FROM profiles INTO OUTFILE '/tmp/profiles_backup.csv' DELIMITER ',' CSV HEADER;
+--
+-- Or use Supabase CLI:
+-- supabase db dump -f backup.sql
+--
+-- Recommended: Enable Point-in-Time Recovery (PITR) on Supabase Pro plan
+-- for continuous backups with ability to restore to any second.
+-- ============================================================
