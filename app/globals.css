@@ -180,3 +180,63 @@ main > *:first-child {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--rose);
 }
+
+/* =======================================================
+   MOBILE APP OPTIMIZATIONS
+======================================================= */
+
+/* Safe area for bottom nav */
+main {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (max-width: 1024px) {
+  /* Add bottom padding for bottom nav on app pages */
+  main {
+    padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Touch targets - minimum 44px */
+button, a, [role="button"], input[type="checkbox"], input[type="radio"] {
+  min-height: 44px;
+}
+
+/* Prevent text selection on interactive elements */
+button, [role="button"] {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Smooth momentum scrolling on iOS */
+html {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Prevent zoom on input focus (iOS) */
+@media (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Haptic-style active state */
+button:active, a:active, [role="button"]:active {
+  transform: scale(0.97);
+  transition: transform 0.1s;
+}
+
+/* Hide footer on mobile when bottom nav is visible */
+@media (max-width: 1024px) {
+  footer {
+    display: none;
+  }
+}
+
+/* Pull-to-refresh visual hint */
+@keyframes pullDown {
+  0% { transform: translateY(-100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}

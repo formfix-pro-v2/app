@@ -5,6 +5,8 @@ import Link from "next/link";
 import { getTodayProgram } from "@/lib/programs";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import CircularTimer from "@/components/CircularTimer";
+import { useSwipe } from "@/lib/hooks/useSwipe";
+import { haptic } from "@/lib/haptic";
 
 const CATEGORY_LABELS: Record<string, string> = {
   warmup: "Warm-Up",
@@ -111,10 +113,12 @@ export default function SessionPage() {
   function handleStart() {
     setStarted(true);
     setTimeLeft(current.seconds);
+    haptic("light");
   }
 
   function handleNext() {
     playBeep();
+    haptic("medium");
     if (index < program.exercises.length - 1) {
       setIndex((prev) => prev + 1);
     } else {
@@ -143,6 +147,13 @@ export default function SessionPage() {
   function handleSkip() {
     handleNext();
   }
+
+  // Swipe left = next, swipe right = skip (same as next for now)
+  const swipeHandlers = useSwipe((dir) => {
+    if (started && !finished) {
+      if (dir === "left") handleNext();
+    }
+  });
 
   function format(sec: number) {
     const m = Math.floor(sec / 60);
@@ -223,8 +234,8 @@ export default function SessionPage() {
       </section>
 
       {/* Current exercise */}
-      <section className="soft-card p-8 mb-8">
-        <div className="w-full h-[400px] rounded-3xl overflow-hidden mb-8 border border-[#f0e3e8] bg-white">
+      <section className="soft-card p-8 mb-8" {...swipeHandlers}>
+        <div className="w-full h-[300px] md:h-[400px] rounded-3xl overflow-hidden mb-6 border border-[#f0e3e8] bg-white">
           <img
             src={current.image}
             alt={current.name}

@@ -2,10 +2,12 @@ import "./globals.css";
 import type { Metadata } from "next";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import BottomNav from "@/components/BottomNav";
 import InstallPrompt from "@/components/InstallPrompt";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import CookieConsent from "@/components/CookieConsent";
 import NotificationPrompt from "@/components/NotificationPrompt";
+import SplashScreen from "@/components/SplashScreen";
 
 export const metadata: Metadata = {
   title: {
@@ -55,6 +57,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="manifest" href="/manifest.json" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
         <meta name="theme-color" content="#d8a7b5" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -121,10 +124,12 @@ export default function RootLayout({
           </main>
 
           <Footer />
+          <BottomNav />
           <InstallPrompt />
           <ServiceWorkerRegister />
           <CookieConsent />
           <NotificationPrompt />
+          <SplashScreen />
         </div>
       </body>
     </html>
