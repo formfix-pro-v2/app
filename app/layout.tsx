@@ -56,6 +56,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/icon-192.png" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="dns-prefetch" href="https://yxzttbqkamyrfabdhgau.supabase.co" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />

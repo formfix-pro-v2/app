@@ -67,9 +67,11 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between gap-4">
           {/* BRAND */}
           <Link href="/" className="flex items-center gap-2 shrink-0">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#f8d8df] via-[#e7bcc8] to-[#d5a6b1] flex items-center justify-center shadow-md">
-              <span className="text-white text-sm font-bold">V</span>
-            </div>
+            <img
+              src="/logo.png"
+              alt="Veronica Method"
+              className="w-10 h-10 rounded-xl shadow-md object-contain"
+            />
             <div className="hidden sm:block">
               <div className="text-xl font-semibold leading-none tracking-tight text-[#7f5665]">
                 Veronica Method
