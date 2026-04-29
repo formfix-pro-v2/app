@@ -30,6 +30,7 @@ export default function Footer() {
               {[
                 ["Dashboard", "/dashboard"],
                 ["Assessment", "/quiz"],
+                ["Blog", "/blog"],
                 ["Progress", "/progress"],
                 ["Shopping List", "/shopping"],
                 ["Nutrition", "/nutrition"],

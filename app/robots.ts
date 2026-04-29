@@ -1,14 +1,14 @@
 import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const base = process.env.NEXT_PUBLIC_APP_URL || "https://velora-wellness.vercel.app";
 
   return {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/", "/checkout/"],
+      disallow: ["/api/", "/admin/", "/checkout/"],
     },
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: `${base}/sitemap.xml`,
   };
 }

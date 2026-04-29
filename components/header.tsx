@@ -45,6 +45,7 @@ export default function Header() {
   const desktopLinks = [
     [t("Dashboard"), "/dashboard"],
     [t("Assessment"), "/quiz"],
+    ["Blog", "/blog"],
     [t("Plans"), "/pricing"],
   ];
 
