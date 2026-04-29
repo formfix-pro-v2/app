@@ -4,6 +4,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import InstallPrompt from "@/components/InstallPrompt";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import CookieConsent from "@/components/CookieConsent";
 
 export const metadata: Metadata = {
   title: {
@@ -57,6 +58,36 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Velora" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebApplication",
+              name: "Velora Wellness",
+              description:
+                "Personalized menopause wellness programs with daily exercises, budget meal plans and progress tracking for women over 40.",
+              url: "https://velora-wellness.vercel.app",
+              applicationCategory: "HealthApplication",
+              offers: [
+                {
+                  "@type": "Offer",
+                  name: "Glow Plan",
+                  price: "29",
+                  priceCurrency: "EUR",
+                  description: "30-day menopause wellness program",
+                },
+                {
+                  "@type": "Offer",
+                  name: "Elite Plan",
+                  price: "79",
+                  priceCurrency: "EUR",
+                  description: "90-day premium transformation program",
+                },
+              ],
+            }),
+          }}
+        />
       </head>
       <body className="text-[#3d2b32]">
         <div className="min-h-screen relative overflow-x-hidden flex flex-col">
@@ -101,6 +132,7 @@ export default function RootLayout({
           <Footer />
           <InstallPrompt />
           <ServiceWorkerRegister />
+          <CookieConsent />
         </div>
       </body>
     </html>

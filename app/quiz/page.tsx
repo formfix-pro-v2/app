@@ -68,6 +68,7 @@ export default function QuizPage() {
     }
 
     localStorage.setItem("quizData", JSON.stringify(form));
+    localStorage.setItem("day", "1");
     router.push("/results");
   }
 
