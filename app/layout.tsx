@@ -108,22 +108,22 @@ export default function RootLayout({
             className="fixed inset-0 -z-20"
             style={{
               background:
-                "linear-gradient(180deg, #fffaf8 0%, #fff5f7 50%, #fdf7f3 100%)",
+                "linear-gradient(180deg, #f2e4e8 0%, #f0dde3 50%, #ede0df 100%)",
             }}
           />
 
-          {/* Soft glow accents - smaller and more subtle */}
+          {/* Soft glow accents */}
           <div
-            className="fixed inset-0 -z-10 opacity-70"
+            className="fixed inset-0 -z-10 opacity-60"
             style={{
               background:
-                "radial-gradient(circle at 90% 5%, rgba(214,167,177,.15), transparent 15%), radial-gradient(circle at 5% 85%, rgba(185,143,161,.12), transparent 18%)",
+                "radial-gradient(circle at 90% 5%, rgba(214,167,177,.18), transparent 15%), radial-gradient(circle at 5% 85%, rgba(185,143,161,.15), transparent 18%)",
             }}
           />
 
           {/* Decorative blur - smaller */}
-          <div className="fixed top-10 -left-16 w-48 h-48 rounded-full bg-[#f1d5dc] blur-3xl opacity-25 -z-10" />
-          <div className="fixed bottom-10 -right-16 w-56 h-56 rounded-full bg-[#e8c6d0] blur-3xl opacity-25 -z-10" />
+          <div className="fixed top-10 -left-16 w-48 h-48 rounded-full bg-[#e4c5cf] blur-3xl opacity-25 -z-10" />
+          <div className="fixed bottom-10 -right-16 w-56 h-56 rounded-full bg-[#dbb8c4] blur-3xl opacity-25 -z-10" />
 
           <Header />
 

@@ -9,13 +9,13 @@
 ======================================================= */
 
 :root {
-  --bg-base: #fffcfd;
+  --bg-base: #f5eaed;
   --rose: #d8a7b5;
-  --rose-light: #fdf2f5;
+  --rose-light: #f5e4ea;
   --rose-dark: #8f5d6f;
   --text-main: #4a3f44;
   --text-muted: #7b6870;
-  --line: rgba(240, 227, 232, 0.5);
+  --line: rgba(220, 200, 210, 0.5);
 }
 
 @layer base {
@@ -53,7 +53,7 @@
 
   /* Cards - tighter padding, smaller radius */
   .soft-card {
-    background: rgba(255, 255, 255, 0.7) !important;
+    background: rgba(255, 255, 255, 0.75) !important;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--line);

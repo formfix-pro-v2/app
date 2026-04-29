@@ -16,31 +16,22 @@ export default function ShareButton({ text, url }: { text: string; url?: string 
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      /* fallback */
-    }
-  }
-
-  async function nativeShare() {
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: "Veronica Method", text, url: shareUrl });
-        setOpen(false);
-      } catch {
-        /* user cancelled */
-      }
+      // Fallback for older browsers
+      const ta = document.createElement("textarea");
+      ta.value = `${text}\n${shareUrl}`;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   }
 
   return (
     <div className="relative">
       <button
-        onClick={() => {
-          if (typeof navigator.share === "function") {
-            nativeShare();
-          } else {
-            setOpen(!open);
-          }
-        }}
+        onClick={() => setOpen(!open)}
         className="btn-outline flex items-center gap-2 text-sm"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -57,6 +48,7 @@ export default function ShareButton({ text, url }: { text: string; url?: string 
               href={`https://wa.me/?text=${encodedText}%20${encodedUrl}`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
               className="flex items-center gap-3 px-4 py-3 text-sm text-[#6f5a62] hover:bg-[#fdf2f5] transition-colors"
             >
               💬 WhatsApp
@@ -65,21 +57,23 @@ export default function ShareButton({ text, url }: { text: string; url?: string 
               href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
               className="flex items-center gap-3 px-4 py-3 text-sm text-[#6f5a62] hover:bg-[#fdf2f5] transition-colors"
             >
               📘 Facebook
             </a>
             <a
-              href={`mailto:?subject=Check%20out%20Veronica Method%20Wellness&body=${encodedText}%20${encodedUrl}`}
+              href={`mailto:?subject=Check%20out%20Veronica%20Method&body=${encodedText}%20${encodedUrl}`}
+              onClick={() => setOpen(false)}
               className="flex items-center gap-3 px-4 py-3 text-sm text-[#6f5a62] hover:bg-[#fdf2f5] transition-colors"
             >
               ✉️ Email
             </a>
             <button
               onClick={() => { copyLink(); setOpen(false); }}
-              className="w-full flex items-center gap-3 px-4 py-3 text-sm text-[#6f5a62] hover:bg-[#fdf2f5] transition-colors"
+              className="w-full flex items-center gap-3 px-4 py-3 text-sm text-[#6f5a62] hover:bg-[#fdf2f5] transition-colors text-left"
             >
-              {copied ? "✓ Copied!" : "🔗 Copy Link"}
+              {copied ? "✅ Copied!" : "🔗 Copy Link"}
             </button>
           </div>
         </>
