@@ -43,7 +43,7 @@ function CheckoutContent() {
       const result = await res.json();
 
       if (result.url) {
-        // Redirect to Stripe Checkout
+        // Redirect to Lemon Squeezy Checkout
         window.location.href = result.url;
       } else {
         setError(result.error || "Something went wrong");
@@ -102,7 +102,7 @@ function CheckoutContent() {
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl text-[#4a3f44]">Secure Payment</h2>
             <span className="text-[10px] bg-green-50 text-green-600 px-2 py-1 rounded border border-green-100 font-bold uppercase tracking-tighter">
-              Stripe Secured
+              SSL Secured
             </span>
           </div>
 
@@ -155,7 +155,7 @@ function CheckoutContent() {
                     Redirecting to payment...
                   </span>
                 ) : (
-                  `Pay €${data.price} with Stripe`
+                  `Pay €${data.price} — Secure Checkout`
                 )}
               </button>
 
@@ -166,7 +166,7 @@ function CheckoutContent() {
               </div>
 
               <p className="text-[11px] text-[#b98fa1] text-center leading-relaxed">
-                You&apos;ll be redirected to Stripe&apos;s secure payment page.
+                You&apos;ll be redirected to our secure payment page.
                 <br />
                 <strong>30-Day Money-Back Guarantee included.</strong>
               </p>
