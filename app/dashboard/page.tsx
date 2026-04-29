@@ -6,6 +6,8 @@ import { getTodayProgram, isRestDay } from "@/lib/programs";
 import { calculateNutrition, getDayMealPlan } from "@/lib/nutrition";
 import UpsellBanner from "@/components/UpsellBanner";
 import PrintButton from "@/components/PrintButton";
+import StreakFreeze from "@/components/StreakFreeze";
+import MilestoneCelebration from "@/components/MilestoneCelebration";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 
 type QuizData = {
@@ -101,6 +103,9 @@ export default function DashboardPage() {
           </Link>
         </div>
       </div>
+
+      {/* STREAK FREEZE */}
+      <StreakFreeze />
 
       {/* UPSELL */}
       <UpsellBanner />
@@ -399,6 +404,8 @@ export default function DashboardPage() {
           ))}
         </div>
       </section>
+
+      <MilestoneCelebration />
     </main>
   );
 }

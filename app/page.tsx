@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import EmailCapture from "@/components/EmailCapture";
+import ExitIntent from "@/components/ExitIntent";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 
 export default function HomePage() {
@@ -161,6 +162,7 @@ export default function HomePage() {
       </section>
 
       <EmailCapture />
+      <ExitIntent />
     </main>
   );
 }

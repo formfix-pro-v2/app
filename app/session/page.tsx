@@ -239,6 +239,7 @@ export default function SessionPage() {
           <img
             src={current.image}
             alt={current.name}
+            loading="lazy"
             className="w-full h-full object-contain"
           />
         </div>
