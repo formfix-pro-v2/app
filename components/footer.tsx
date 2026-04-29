@@ -9,15 +9,15 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-3">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#f8d8df] to-[#d5a6b1] flex items-center justify-center">
-                <span className="text-white text-xs">✦</span>
+                <span className="text-white text-xs font-bold">V</span>
               </div>
               <span className="text-xl font-semibold text-[#7f5665]">
-                Velora
+                Veronica Method
               </span>
             </div>
             <p className="text-sm text-[#7b6870] leading-relaxed">
-              Premium wellness for women navigating menopause with grace and
-              confidence.
+              The complete menopause program: personalized exercises, budget
+              nutrition and supplement guidance for women after 40.
             </p>
           </div>
 
@@ -72,7 +72,7 @@ export default function Footer() {
 
         <div className="mt-8 pt-6 border-t border-[#f0e3e8]/50 text-center">
           <p className="text-xs text-[#b98fa1]">
-            © {new Date().getFullYear()} Velora Wellness Maison. All rights
+            © {new Date().getFullYear()} Veronica Method. All rights
             reserved.
           </p>
         </div>

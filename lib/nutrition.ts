@@ -1,5 +1,5 @@
 // ============================================================
-// VELORA PERSONALIZED NUTRITION ENGINE
+// Veronica Method PERSONALIZED NUTRITION ENGINE
 // Budget-optimized meal plans based on quiz data, symptoms,
 // goals, and calorie needs. Different meals every day.
 // All meals under €7/day total.

@@ -2,7 +2,7 @@
 export function generateReferralCode(userId: string): string {
   // Take first 8 chars of user ID and add prefix
   const short = userId.replace(/-/g, "").substring(0, 8).toUpperCase();
-  return `VELORA-${short}`;
+  return `VM-${short}`;
 }
 
 export function getReferralLink(code: string): string {

@@ -18,7 +18,7 @@ export default function NotificationPrompt() {
   async function requestPermission() {
     const result = await Notification.requestPermission();
     if (result === "granted") {
-      new Notification("Velora Wellness 🌸", {
+      new Notification("Veronica Method 🌸", {
         body: "You'll get gentle reminders for your daily sessions.",
         icon: "/icon.svg",
       });

@@ -121,7 +121,7 @@ export default function HotFlashArticle() {
             <p>
               Consistency matters more than intensity. Even 10 minutes of these
               exercises daily can make a noticeable difference within 2 weeks.
-              The Velora program includes all of these in your personalized
+              the Veronica Method program includes all of these in your personalized
               daily plan.
             </p>
           </section>

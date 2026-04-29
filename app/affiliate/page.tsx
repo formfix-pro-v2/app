@@ -154,11 +154,11 @@ export default function AffiliatePage() {
               },
               {
                 platform: "Facebook Post",
-                text: `Ladies, if you're dealing with menopause symptoms — hot flashes, sleep issues, joint pain — check out Velora. I've been using it and the daily routines are gentle but effective. Plus the meal plans are SO budget-friendly.\n\nFree assessment here: ${affiliateLink}`,
+                text: `Ladies, if you're dealing with menopause symptoms — hot flashes, sleep issues, joint pain — check out Veronica Method. I've been using it and the daily routines are gentle but effective. Plus the meal plans are SO budget-friendly.\n\nFree assessment here: ${affiliateLink}`,
               },
               {
                 platform: "WhatsApp Message",
-                text: `Hey! Have you heard of Velora? It's a wellness program for women our age. Personalized exercises and meals for under €7/day. I think you'd love it: ${affiliateLink}`,
+                text: `Hey! Have you heard of Veronica Method? It's a wellness program for women our age. Personalized exercises and meals for under €7/day. I think you'd love it: ${affiliateLink}`,
               },
             ].map((t) => (
               <div key={t.platform} className="p-4 rounded-xl bg-white border border-[#f0e3e8]">
@@ -223,10 +223,10 @@ export default function AffiliatePage() {
           Partner Program
         </p>
         <h1 className="text-4xl mb-3 text-[#4a3f44]">
-          Become a Velora Affiliate
+          Become a Veronica Method Affiliate
         </h1>
         <p className="text-[#7b6870] max-w-xl mx-auto">
-          Earn 25% commission for every woman you help discover Velora.
+          Earn 25% commission for every woman you help discover Veronica Method.
           Share your unique link, we handle everything else.
         </p>
       </section>

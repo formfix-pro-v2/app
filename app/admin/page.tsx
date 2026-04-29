@@ -27,7 +27,7 @@ type Stats = {
 };
 
 // Add your admin email(s) here
-const ADMIN_EMAILS = ["admin@velora.com"];
+const ADMIN_EMAILS = ["admin@Veronica Method.com"];
 
 export default function AdminPage() {
   const router = useRouter();
@@ -62,7 +62,7 @@ export default function AdminPage() {
 
   function handleKeySubmit() {
     // Simple passkey for admin access (change this!)
-    if (adminKey === "velora2024") {
+    if (adminKey === "Veronica Method2024") {
       setKeyEntered(true);
       setAuthorized(true);
       fetchData();

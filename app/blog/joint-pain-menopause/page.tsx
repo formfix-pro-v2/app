@@ -68,7 +68,7 @@ export default function JointPainArticle() {
 
           <section className="p-6 rounded-2xl bg-[#fdf2f5] border border-[#f0e3e8]">
             <h2 className="text-xl text-[#4a3f44] mb-2">What to Expect</h2>
-            <p>Most women notice reduced stiffness within 1-2 weeks of daily mobility work combined with anti-inflammatory nutrition. The Velora program automatically prioritizes joint-friendly exercises when you report joint pain in your assessment.</p>
+            <p>Most women notice reduced stiffness within 1-2 weeks of daily mobility work combined with anti-inflammatory nutrition. the Veronica Method program automatically prioritizes joint-friendly exercises when you report joint pain in your assessment.</p>
           </section>
         </div>
       </article>

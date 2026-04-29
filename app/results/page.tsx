@@ -74,7 +74,7 @@ export default function ResultsPage() {
           and manage {data.symptoms?.length ? data.symptoms[0].toLowerCase() : "hormonal balance"} effectively.
         </p>
         <div className="mt-6 flex justify-center">
-          <ShareButton text="I just got my personalized menopause wellness plan from Velora! 🌸" url="https://velora-wellness.vercel.app/quiz" />
+          <ShareButton text="I just got my personalized menopause wellness plan from Veronica Method! 🌸" url="https://veronica-method.vercel.app/quiz" />
         </div>
       </section>
 

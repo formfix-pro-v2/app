@@ -12,12 +12,12 @@ export function getStripe() {
 // Stripe price config for each plan
 export const STRIPE_PLANS = {
   glow: {
-    name: "Velora Glow - 30 Day Program",
+    name: "Veronica Glow - 30 Day Program",
     price: 2900, // in cents (€29.00)
     currency: "eur",
   },
   elite: {
-    name: "Velora Elite - 90 Day Program",
+    name: "Veronica Elite - 90 Day Program",
     price: 7900, // in cents (€79.00)
     currency: "eur",
   },

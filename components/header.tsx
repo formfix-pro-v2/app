@@ -68,14 +68,14 @@ export default function Header() {
           {/* BRAND */}
           <Link href="/" className="flex items-center gap-2 shrink-0">
             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#f8d8df] via-[#e7bcc8] to-[#d5a6b1] flex items-center justify-center shadow-md">
-              <span className="text-white text-sm">✦</span>
+              <span className="text-white text-sm font-bold">V</span>
             </div>
             <div className="hidden sm:block">
-              <div className="text-2xl font-semibold leading-none tracking-tight text-[#7f5665]">
-                Velora
+              <div className="text-xl font-semibold leading-none tracking-tight text-[#7f5665]">
+                Veronica Method
               </div>
-              <div className="text-[9px] uppercase tracking-[0.3em] text-[#b38d98] mt-0.5">
-                Wellness
+              <div className="text-[8px] uppercase tracking-[0.25em] text-[#b38d98] mt-0.5">
+                The Complete Menopause Program
               </div>
             </div>
           </Link>

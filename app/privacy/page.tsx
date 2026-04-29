@@ -9,7 +9,7 @@ export default function PrivacyPage() {
 
         <div className="space-y-6 text-[#7b6870] leading-relaxed">
           <p>
-            At Velora, we respect your privacy. Your personal data is securely
+            At Veronica Method, we respect your privacy. Your personal data is securely
             stored and never sold to third parties.
           </p>
 

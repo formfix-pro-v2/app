@@ -9,13 +9,13 @@ export default function TermsPage() {
 
         <div className="space-y-6 text-[#7b6870] leading-relaxed">
           <p>
-            By using Velora, you agree to use the service responsibly and in
+            By using Veronica Method, you agree to use the service responsibly and in
             accordance with these terms.
           </p>
 
           <h2 className="text-2xl text-[#4a3f44] mt-8">Service Description</h2>
           <p>
-            Velora provides personalized wellness programs, exercise routines,
+            Veronica Method provides personalized wellness programs, exercise routines,
             and nutrition guidance for women navigating menopause.
           </p>
 
@@ -27,7 +27,7 @@ export default function TermsPage() {
 
           <h2 className="text-2xl text-[#4a3f44] mt-8">Health Disclaimer</h2>
           <p>
-            Velora is not a substitute for professional medical advice. Always
+            Veronica Method is not a substitute for professional medical advice. Always
             consult your healthcare provider before starting any new exercise or
             nutrition program.
           </p>

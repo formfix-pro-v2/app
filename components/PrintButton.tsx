@@ -18,7 +18,7 @@ export default function PrintButton({
       <!DOCTYPE html>
       <html>
       <head>
-        <title>Velora Wellness</title>
+        <title>Veronica Method</title>
         <style>
           * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -165,7 +165,7 @@ export default function PrintButton({
       </head>
       <body>
         <div class="print-header">
-          <h1>✦ Velora Wellness</h1>
+          <h1>✦ Veronica Method</h1>
           <p>${new Date().toLocaleDateString("en", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</p>
         </div>
         ${content.innerHTML}

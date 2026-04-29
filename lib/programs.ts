@@ -1,5 +1,5 @@
 // ============================================================
-// VELORA PERSONALIZED PROGRAM ENGINE
+// Veronica Method PERSONALIZED PROGRAM ENGINE
 // Builds unique daily plans based on quiz data, symptoms,
 // goals, fitness level, and program phase.
 // ============================================================

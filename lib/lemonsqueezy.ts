@@ -14,12 +14,12 @@ function getHeaders() {
 export const LEMON_PLANS = {
   glow: {
     variantId: process.env.LEMONSQUEEZY_GLOW_VARIANT_ID || "1013533",
-    name: "Velora Glow",
+    name: "Veronica Glow",
     price: 29,
   },
   elite: {
     variantId: process.env.LEMONSQUEEZY_ELITE_VARIANT_ID || "1013547",
-    name: "Velora Elite",
+    name: "Veronica Elite",
     price: 79,
   },
 } as const;

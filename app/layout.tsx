@@ -11,36 +11,36 @@ import SplashScreen from "@/components/SplashScreen";
 
 export const metadata: Metadata = {
   title: {
-    default: "Velora | Wellness for Women 40+",
-    template: "%s | Velora Wellness",
+    default: "Veronica Method | The Complete Menopause Program",
+    template: "%s | Veronica Method",
   },
   description:
-    "Personalized menopause wellness programs: daily exercises, budget meal plans, sleep support and hormone balance. Join 1,200+ women transforming their health.",
+    "The complete menopause program: personalized exercises, budget meal plans under €7/day, supplement guide and daily support for women after 40.",
   keywords: [
-    "menopause wellness",
+    "menopause program",
+    "menopause exercises",
+    "menopause meal plan",
+    "menopause supplements",
     "women over 40 fitness",
     "hormone balance exercises",
-    "menopause meal plan",
     "hot flash relief",
-    "sleep improvement program",
-    "budget healthy eating",
+    "sleep improvement menopause",
+    "budget healthy eating menopause",
     "pelvic floor exercises",
-    "midlife wellness",
-    "women health program",
   ],
   openGraph: {
-    title: "Velora | Wellness for Women 40+",
+    title: "Veronica Method | The Complete Menopause Program",
     description:
-      "Personalized exercise programs and budget meal plans for women navigating menopause. Sleep better, move better, feel amazing.",
+      "Personalized exercises, budget meal plans and supplement guidance for women navigating menopause.",
     type: "website",
     locale: "en_US",
-    siteName: "Velora Wellness",
+    siteName: "Veronica Method",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Velora | Wellness for Women 40+",
+    title: "Veronica Method | The Complete Menopause Program",
     description:
-      "Personalized menopause wellness: exercises, meals under €7/day, sleep support. Join 1,200+ women.",
+      "Personalized exercises, budget meals under €7/day, supplement guide. The complete menopause program for women after 40.",
   },
   robots: {
     index: true,
@@ -61,7 +61,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#d8a7b5" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Velora" />
+        <meta name="apple-mobile-web-app-title" content="Veronica Method" />
         {/* Analytics - Plausible (privacy-friendly, no cookies needed) */}
         {process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN && (
           <script
@@ -76,10 +76,10 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "WebApplication",
-              name: "Velora Wellness",
+              name: "Veronica Method",
               description:
-                "Personalized menopause wellness programs with daily exercises, budget meal plans and progress tracking for women over 40.",
-              url: "https://velora-wellness.vercel.app",
+                "The complete menopause program: personalized exercises, budget meal plans and supplement guidance for women after 40.",
+              url: "https://veronica-method.vercel.app",
               applicationCategory: "HealthApplication",
               offers: [
                 {

@@ -219,7 +219,7 @@ function PricingContent() {
             },
             {
               q: "What if I have specific health conditions?",
-              a: "Velora is a wellness program, not medical treatment. The quiz personalizes your plan based on symptoms, but always consult your doctor before starting any new exercise or nutrition program.",
+              a: "Veronica Method is a wellness program, not medical treatment. The quiz personalizes your plan based on symptoms, but always consult your doctor before starting any new exercise or nutrition program.",
             },
             {
               q: "Can I cancel anytime?",

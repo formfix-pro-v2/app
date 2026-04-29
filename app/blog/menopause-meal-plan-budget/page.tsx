@@ -61,7 +61,7 @@ export default function MealPlanArticle() {
 
           <section className="p-6 rounded-2xl bg-[#fdf2f5] border border-[#f0e3e8]">
             <h2 className="text-xl text-[#4a3f44] mb-2">Daily Total: €4.15 | 1,430 kcal | 82g protein</h2>
-            <p>The Velora program generates a different meal plan every day, personalized to your calorie needs and symptoms — all under €7/day.</p>
+            <p>the Veronica Method program generates a different meal plan every day, personalized to your calorie needs and symptoms — all under €7/day.</p>
           </section>
         </div>
       </article>

@@ -71,7 +71,7 @@ export default function BlogPage() {
         <p className="uppercase tracking-[0.25em] text-xs text-[#b98fa1] mb-4 font-bold">
           Wellness Journal
         </p>
-        <h1 className="text-5xl mb-4 text-[#4a3f44]">The Velora Blog</h1>
+        <h1 className="text-5xl mb-4 text-[#4a3f44]">The Veronica Method Blog</h1>
         <p className="text-[#7b6870] text-lg max-w-2xl">
           Expert guidance on menopause wellness, nutrition on a budget, gentle
           exercise and building confidence through midlife.

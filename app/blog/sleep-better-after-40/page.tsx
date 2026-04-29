@@ -60,7 +60,7 @@ export default function SleepArticle() {
 
           <section className="p-6 rounded-2xl bg-[#fdf2f5] border border-[#f0e3e8]">
             <h2 className="text-xl text-[#4a3f44] mb-2">Results to Expect</h2>
-            <p>Most women notice improvement within 5-10 days. The Velora program includes sleep-specific routines on your rest days and evening breathing exercises in every session.</p>
+            <p>Most women notice improvement within 5-10 days. the Veronica Method program includes sleep-specific routines on your rest days and evening breathing exercises in every session.</p>
           </section>
         </div>
       </article>

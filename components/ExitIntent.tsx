@@ -50,7 +50,7 @@ export default function ExitIntent() {
 
         <div className="bg-[#fdf2f5] border-2 border-dashed border-[#d8a7b5] rounded-xl p-4 mb-5">
           <span className="text-2xl font-mono font-bold text-[#4a3f44] tracking-widest">
-            VELORA10
+            VERONICA10
           </span>
         </div>
 

@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { translations, type Locale } from "./translations";
 
-const STORAGE_KEY = "velora_locale";
+const STORAGE_KEY = "vm_locale";
 
 export function useTranslation() {
   const [locale, setLocaleState] = useState<Locale>("en");

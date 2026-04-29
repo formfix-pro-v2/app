@@ -76,7 +76,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* WHAT IS VELORA - Clear value proposition */}
+      {/* WHAT IS Veronica Method - Clear value proposition */}
       <section className="max-w-7xl mx-auto py-6">
         <div className="soft-card p-6 md:p-8">
           <h2 className="text-3xl text-center text-[#4a3f44] mb-2 italic">
@@ -223,17 +223,17 @@ export default function HomePage() {
           <h2 className="text-2xl text-center text-[#4a3f44] mb-4 italic">How Much You Save</h2>
           <div className="grid md:grid-cols-3 gap-4">
             <div className="p-4 rounded-xl bg-red-50/50 border border-red-100 text-center">
-              <p className="text-xs text-red-400 uppercase font-bold tracking-widest mb-1">Without Velora</p>
+              <p className="text-xs text-red-400 uppercase font-bold tracking-widest mb-1">Without Us</p>
               <p className="text-2xl font-light text-red-500 line-through">€180+/mo</p>
               <p className="text-[10px] text-red-400 mt-1">Gym + nutritionist + supplements advice</p>
             </div>
             <div className="p-4 rounded-xl bg-[#fdf2f5] border-2 border-[#d8a7b5] text-center">
-              <p className="text-xs text-[#d8a7b5] uppercase font-bold tracking-widest mb-1">Velora Glow</p>
+              <p className="text-xs text-[#d8a7b5] uppercase font-bold tracking-widest mb-1">Veronica Glow</p>
               <p className="text-2xl font-light text-[#4a3f44]">€29 <span className="text-sm">one-time</span></p>
               <p className="text-[10px] text-[#7b6870] mt-1">30 days of everything included</p>
             </div>
             <div className="p-4 rounded-xl bg-[#fdf2f5] border border-[#f0e3e8] text-center">
-              <p className="text-xs text-[#d8a7b5] uppercase font-bold tracking-widest mb-1">Velora Elite</p>
+              <p className="text-xs text-[#d8a7b5] uppercase font-bold tracking-widest mb-1">Veronica Elite</p>
               <p className="text-2xl font-light text-[#4a3f44]">€79 <span className="text-sm">one-time</span></p>
               <p className="text-[10px] text-[#7b6870] mt-1">90 days + advanced features</p>
             </div>

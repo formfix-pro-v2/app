@@ -8,7 +8,7 @@ export default function LanguageSwitcher() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem("velora_locale") as Locale | null;
+    const saved = localStorage.getItem("vm_locale") as Locale | null;
     if (saved) setLocale(saved);
   }, []);
 
@@ -16,7 +16,7 @@ export default function LanguageSwitcher() {
 
   function handleChange(loc: Locale) {
     setLocale(loc);
-    localStorage.setItem("velora_locale", loc);
+    localStorage.setItem("vm_locale", loc);
     setOpen(false);
     // Reload to apply translations everywhere
     window.location.reload();

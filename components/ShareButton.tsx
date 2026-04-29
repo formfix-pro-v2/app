@@ -23,7 +23,7 @@ export default function ShareButton({ text, url }: { text: string; url?: string 
   async function nativeShare() {
     if (navigator.share) {
       try {
-        await navigator.share({ title: "Velora Wellness", text, url: shareUrl });
+        await navigator.share({ title: "Veronica Method", text, url: shareUrl });
         setOpen(false);
       } catch {
         /* user cancelled */
@@ -70,7 +70,7 @@ export default function ShareButton({ text, url }: { text: string; url?: string 
               📘 Facebook
             </a>
             <a
-              href={`mailto:?subject=Check%20out%20Velora%20Wellness&body=${encodedText}%20${encodedUrl}`}
+              href={`mailto:?subject=Check%20out%20Veronica Method%20Wellness&body=${encodedText}%20${encodedUrl}`}
               className="flex items-center gap-3 px-4 py-3 text-sm text-[#6f5a62] hover:bg-[#fdf2f5] transition-colors"
             >
               ✉️ Email

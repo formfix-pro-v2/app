@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   // Simple auth check via header
   const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET || "velora-cron-2024"}`) {
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET || "vm-cron-2024"}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -33,7 +33,7 @@ export async function GET(request: Request) {
     email: user.email,
     plan: user.plan,
     day: user.current_day,
-    subject: `Week ${Math.ceil(user.current_day / 7)} — Your Velora Update`,
+    subject: `Week ${Math.ceil(user.current_day / 7)} — Your Veronica Method Update`,
     message: getWeeklyMessage(user.current_day, user.plan),
   }));
 
