@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { getTodayProgram } from "@/lib/programs";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import CircularTimer from "@/components/CircularTimer";
 
 const CATEGORY_LABELS: Record<string, string> = {
   warmup: "Warm-Up",
@@ -207,9 +208,7 @@ export default function SessionPage() {
               ▶
             </button>
           ) : (
-            <div className="text-7xl font-extralight text-[#4a3f44] tracking-tight">
-              {format(timeLeft)}
-            </div>
+            <CircularTimer timeLeft={timeLeft} totalTime={currentTime} />
           )}
         </div>
 

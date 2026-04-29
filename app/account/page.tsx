@@ -9,6 +9,7 @@ import {
   clearMembership,
   cancelSubscription,
 } from "@/lib/subscription";
+import ReferralCard from "@/components/ReferralCard";
 import type { User } from "@supabase/supabase-js";
 
 type State = {
@@ -165,6 +166,9 @@ export default function AccountPage() {
           </button>
         </div>
       </section>
+
+      {/* REFERRAL */}
+      <ReferralCard />
 
       {/* RETENTION */}
       {premium && data.daysRemaining <= 7 && (

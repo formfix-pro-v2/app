@@ -3,11 +3,45 @@ import type { Metadata } from "next";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import InstallPrompt from "@/components/InstallPrompt";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
-  title: "Velora | Luxury Women Wellness",
+  title: {
+    default: "Velora | Wellness for Women 40+",
+    template: "%s | Velora Wellness",
+  },
   description:
-    "Premium feminine wellness experience for women navigating menopause. Daily movement, nutrition, confidence and elegance.",
+    "Personalized menopause wellness programs: daily exercises, budget meal plans, sleep support and hormone balance. Join 1,200+ women transforming their health.",
+  keywords: [
+    "menopause wellness",
+    "women over 40 fitness",
+    "hormone balance exercises",
+    "menopause meal plan",
+    "hot flash relief",
+    "sleep improvement program",
+    "budget healthy eating",
+    "pelvic floor exercises",
+    "midlife wellness",
+    "women health program",
+  ],
+  openGraph: {
+    title: "Velora | Wellness for Women 40+",
+    description:
+      "Personalized exercise programs and budget meal plans for women navigating menopause. Sleep better, move better, feel amazing.",
+    type: "website",
+    locale: "en_US",
+    siteName: "Velora Wellness",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Velora | Wellness for Women 40+",
+    description:
+      "Personalized menopause wellness: exercises, meals under €7/day, sleep support. Join 1,200+ women.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
@@ -66,6 +100,7 @@ export default function RootLayout({
 
           <Footer />
           <InstallPrompt />
+          <ServiceWorkerRegister />
         </div>
       </body>
     </html>
