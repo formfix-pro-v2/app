@@ -8,6 +8,7 @@ import {
   type Activity,
   type Goal,
 } from "@/lib/nutrition";
+import PrintButton from "@/components/PrintButton";
 
 type QuizData = {
   symptoms?: string[];
@@ -106,10 +107,15 @@ export default function ResultsPage() {
 
         {/* 3. FREE DAY 1 COMPLETE MEAL PLAN */}
         <div className="mb-10">
-          <div className="flex items-center gap-3 mb-6">
-            <span className="bg-[#4a3f44] text-white text-[10px] px-3 py-1 rounded-full uppercase tracking-widest font-bold">Free Preview</span>
-            <h3 className="text-2xl text-[#4a3f44]">Your Complete Day 1 Meal Plan</h3>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <span className="bg-[#4a3f44] text-white text-[10px] px-3 py-1 rounded-full uppercase tracking-widest font-bold">Free Preview</span>
+              <h3 className="text-2xl text-[#4a3f44]">Your Complete Day 1 Meal Plan</h3>
+            </div>
+            <PrintButton targetId="printable-day1-meals" label="Print Meals" />
           </div>
+
+          <div id="printable-day1-meals">
 
           <div className="grid md:grid-cols-2 gap-4">
             {mealPlan.meals.map(({ slot, meal }) => {
@@ -184,6 +190,7 @@ export default function ResultsPage() {
               Day 2-7 free trial includes breakfast only. Premium unlocks all meals every day.
             </p>
           </div>
+          </div>{/* close printable-day1-meals */}
         </div>
 
         {/* 4. CTA SECTION */}

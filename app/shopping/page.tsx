@@ -108,6 +108,9 @@ export default function ShoppingPage() {
 
   const isPremium = plan === "glow" || plan === "elite";
 
+  // Free users get 7-day list, premium get 3/7/14 options
+  const maxFreeDays = 7;
+
   return (
     <main className="max-w-4xl mx-auto px-6 py-14">
       {/* HERO */}
@@ -127,21 +130,24 @@ export default function ShoppingPage() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <span className="text-sm text-[#7b6870]">Generate for:</span>
-            {[3, 7, 14].map((d) => (
-              <button
-                key={d}
-                onClick={() => isPremium ? setDays(d) : null}
-                className={`px-4 py-2 rounded-xl text-sm transition-colors ${
-                  days === d
-                    ? "bg-[#d8a7b5] text-white"
-                    : isPremium
-                      ? "bg-white border border-[#f0e3e8] text-[#7b6870] hover:border-[#d8a7b5]"
-                      : "bg-white border border-[#f0e3e8] text-[#7b6870] opacity-50 cursor-not-allowed"
-                }`}
-              >
-                {d} days
-              </button>
-            ))}
+            {[3, 7, 14].map((d) => {
+              const allowed = isPremium || d <= maxFreeDays;
+              return (
+                <button
+                  key={d}
+                  onClick={() => allowed ? setDays(d) : null}
+                  className={`px-4 py-2 rounded-xl text-sm transition-colors ${
+                    days === d
+                      ? "bg-[#d8a7b5] text-white"
+                      : allowed
+                        ? "bg-white border border-[#f0e3e8] text-[#7b6870] hover:border-[#d8a7b5]"
+                        : "bg-white border border-[#f0e3e8] text-[#7b6870] opacity-50 cursor-not-allowed"
+                  }`}
+                >
+                  {d} days {!isPremium && d > maxFreeDays ? "🔒" : ""}
+                </button>
+              );
+            })}
           </div>
 
           <div className="flex items-center gap-4">
@@ -164,15 +170,14 @@ export default function ShoppingPage() {
 
       {/* GROCERY LIST */}
       <div id="printable-grocery">
-      {!isPremium && days > 1 ? (
+      {!isPremium && days > maxFreeDays ? (
         <section className="soft-card p-10 text-center mb-8">
           <div className="text-4xl mb-4">🔒</div>
           <h3 className="text-2xl text-[#4a3f44] mb-2">
-            Multi-Day Shopping Lists are Premium
+            14-Day Shopping Lists are Premium
           </h3>
           <p className="text-[#7b6870] mb-6">
-            Free users get a 1-day shopping list. Upgrade to generate lists for
-            up to 14 days.
+            Free users get up to 7-day lists. Upgrade to generate lists for 14 days.
           </p>
           <Link href="/pricing" className="btn-primary">
             Upgrade Now
