@@ -5,6 +5,7 @@ import Footer from "@/components/footer";
 import InstallPrompt from "@/components/InstallPrompt";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import CookieConsent from "@/components/CookieConsent";
+import NotificationPrompt from "@/components/NotificationPrompt";
 
 export const metadata: Metadata = {
   title: {
@@ -123,6 +124,7 @@ export default function RootLayout({
           <InstallPrompt />
           <ServiceWorkerRegister />
           <CookieConsent />
+          <NotificationPrompt />
         </div>
       </body>
     </html>

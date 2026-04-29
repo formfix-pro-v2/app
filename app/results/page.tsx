@@ -9,6 +9,7 @@ import {
   type Goal,
 } from "@/lib/nutrition";
 import PrintButton from "@/components/PrintButton";
+import ShareButton from "@/components/ShareButton";
 
 type QuizData = {
   symptoms?: string[];
@@ -69,9 +70,12 @@ export default function ResultsPage() {
         </p>
         <h1 className="text-5xl mb-4 text-[#4a3f44] tracking-tight">Your Hormone-Balance Blueprint</h1>
         <p className="text-[#7b6870] text-xl max-w-2xl mx-auto leading-relaxed">
-          Based on your profile, we've optimized a plan to support your metabolism 
+          Based on your profile, we&apos;ve optimized a plan to support your metabolism 
           and manage {data.symptoms?.length ? data.symptoms[0].toLowerCase() : "hormonal balance"} effectively.
         </p>
+        <div className="mt-6 flex justify-center">
+          <ShareButton text="I just got my personalized menopause wellness plan from Velora! 🌸" url="https://velora-wellness.vercel.app/quiz" />
+        </div>
       </section>
 
       {/* 2. NUTRITION & BUDGET PREVIEW */}
