@@ -232,7 +232,11 @@ export default function DashboardPage() {
         <div className="grid md:grid-cols-2 gap-4">
           {mealPlan.meals.map(({ slot, meal }, i) => {
             const isFree = plan === "free";
-            const isLocked = isFree && day > 1;
+            // Free plan: Day 1 = all 4 meals, Day 2-7 = only breakfast, Day 8+ = locked
+            const freeDayLimit = 7;
+            const isFreeTrial = isFree && day <= freeDayLimit;
+            const isFreeExpired = isFree && day > freeDayLimit;
+            const isLocked = isFreeExpired || (isFree && day > 1 && slot !== "breakfast");
             const slotLabels: Record<string, string> = {
               breakfast: "Breakfast",
               lunch: "Lunch",
@@ -323,9 +327,27 @@ export default function DashboardPage() {
 
         {plan === "free" && (
           <div className="mt-8 text-center p-8 rounded-[34px] bg-[#fdf2f5]/60 border border-dashed border-[#d8a7b5]/40 backdrop-blur-sm">
-            <h3 className="text-lg text-[#4a3f44] font-semibold mb-2">
-              Unlock Your Full Budget Menu
-            </h3>
+            {day <= 7 ? (
+              <>
+                <h3 className="text-lg text-[#4a3f44] font-semibold mb-1">
+                  Free Trial: Day {day} of 7
+                </h3>
+                <p className="text-sm text-[#7b6870] mb-4">
+                  {day === 1
+                    ? "Today you get all 4 meals with full recipes. From tomorrow, only breakfast is free."
+                    : `${8 - day} days left in your free trial. Upgrade to unlock all meals.`}
+                </p>
+              </>
+            ) : (
+              <>
+                <h3 className="text-lg text-[#4a3f44] font-semibold mb-1">
+                  Your Free Trial Has Ended
+                </h3>
+                <p className="text-sm text-[#7b6870] mb-4">
+                  Upgrade to continue with full meal plans and exercises.
+                </p>
+              </>
+            )}
             <Link
               href="/pricing"
               className="btn-primary px-8 py-3 text-sm inline-block"

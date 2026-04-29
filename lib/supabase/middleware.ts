@@ -35,7 +35,9 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // Protected routes that require authentication
-  const protectedRoutes = ["/dashboard", "/session", "/account", "/checkin"];
+  // Dashboard, session, nutrition, shopping, progress are FREE (no login needed)
+  // Only account and checkin require login
+  const protectedRoutes = ["/account", "/checkin"];
   const isProtected = protectedRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   );

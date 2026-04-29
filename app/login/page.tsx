@@ -9,7 +9,6 @@ import { signIn, signUp } from "@/lib/auth";
 function LoginContent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -29,20 +28,37 @@ function LoginContent() {
       return;
     }
 
-    if (isSignUp) {
-      const result = await signUp(email, password);
-      if (result.success) {
-        setMessage("Check your email for a confirmation link.");
-      } else {
-        setError(result.error || "Sign up failed. Please try again.");
-      }
-    } else {
-      const result = await signIn(email, password);
-      if (result.success) {
+    // Try sign in first
+    const signInResult = await signIn(email, password);
+
+    if (signInResult.success) {
+      router.push(redirect);
+      router.refresh();
+      return;
+    }
+
+    // If sign in failed, try to create account automatically
+    const signUpResult = await signUp(email, password);
+
+    if (signUpResult.success) {
+      // Try signing in immediately after signup
+      const retrySignIn = await signIn(email, password);
+      if (retrySignIn.success) {
         router.push(redirect);
         router.refresh();
+        return;
+      }
+      // If email confirmation is required
+      setMessage(
+        "Account created! Check your email for a confirmation link, then sign in."
+      );
+    } else {
+      // Both failed — show a helpful error
+      const err = signUpResult.error || "";
+      if (err.toLowerCase().includes("already")) {
+        setError("Incorrect password. Please try again.");
       } else {
-        setError(result.error || "Invalid email or password.");
+        setError(err || "Something went wrong. Please try again.");
       }
     }
 
@@ -54,13 +70,9 @@ function LoginContent() {
       <div className="max-w-md w-full">
         <div className="soft-card p-10">
           <div className="text-center mb-8">
-            <h1 className="text-4xl mb-2 text-[#4a3f44]">
-              {isSignUp ? "Create Account" : "Welcome Back"}
-            </h1>
+            <h1 className="text-4xl mb-2 text-[#4a3f44]">Welcome</h1>
             <p className="text-[#7b6870]">
-              {isSignUp
-                ? "Start your wellness journey today"
-                : "Sign in to continue your journey"}
+              Sign in or create an account to continue
             </p>
           </div>
 
@@ -112,7 +124,7 @@ function LoginContent() {
                 className="w-full mt-1 p-4 rounded-2xl border border-[#ead8de] outline-none focus:border-[#d6a7b1] transition-colors"
                 required
                 minLength={6}
-                autoComplete={isSignUp ? "new-password" : "current-password"}
+                autoComplete="current-password"
               />
             </div>
 
@@ -124,30 +136,18 @@ function LoginContent() {
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  {isSignUp ? "Creating Account..." : "Signing In..."}
+                  Please wait...
                 </span>
-              ) : isSignUp ? (
-                "Create Account"
               ) : (
-                "Sign In"
+                "Continue"
               )}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <button
-              onClick={() => {
-                setIsSignUp(!isSignUp);
-                setError("");
-                setMessage("");
-              }}
-              className="text-sm text-[#b98fa1] hover:text-[#8f5d6f] transition-colors"
-            >
-              {isSignUp
-                ? "Already have an account? Sign in"
-                : "Don't have an account? Sign up"}
-            </button>
-          </div>
+          <p className="mt-6 text-center text-xs text-[#b98fa1]">
+            New here? Just enter your email and password — we&apos;ll create
+            your account automatically.
+          </p>
 
           <div className="mt-4 text-center">
             <Link
