@@ -56,6 +56,7 @@ export default function Footer() {
                 ["Privacy Policy", "/privacy"],
                 ["Terms of Service", "/terms"],
                 ["Contact", "/contact"],
+                ["Become an Affiliate", "/affiliate"],
               ].map(([label, href]) => (
                 <Link
                   key={label}

@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 type QuizData = {
   // Nutrition-critical fields
@@ -20,7 +21,24 @@ type QuizData = {
 };
 
 export default function QuizPage() {
+  return (
+    <Suspense fallback={<div className="min-h-[60vh] flex items-center justify-center"><div className="animate-pulse text-[#b98fa1]">Loading...</div></div>}>
+      <QuizContent />
+    </Suspense>
+  );
+}
+
+function QuizContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Track affiliate and referral codes
+  useEffect(() => {
+    const aff = searchParams.get("aff");
+    const ref = searchParams.get("ref");
+    if (aff) localStorage.setItem("affiliateRef", aff);
+    if (ref) localStorage.setItem("referredBy", ref);
+  }, [searchParams]);
 
   const [step, setStep] = useState(1);
 
