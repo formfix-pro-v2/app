@@ -56,8 +56,6 @@ export default function ResultsPage() {
     return getDayMealPlan(1, nutrition.calories, data.symptoms || [], data.goal || "tone");
   }, [nutrition.calories, data.symptoms, data.goal]);
 
-  const sampleMeal = mealPlan.meals[0]?.meal;
-
   return (
     <main className="max-w-6xl mx-auto px-6 py-14">
       {/* 1. HERO SUCCESS SECTION */}
@@ -106,74 +104,89 @@ export default function ResultsPage() {
           ))}
         </div>
 
-        {/* 3. FREE SAMPLE MEAL */}
+        {/* 3. FREE DAY 1 COMPLETE MEAL PLAN */}
         <div className="mb-10">
           <div className="flex items-center gap-3 mb-6">
-            <span className="bg-[#4a3f44] text-white text-[10px] px-3 py-1 rounded-full uppercase tracking-widest font-bold">Free Sample</span>
-            <h3 className="text-2xl text-[#4a3f44]">Your Day 1 Breakfast</h3>
+            <span className="bg-[#4a3f44] text-white text-[10px] px-3 py-1 rounded-full uppercase tracking-widest font-bold">Free Preview</span>
+            <h3 className="text-2xl text-[#4a3f44]">Your Complete Day 1 Meal Plan</h3>
           </div>
 
-          {sampleMeal && (
-            <div className="p-8 rounded-[40px] bg-white border border-[#f0e3e8] shadow-sm">
-              <div className="grid md:grid-cols-2 gap-10">
-                <div>
-                  <h4 className="text-3xl text-[#4a3f44] mb-2">{sampleMeal.title}</h4>
-                  <p className="text-[#7b6870] italic mb-6">&ldquo;{sampleMeal.subtitle}&rdquo;</p>
-                  
-                  <div className="flex gap-6 mb-8">
-                    <div className="text-center">
-                      <p className="text-[10px] text-[#b98fa1] uppercase font-bold tracking-widest mb-1">Prep</p>
-                      <p className="text-[#4a3f44] font-medium">{sampleMeal.prep}</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-[10px] text-[#b98fa1] uppercase font-bold tracking-widest mb-1">Cost</p>
-                      <p className="text-[#4a3f44] font-medium">€{sampleMeal.price.toFixed(2)}</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-[10px] text-[#b98fa1] uppercase font-bold tracking-widest mb-1">Protein</p>
-                      <p className="text-[#4a3f44] font-medium">{sampleMeal.protein}g</p>
-                    </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            {mealPlan.meals.map(({ slot, meal }) => {
+              const slotLabels: Record<string, string> = {
+                breakfast: "Breakfast",
+                lunch: "Lunch",
+                dinner: "Dinner",
+                snack: "Snack",
+              };
+
+              return (
+                <div key={slot} className="p-6 rounded-[30px] bg-white border border-[#f0e3e8] shadow-sm">
+                  <div className="flex justify-between gap-3 mb-3">
+                    <span className="text-[9px] px-3 py-1 rounded-full bg-[#fdf2f5] text-[#d8a7b5] font-bold uppercase tracking-widest">
+                      {slotLabels[slot]}
+                    </span>
+                    <span className="text-sm font-semibold text-[#4a3f44]">€{meal.price.toFixed(2)}</span>
                   </div>
 
-                  <div className="space-y-2">
-                    <p className="text-xs font-bold uppercase text-[#4a3f44] tracking-widest mb-3">Ingredients</p>
-                    {sampleMeal.ingredients.map((ing, idx) => (
-                      <div key={ing} className="flex items-center gap-3 text-[#6f5a62] text-sm">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#d6a7b1]" />
-                        <span className="font-medium">{sampleMeal.amounts?.[idx]}</span> {ing}
-                      </div>
-                    ))}
+                  <h4 className="text-xl text-[#4a3f44] mb-1 font-medium">{meal.title}</h4>
+                  <p className="text-[#7b6870] text-xs italic mb-3">&ldquo;{meal.subtitle}&rdquo;</p>
+
+                  <div className="flex gap-4 text-[10px] text-[#d8a7b5] font-bold uppercase tracking-tight mb-4">
+                    <span>⏱ {meal.prep}</span>
+                    <span>🔥 {meal.kcal} kcal</span>
+                    <span>💪 {meal.protein}g protein</span>
                   </div>
-                </div>
 
-                <div className="bg-[#fffcfd] p-6 rounded-[30px] border border-[#f0e3e8]">
-                  <p className="text-xs font-bold uppercase text-[#4a3f44] tracking-widest mb-4">Method</p>
-                  <ol className="space-y-4">
-                    {sampleMeal.steps.map((step, i) => (
-                      <li key={i} className="flex gap-4 text-sm text-[#6f5a62]">
-                        <span className="font-bold text-[#d6a7b1]">{i + 1}.</span>
-                        {step}
-                      </li>
-                    ))}
-                  </ol>
+                  <div className="mb-3">
+                    <p className="text-[10px] font-bold uppercase text-[#4a3f44] mb-2 tracking-widest opacity-70">Ingredients</p>
+                    <ul className="space-y-1 text-xs text-[#6f5a62]">
+                      {meal.ingredients.map((ing, idx) => (
+                        <li key={ing} className="flex items-center gap-2">
+                          <span className="w-1 h-1 rounded-full bg-[#d8a7b5]" />
+                          <span className="font-medium">{meal.amounts?.[idx]}</span> {ing}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div>
+                    <p className="text-[10px] font-bold uppercase text-[#4a3f44] mb-2 tracking-widest opacity-70">How to Make</p>
+                    <ol className="space-y-1 text-xs text-[#6f5a62]">
+                      {meal.steps.map((step, idx) => (
+                        <li key={idx} className="flex gap-2">
+                          <span className="text-[#d8a7b5] font-bold shrink-0">{idx + 1}.</span>
+                          {step}
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+
+                  {meal.benefits.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-1">
+                      {meal.benefits.map((b) => (
+                        <span key={b} className="text-[9px] px-2 py-0.5 rounded-full bg-[#fdf2f5] text-[#b98fa1] border border-[#f0e3e8]">
+                          {b}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </div>
-            </div>
-          )}
+              );
+            })}
+          </div>
+
+          <div className="mt-6 p-6 rounded-2xl bg-[#fdf2f5] border border-[#f0e3e8] text-center">
+            <p className="text-sm text-[#4a3f44] font-medium">
+              Total Day 1: {mealPlan.totalKcal} kcal · {mealPlan.totalProtein}g protein · €{mealPlan.totalPrice.toFixed(2)}
+            </p>
+            <p className="text-xs text-[#7b6870] mt-1">
+              Day 2-7 free trial includes breakfast only. Premium unlocks all meals every day.
+            </p>
+          </div>
         </div>
 
-        {/* 4. LOCKED CONTENT PLACEHOLDERS */}
-        <div className="grid md:grid-cols-3 gap-4 mb-10">
-          {["Lunch", "Dinner", "Snack"].map((label) => (
-            <div key={label} className="p-8 rounded-[30px] border border-dashed border-[#d6a7b1] bg-[#fffcfd] text-center group cursor-not-allowed">
-              <span className="block text-2xl mb-2 grayscale">🔒</span>
-              <p className="text-sm font-bold uppercase tracking-widest text-[#b98fa1]">{label}</p>
-              <p className="text-[10px] text-[#7b6870] mt-1 italic">Included in Premium</p>
-            </div>
-          ))}
-        </div>
-
-        {/* 5. CTA SECTION */}
+        {/* 4. CTA SECTION */}
         <div className="text-center">
           <Link href="/pricing" className="btn-primary px-12 py-5 text-xl inline-block shadow-xl hover:scale-105 transition-transform mb-4">
             Get My Full 28-Day Plan
