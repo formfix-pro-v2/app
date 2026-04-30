@@ -108,7 +108,7 @@ export default function RootLayout({
         />
       </head>
       <body className="text-[#3d2b32]">
-        <div className="min-h-screen relative overflow-x-hidden flex flex-col">
+        <div className="min-h-screen relative flex flex-col">
           {/* Subtle gradient background */}
           <div
             className="fixed inset-0 -z-20"

@@ -24,12 +24,12 @@
     background-image: url("/VM-bg-pattern.png") !important;
     background-repeat: repeat !important;
     background-size: 450px !important;
-    background-attachment: fixed !important;
     color: var(--text-main);
     font-family: "Inter", sans-serif;
     min-height: 100vh;
     font-size: 15px;
     line-height: 1.6;
+    -webkit-overflow-scrolling: touch;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -213,6 +213,7 @@ button, [role="button"] {
 html {
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 /* Prevent zoom on input focus (iOS) */
