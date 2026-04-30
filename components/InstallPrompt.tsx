@@ -65,9 +65,7 @@ export default function InstallPrompt() {
         {!showIOSGuide && (
           <div className="fixed bottom-4 left-4 right-4 z-50 md:left-auto md:right-4 md:max-w-sm">
             <div className="soft-card p-4 shadow-xl border border-[#d8a7b5]/20 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#f8d8df] to-[#d5a6b1] flex items-center justify-center shrink-0">
-                <span className="text-white text-sm font-bold">V</span>
-              </div>
+              <img src="/logo.png" alt="Veronica Method" className="w-10 h-10 rounded-xl shadow-sm object-contain shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-[#4a3f44] font-medium">Add Veronica Method to Home Screen</p>
                 <p className="text-[11px] text-[#7b6870]">Use it like a real app</p>
@@ -115,9 +113,7 @@ export default function InstallPrompt() {
   return (
     <div className="fixed bottom-4 left-4 right-4 z-50 md:left-auto md:right-4 md:max-w-sm">
       <div className="soft-card p-4 shadow-xl border border-[#d8a7b5]/20 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#f8d8df] to-[#d5a6b1] flex items-center justify-center shrink-0">
-          <span className="text-white text-sm font-bold">V</span>
-        </div>
+        <img src="/logo.png" alt="Veronica Method" className="w-10 h-10 rounded-xl shadow-sm object-contain shrink-0" />
         <div className="flex-1 min-w-0">
           <p className="text-sm text-[#4a3f44] font-medium">Install Veronica Method</p>
           <p className="text-[11px] text-[#7b6870]">Add to home screen for quick access</p>
