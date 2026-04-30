@@ -129,7 +129,7 @@ const EXERCISES: Exercise[] = [
   },
   {
     name: "Single-Leg Bridge",
-    image: img("singlebridge.jpg"),
+    image: img("singlebridg.jpg"),
     start: "Lie on back, one leg extended toward ceiling.",
     end: "Lift hips pressing through grounded foot. Hold 2 sec at top.",
     why: "Advanced glute and core activation, corrects muscle imbalances.",
