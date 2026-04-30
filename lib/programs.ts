@@ -100,7 +100,7 @@ const EXERCISES: Exercise[] = [
   },
   {
     name: "Box Breathing Reset",
-    image: img("breathing.jpg"),
+    image: img("boxbreathing.jpg"),
     start: "Sit tall with eyes closed.",
     end: "Inhale 4 counts, hold 4, exhale 4, hold 4. Repeat 6 cycles.",
     why: "Calms the nervous system, improves sleep quality and reduces anxiety.",
@@ -109,7 +109,7 @@ const EXERCISES: Exercise[] = [
   },
   {
     name: "Evening Wind-Down Breath",
-    image: img("breathing.jpg"),
+    image: img("winddown.jpg"),
     start: "Lie on back, knees bent, arms relaxed.",
     end: "Long exhales (twice the length of inhales) for 3 minutes.",
     why: "Prepares body for deep sleep, reduces night sweats and restlessness.",
@@ -129,7 +129,7 @@ const EXERCISES: Exercise[] = [
   },
   {
     name: "Single-Leg Bridge",
-    image: img("bridge.jpg"),
+    image: img("singlebridge.jpg"),
     start: "Lie on back, one leg extended toward ceiling.",
     end: "Lift hips pressing through grounded foot. Hold 2 sec at top.",
     why: "Advanced glute and core activation, corrects muscle imbalances.",
@@ -138,7 +138,7 @@ const EXERCISES: Exercise[] = [
   },
   {
     name: "Dead Bug Hold",
-    image: img("bridge.jpg"),
+    image: img("deadbug.jpg"),
     start: "Lie on back, arms up, knees at 90°.",
     end: "Slowly extend opposite arm and leg while keeping lower back pressed to floor.",
     why: "Deep core stabilization without straining the neck or back.",
@@ -176,7 +176,7 @@ const EXERCISES: Exercise[] = [
   },
   {
     name: "Sumo Squat Pulse",
-    image: img("squat.jpg"),
+    image: img("sumosquat.jpg"),
     start: "Wide stance, toes pointed out 45°.",
     end: "Lower into deep squat, pulse 3 times at bottom, then stand.",
     why: "Targets inner thighs and glutes, improves hip mobility.",
@@ -185,7 +185,7 @@ const EXERCISES: Exercise[] = [
   },
   {
     name: "Standing Calf Raise",
-    image: img("walk.jpg"),
+    image: img("calfraise.jpg"),
     start: "Stand near wall for balance, feet hip-width.",
     end: "Rise onto toes slowly (3 sec up), hold at top, lower slowly (3 sec down).",
     why: "Improves circulation in legs, reduces swelling and supports ankle stability.",
@@ -205,7 +205,7 @@ const EXERCISES: Exercise[] = [
   },
   {
     name: "Incline Push-Up",
-    image: img("pushup.jpg"),
+    image: img("inclinepushup.jpg"),
     start: "Hands on sturdy counter or bench, body in plank line.",
     end: "Lower chest toward surface, push back up with control.",
     why: "Progressive upper body strength, prepares for full push-ups.",
@@ -246,7 +246,7 @@ const EXERCISES: Exercise[] = [
     image: img("twist.jpg"),
     start: "Stand with feet hip-width, arms at shoulder height.",
     end: "Rotate torso left and right with control, keeping hips stable.",
-    why: "Improves thoracic mobility, aids digestion and reduces waist stiffness.",
+    why: "Gentle twists and deep breathing may help ease abdominal tension and promote comfort.",
     reps: "20 reps", seconds: 90,
     category: "mobility", intensity: 1,
   },
@@ -272,7 +272,7 @@ const EXERCISES: Exercise[] = [
   // --- BALANCE ---
   {
     name: "Single-Leg Stand",
-    image: img("walk.jpg"),
+    image: img("singleleg.jpg"),
     start: "Stand near wall for safety, shift weight to one foot.",
     end: "Lift other foot off ground, hold 20-30 seconds. Switch sides.",
     why: "Improves balance and proprioception, reduces fall risk.",
@@ -281,7 +281,7 @@ const EXERCISES: Exercise[] = [
   },
   {
     name: "Heel-to-Toe Walk",
-    image: img("walk.jpg"),
+    image: img("heeltoe.jpg"),
     start: "Stand at one end of room.",
     end: "Walk in a straight line placing heel directly in front of toes each step.",
     why: "Trains balance and coordination, strengthens stabilizer muscles.",
@@ -292,7 +292,7 @@ const EXERCISES: Exercise[] = [
   // --- PELVIC FLOOR ---
   {
     name: "Pelvic Floor Activation",
-    image: img("bridge.jpg"),
+    image: img("pelvicfloor.jpg"),
     start: "Sit or lie comfortably with neutral spine.",
     end: "Gently contract pelvic floor (as if stopping urine flow), hold 5 sec, release. Repeat.",
     why: "Strengthens pelvic floor muscles weakened by hormonal changes.",
@@ -301,7 +301,7 @@ const EXERCISES: Exercise[] = [
   },
   {
     name: "Bridge with Pelvic Squeeze",
-    image: img("bridge.jpg"),
+    image: img("pelvicsqueeze.jpg"),
     start: "Lie on back, knees bent, small ball or pillow between knees.",
     end: "Lift hips while squeezing knees together. Hold 5 sec at top.",
     why: "Combines glute strength with pelvic floor engagement for maximum benefit.",
@@ -321,7 +321,7 @@ const EXERCISES: Exercise[] = [
   },
   {
     name: "Scapula Squeeze",
-    image: img("shoulder.jpg"),
+    image: img("scapula.jpg"),
     start: "Sit or stand tall, arms by sides.",
     end: "Squeeze shoulder blades together and down, hold 5 sec, release.",
     why: "Strengthens upper back muscles that support upright posture.",
@@ -341,7 +341,7 @@ const EXERCISES: Exercise[] = [
   },
   {
     name: "Child's Pose Rest",
-    image: img("fold.jpg"),
+    image: img("childpose.jpg"),
     start: "Kneel on floor, big toes touching, knees wide.",
     end: "Fold forward, arms extended, forehead to floor. Breathe deeply.",
     why: "Full-body relaxation, stretches hips, back and shoulders simultaneously.",
@@ -357,13 +357,13 @@ const EXERCISES: Exercise[] = [
 
 const SYMPTOM_FOCUS: Record<string, ExerciseCategory[]> = {
   "Hot flashes":    ["breathing", "mobility", "cooldown"],
-  "Poor sleep":     ["breathing", "mobility", "cooldown", "pelvic"],
+  "Poor sleep":     ["breathing", "mobility", "cooldown", "balance"],
   "Weight gain":    ["lower", "core", "upper", "balance"],
-  "Low energy":     ["lower", "core", "upper", "warmup"],
+  "Low energy":     ["lower", "core", "upper", "warmup", "breathing"],
   "Joint pain":     ["mobility", "warmup", "balance", "cooldown"],
   "Bloating":       ["mobility", "breathing", "core"],
   "Back pain":      ["core", "mobility", "pelvic", "posture"],
-  "Mood swings":    ["breathing", "balance", "posture", "mobility"],
+  "Mood swings":    ["breathing", "balance", "posture", "mobility", "lower"],
   "Low confidence": ["posture", "upper", "core", "balance"],
 };
 
