@@ -92,7 +92,7 @@ function CheckoutContent() {
             </div>
 
             <div className="mt-8 pt-6 border-t border-[#f0e3e8] text-sm text-[#b98fa1] italic">
-              &ldquo;Joining 1,200+ women on their hormone-reset journey this month.&rdquo;
+              Start your personalized menopause wellness journey today.
             </div>
           </div>
         </section>

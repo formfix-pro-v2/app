@@ -190,18 +190,28 @@ export default function SupplementsPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-2">
           <div>
             <p className="uppercase tracking-[0.25em] text-xs text-[#b98fa1] mb-2 font-bold">
-              Personalized For You
+              {data.symptoms && data.symptoms.length > 0 ? "Personalized For You" : "Supplement Guide"}
             </p>
-            <h1 className="text-4xl text-[#4a3f44]">Supplement Guide</h1>
+            <h1 className="text-4xl text-[#4a3f44]">Vitamins & Minerals</h1>
           </div>
           <PrintButton targetId="printable-supplements" label="Print Guide" />
         </div>
-        <p className="text-sm text-[#7b6870]">
-          Vitamins, minerals and doses recommended for your symptoms and age.
-          {data.symptoms && data.symptoms.length > 0 && (
-            <span className="text-[#d8a7b5]"> Targeting: {data.symptoms.join(", ")}.</span>
-          )}
-        </p>
+
+        {data.symptoms && data.symptoms.length > 0 ? (
+          <p className="text-sm text-[#7b6870]">
+            Based on your assessment, here are the supplements recommended for your specific needs.
+            <span className="block mt-1 text-[#d8a7b5] font-medium">Your symptoms: {data.symptoms.join(", ")}.</span>
+          </p>
+        ) : (
+          <div className="mt-3 p-4 rounded-2xl bg-[#fff4f7] border border-[#f0e3e8]">
+            <p className="text-sm text-[#6f5a62] mb-2">
+              📋 Take the assessment to get personalized supplement recommendations based on your symptoms, age and goals.
+            </p>
+            <Link href="/quiz" className="btn-primary text-xs px-4 py-2">
+              Take Assessment
+            </Link>
+          </div>
+        )}
       </section>
 
       <div id="printable-supplements">

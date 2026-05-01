@@ -54,8 +54,8 @@ export default function PostureArticle() {
           </section>
 
           <section className="p-6 rounded-2xl bg-[#fdf2f5] border border-[#f0e3e8]">
-            <h2 className="text-xl text-[#4a3f44] mb-2">My Results After 30 Days</h2>
-            <p>My shoulders sit back naturally now. I catch my reflection and feel proud instead of deflated. Friends have commented that I &ldquo;look different&rdquo; — taller, more present. The physical change was gradual, but the confidence shift was immediate.</p>
+            <h2 className="text-xl text-[#4a3f44] mb-2">What to Expect After 30 Days</h2>
+            <p>With consistent daily posture exercises, many women notice their shoulders sitting back more naturally, improved body awareness, and a growing sense of confidence. The physical changes are gradual, but the mental shift often comes sooner.</p>
           </section>
         </div>
       </article>

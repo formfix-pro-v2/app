@@ -44,6 +44,108 @@ const CATEGORY_LABELS: Record<string, string> = {
   posture: "Posture",
 };
 
+type DailySupp = {
+  name: string;
+  icon: string;
+  dose: string;
+  timing: string;
+  priority: "essential" | "recommended";
+  symptoms: string[];
+};
+
+const DAILY_SUPPLEMENTS: DailySupp[] = [
+  { name: "Vitamin D3", icon: "☀️", dose: "2,000–4,000 IU", timing: "With breakfast", priority: "essential", symptoms: [] },
+  { name: "Magnesium Glycinate", icon: "🌙", dose: "300–400mg", timing: "Before bed", priority: "essential", symptoms: ["Poor sleep", "Joint pain", "Mood swings"] },
+  { name: "Omega-3 (EPA/DHA)", icon: "🐟", dose: "1,000–2,000mg", timing: "With meal", priority: "essential", symptoms: ["Joint pain", "Hot flashes", "Mood swings"] },
+  { name: "Calcium", icon: "🦴", dose: "500–600mg", timing: "2× with meals", priority: "essential", symptoms: ["Joint pain", "Back pain"] },
+  { name: "Vitamin B Complex", icon: "⚡", dose: "1 capsule", timing: "With breakfast", priority: "recommended", symptoms: ["Low energy", "Mood swings", "Low confidence"] },
+  { name: "Ashwagandha", icon: "🌿", dose: "300–600mg", timing: "Morning or evening", priority: "recommended", symptoms: ["Poor sleep", "Mood swings", "Hot flashes", "Low confidence"] },
+  { name: "Vitamin K2 (MK-7)", icon: "🥬", dose: "100–200mcg", timing: "With Vitamin D3", priority: "recommended", symptoms: [] },
+  { name: "Probiotics", icon: "🦠", dose: "10–30B CFU", timing: "Empty stomach", priority: "recommended", symptoms: ["Bloating", "Mood swings", "Weight gain"] },
+];
+
+function DailySupplements({ symptoms, age }: { symptoms: string[]; age: number }) {
+  const relevant = useMemo(() => {
+    return DAILY_SUPPLEMENTS
+      .map((s) => {
+        let score = s.priority === "essential" ? 10 : 5;
+        for (const sym of s.symptoms) {
+          if (symptoms.includes(sym)) score += 3;
+        }
+        if (age >= 55 && s.name === "Calcium") score += 2;
+        if (age >= 50 && s.name === "Vitamin D3") score += 2;
+        return { ...s, score, matches: s.symptoms.some((sym) => symptoms.includes(sym)) };
+      })
+      .sort((a, b) => b.score - a.score);
+  }, [symptoms, age]);
+
+  const [checked, setChecked] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    const saved = localStorage.getItem(`supps_${today}`);
+    if (saved) {
+      try { setChecked(JSON.parse(saved)); } catch { /* ignore */ }
+    }
+  }, []);
+
+  function toggle(name: string) {
+    const today = new Date().toISOString().slice(0, 10);
+    const next = { ...checked, [name]: !checked[name] };
+    setChecked(next);
+    localStorage.setItem(`supps_${today}`, JSON.stringify(next));
+  }
+
+  const takenCount = Object.values(checked).filter(Boolean).length;
+
+  return (
+    <div>
+      <div className="flex items-center gap-3 mb-4">
+        <div className="text-sm text-[#7b6870]">
+          <span className="font-bold text-[#4a3f44]">{takenCount}</span> / {relevant.length} taken today
+        </div>
+        <div className="flex-1 h-2 bg-[#fdf2f5] rounded-full overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-[#d8a7b5] to-[#b98fa1] rounded-full transition-all duration-300"
+            style={{ width: `${(takenCount / relevant.length) * 100}%` }}
+          />
+        </div>
+      </div>
+
+      <div className="grid sm:grid-cols-2 gap-2">
+        {relevant.map((supp) => (
+          <button
+            key={supp.name}
+            onClick={() => toggle(supp.name)}
+            className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all ${
+              checked[supp.name]
+                ? "bg-[#f0fdf4] border-green-200 opacity-70"
+                : supp.matches
+                ? "bg-white/60 border-[#d8a7b5]/30 hover:border-[#d8a7b5]"
+                : "bg-white/40 border-[#f0e3e8] hover:border-[#d8a7b5]/50"
+            }`}
+          >
+            <span className="text-xl shrink-0">{checked[supp.name] ? "✅" : supp.icon}</span>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-[#4a3f44] truncate">{supp.name}</span>
+                {supp.matches && !checked[supp.name] && (
+                  <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-[#fdf2f5] text-[#d8a7b5] font-bold shrink-0">
+                    FOR YOU
+                  </span>
+                )}
+              </div>
+              <div className="text-[10px] text-[#7b6870]">
+                {supp.dose} • {supp.timing}
+              </div>
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const { t } = useTranslation();
   const [day, setDay] = useState(1);
@@ -367,6 +469,25 @@ export default function DashboardPage() {
           </div>
         )}
         </div>{/* close printable-meals */}
+      </section>
+
+      {/* DAILY SUPPLEMENTS */}
+      <section className="soft-card p-8 mb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-3">
+          <div>
+            <p className="uppercase tracking-[0.25em] text-[10px] text-[#d8a7b5] mb-1 font-bold">
+              Daily Supplements
+            </p>
+            <h2 className="text-3xl text-[#4a3f44] font-light italic">
+              Your Vitamins & Minerals
+            </h2>
+          </div>
+          <Link href="/supplements" className="btn-outline text-xs px-4 py-2">
+            Full Guide
+          </Link>
+        </div>
+
+        <DailySupplements symptoms={data.symptoms || []} age={Number(data.age) || 48} />
       </section>
 
       {/* EXERCISES LIST */}

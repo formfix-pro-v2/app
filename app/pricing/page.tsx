@@ -161,47 +161,6 @@ function PricingContent() {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
-      <section className="mb-14">
-        <h2 className="text-4xl text-center mb-8 text-[#4a3f44] italic">
-          What Women Are Saying
-        </h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          {[
-            {
-              quote: "I sleep through the night for the first time in 2 years. The evening breathing routines changed everything.",
-              name: "Marina, 52",
-              plan: "Glow Member",
-            },
-            {
-              quote: "The meal plans are so simple and cheap. I spend less than €6 a day and feel more energized than ever.",
-              name: "Jelena, 47",
-              plan: "Elite Member",
-            },
-            {
-              quote: "My joint pain reduced significantly after week 2. The mobility exercises are gentle but effective.",
-              name: "Ana, 55",
-              plan: "Glow Member",
-            },
-          ].map((t) => (
-            <div key={t.name} className="soft-card p-6">
-              <p className="text-[#6f5a62] text-sm leading-relaxed mb-4 italic">
-                &ldquo;{t.quote}&rdquo;
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[#fdf2f5] flex items-center justify-center text-[#d8a7b5] text-sm font-bold">
-                  {t.name[0]}
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-[#4a3f44]">{t.name}</p>
-                  <p className="text-[10px] text-[#b98fa1] uppercase tracking-widest">{t.plan}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* FAQ */}
       <section className="soft-card p-10 mb-14">
         <h2 className="text-4xl text-center mb-8 text-[#4a3f44]">
