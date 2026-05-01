@@ -55,28 +55,30 @@ export default function StreakFreeze() {
   if (!show) return null;
 
   return (
-    <div className="soft-card p-5 mb-4 border border-blue-100 bg-blue-50/30">
+    <div className="soft-card p-5 mb-4 border border-blue-100 bg-gradient-to-r from-blue-50/50 to-indigo-50/30 animate-[fadeIn_0.5s_ease-out]">
       <div className="flex items-center gap-4">
-        <span className="text-3xl">❄️</span>
+        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+          <span className="text-2xl">{frozen ? "✅" : "❄️"}</span>
+        </div>
         <div className="flex-1">
           {frozen ? (
             <p className="text-sm text-green-600 font-medium">
-              Streak frozen! Your streak is safe.
+              ✨ Streak frozen! Your {localStorage.getItem("streak") || "0"}-day streak is safe.
             </p>
           ) : (
             <>
               <p className="text-sm text-[#4a3f44] font-medium">
                 You missed yesterday — use a Streak Freeze?
               </p>
-              <p className="text-xs text-[#7b6870]">
-                1 free freeze per week. Keeps your streak alive.
+              <p className="text-xs text-[#7b6870] mt-0.5">
+                1 free freeze per week. Keeps your streak alive without losing progress.
               </p>
             </>
           )}
         </div>
         {!frozen && (
-          <button onClick={freezeStreak} className="btn-primary px-4 py-2 text-xs shrink-0">
-            Freeze It
+          <button onClick={freezeStreak} className="btn-primary px-5 py-2.5 text-xs shrink-0 shadow-lg">
+            ❄️ Freeze It
           </button>
         )}
       </div>

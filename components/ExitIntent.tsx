@@ -42,20 +42,20 @@ export default function ExitIntent() {
         </button>
 
         <div className="text-4xl mb-3">🌸</div>
-        <h2 className="text-2xl text-[#4a3f44] mb-2">Wait — Don&apos;t Miss This</h2>
+        <h2 className="text-2xl text-[#4a3f44] mb-2">Wait — Special Offer Just For You</h2>
         <p className="text-sm text-[#7b6870] mb-4">
-          Get <span className="font-bold text-[#d8a7b5]">10% off</span> your
+          Get <span className="font-bold text-[#d8a7b5]">20% off</span> your
           first plan. Use code at checkout:
         </p>
 
         <div className="bg-[#fdf2f5] border-2 border-dashed border-[#d8a7b5] rounded-xl p-4 mb-5">
           <span className="text-2xl font-mono font-bold text-[#4a3f44] tracking-widest">
-            VERONICA10
+            VERONICA20
           </span>
         </div>
 
         <Link href="/pricing" className="btn-primary w-full py-3 mb-3" onClick={() => setShow(false)}>
-          View Plans with 10% Off
+          View Plans with 20% Off
         </Link>
 
         <button

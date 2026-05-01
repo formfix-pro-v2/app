@@ -10,6 +10,7 @@ import NotificationPrompt from "@/components/NotificationPrompt";
 import SplashScreen from "@/components/SplashScreen";
 import DragScroll from "@/components/DragScroll";
 import PageTransition from "@/components/PageTransition";
+import SocialProof from "@/components/SocialProof";
 
 export const metadata: Metadata = {
   title: {
@@ -61,6 +62,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
+        <link rel="alternate" type="application/rss+xml" title="Veronica Method Blog" href="/feed.xml" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="dns-prefetch" href="https://yxzttbqkamyrfabdhgau.supabase.co" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -110,6 +112,13 @@ export default function RootLayout({
         />
       </head>
       <body className="text-[#3d2b32]">
+        {/* Skip to content for keyboard users */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[#d8a7b5] focus:text-white focus:text-sm"
+        >
+          Skip to content
+        </a>
         <div className="min-h-screen relative flex flex-col">
           {/* Subtle gradient background */}
           <div
@@ -135,7 +144,7 @@ export default function RootLayout({
 
           <Header />
 
-          <main className="relative z-10 flex-1">
+          <main id="main-content" className="relative z-10 flex-1">
             <PageTransition>
               {children}
             </PageTransition>
@@ -149,6 +158,7 @@ export default function RootLayout({
           <NotificationPrompt />
           <SplashScreen />
           <DragScroll />
+          <SocialProof />
         </div>
       </body>
     </html>

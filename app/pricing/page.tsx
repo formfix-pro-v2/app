@@ -1,8 +1,51 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+
+function CountdownTimer() {
+  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    // Set deadline to end of today (midnight)
+    function getTimeLeft() {
+      const now = new Date();
+      const end = new Date(now);
+      end.setHours(23, 59, 59, 999);
+      const diff = end.getTime() - now.getTime();
+      if (diff <= 0) return { hours: 0, minutes: 0, seconds: 0 };
+      return {
+        hours: Math.floor(diff / (1000 * 60 * 60)),
+        minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((diff % (1000 * 60)) / 1000),
+      };
+    }
+
+    setTimeLeft(getTimeLeft());
+    const interval = setInterval(() => setTimeLeft(getTimeLeft()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[#fff1f5] border border-[#f0e3e8]">
+      <span className="text-sm text-[#8f5d6f] font-medium">Today&apos;s price expires in:</span>
+      <div className="flex items-center gap-1 font-mono">
+        <span className="bg-[#4a3f44] text-white px-2 py-1 rounded-lg text-sm font-bold">
+          {String(timeLeft.hours).padStart(2, "0")}
+        </span>
+        <span className="text-[#d8a7b5] font-bold">:</span>
+        <span className="bg-[#4a3f44] text-white px-2 py-1 rounded-lg text-sm font-bold">
+          {String(timeLeft.minutes).padStart(2, "0")}
+        </span>
+        <span className="text-[#d8a7b5] font-bold">:</span>
+        <span className="bg-[#4a3f44] text-white px-2 py-1 rounded-lg text-sm font-bold">
+          {String(timeLeft.seconds).padStart(2, "0")}
+        </span>
+      </div>
+    </div>
+  );
+}
 
 function PricingContent() {
   const params = useSearchParams();
@@ -76,10 +119,12 @@ function PricingContent() {
           Premium Plans Designed For Women 40+
         </h1>
 
-        <p className="max-w-3xl mx-auto text-[#7b6870] text-xl leading-relaxed">
+        <p className="max-w-3xl mx-auto text-[#7b6870] text-xl leading-relaxed mb-6">
           Compare your options, explore benefits and choose
           the transformation path that fits you best.
         </p>
+
+        <CountdownTimer />
       </section>
 
       {/* PLAN CARDS */}
