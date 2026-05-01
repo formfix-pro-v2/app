@@ -8,6 +8,7 @@ import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import CookieConsent from "@/components/CookieConsent";
 import NotificationPrompt from "@/components/NotificationPrompt";
 import SplashScreen from "@/components/SplashScreen";
+import DragScroll from "@/components/DragScroll";
 
 export const metadata: Metadata = {
   title: {
@@ -144,6 +145,7 @@ export default function RootLayout({
           <CookieConsent />
           <NotificationPrompt />
           <SplashScreen />
+          <DragScroll />
         </div>
       </body>
     </html>
