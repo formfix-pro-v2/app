@@ -165,20 +165,47 @@ main > *:first-child {
 ======================================================= */
 
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 14px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #f8f0f3;
+  border-radius: 7px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: #e0c8d0;
-  border-radius: 3px;
+  border-radius: 7px;
+  border: 3px solid #f8f0f3;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--rose);
+}
+
+::-webkit-scrollbar-button:single-button:vertical:decrement {
+  height: 14px;
+  background: #f8f0f3 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 5l4 5H4z' fill='%23d8a7b5'/%3E%3C/svg%3E") center no-repeat;
+  background-size: 10px;
+  border-radius: 7px 7px 0 0;
+}
+
+::-webkit-scrollbar-button:single-button:vertical:increment {
+  height: 14px;
+  background: #f8f0f3 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 11l4-5H4z' fill='%23d8a7b5'/%3E%3C/svg%3E") center no-repeat;
+  background-size: 10px;
+  border-radius: 0 0 7px 7px;
+}
+
+::-webkit-scrollbar-button:single-button:vertical:decrement:hover,
+::-webkit-scrollbar-button:single-button:vertical:increment:hover {
+  background-color: #f0e3e8;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #e0c8d0 #f8f0f3;
 }
 
 /* =======================================================
@@ -207,6 +234,12 @@ button, [role="button"] {
   -webkit-user-select: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Ensure page is always scrollable via touch/trackpad */
+html, body {
+  touch-action: pan-y;
+  overscroll-behavior-y: auto;
 }
 
 /* Smooth momentum scrolling on iOS */
