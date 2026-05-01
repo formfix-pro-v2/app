@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { getMembership } from "@/lib/subscription";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import DarkModeToggle from "@/components/DarkModeToggle";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import type { User } from "@supabase/supabase-js";
 
@@ -97,6 +98,9 @@ export default function Header() {
 
           {/* RIGHT */}
           <div className="flex items-center gap-2">
+            {/* Dark mode toggle */}
+            <DarkModeToggle />
+
             {/* Instagram */}
             <a
               href="https://instagram.com/veronica_menopause_program"

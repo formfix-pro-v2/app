@@ -12,6 +12,43 @@ import {
 import ReferralCard from "@/components/ReferralCard";
 import type { User } from "@supabase/supabase-js";
 
+function MemberBadges({ purchaseDate, plan }: { purchaseDate: string | null; plan: string }) {
+  const day = Number(typeof window !== "undefined" ? localStorage.getItem("day") || "1" : "1");
+  const streak = Number(typeof window !== "undefined" ? localStorage.getItem("streak") || "0" : "0");
+
+  const memberSince = purchaseDate
+    ? new Date(purchaseDate).toLocaleDateString("en", { month: "long", year: "numeric" })
+    : new Date().toLocaleDateString("en", { month: "long", year: "numeric" });
+
+  const badges = [
+    { icon: "🌱", title: "Member Since", subtitle: memberSince, earned: true },
+    { icon: "🔥", title: "Streak Master", subtitle: `${streak} day streak`, earned: streak >= 3 },
+    { icon: "⭐", title: "Week One", subtitle: "Completed 7 days", earned: day >= 7 },
+    { icon: "💪", title: "Two Weeks Strong", subtitle: "14 days done", earned: day >= 14 },
+    { icon: "👑", title: "30-Day Champion", subtitle: "Full month complete", earned: day >= 30 },
+    { icon: "💎", title: plan === "elite" ? "Elite Member" : "Glow Member", subtitle: plan !== "free" ? "Premium access" : "Upgrade to earn", earned: plan !== "free" },
+  ];
+
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+      {badges.map((b) => (
+        <div
+          key={b.title}
+          className={`p-4 rounded-2xl text-center transition-all ${
+            b.earned
+              ? "bg-[#fdf2f5] border border-[#f0e3e8]"
+              : "bg-white/30 border border-dashed border-[#f0e3e8] opacity-40 grayscale"
+          }`}
+        >
+          <div className="text-3xl mb-2">{b.icon}</div>
+          <div className="text-sm font-medium text-[#4a3f44]">{b.title}</div>
+          <div className="text-[10px] text-[#b98fa1]">{b.subtitle}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 type State = {
   plan: "free" | "glow" | "elite";
   status: "active" | "expired" | "none";
@@ -125,6 +162,12 @@ export default function AccountPage() {
               : "—"}
           </div>
         </div>
+      </section>
+
+      {/* MEMBER BADGES */}
+      <section className="soft-card p-8 mb-8">
+        <h2 className="text-3xl mb-6 text-[#4a3f44] italic">Your Badges</h2>
+        <MemberBadges purchaseDate={data.purchaseDate} plan={data.plan} />
       </section>
 
       {/* ACTIONS */}

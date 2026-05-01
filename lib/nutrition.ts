@@ -55,6 +55,8 @@ export type DayMealPlan = {
   totalProtein: number;
   totalPrice: number;
   focus: string;
+  season: string;
+  seasonalNote: string;
 };
 
 export type NutritionResult = {
@@ -795,7 +797,17 @@ export function getDayMealPlan(
   };
   const focus = priorityTags[0] ? (focusMap[priorityTags[0]] || "Balanced Nutrition") : "Balanced Nutrition";
 
-  return { day, meals, totalKcal, totalProtein, totalPrice, focus };
+  // Seasonal awareness
+  const month = new Date().getMonth();
+  const season = month >= 2 && month <= 4 ? "Spring" : month >= 5 && month <= 7 ? "Summer" : month >= 8 && month <= 10 ? "Autumn" : "Winter";
+  const seasonalNote = {
+    Spring: "Fresh greens & light meals",
+    Summer: "Cooling salads & hydration",
+    Autumn: "Warming soups & root vegetables",
+    Winter: "Hearty stews & comfort food",
+  }[season];
+
+  return { day, meals, totalKcal, totalProtein, totalPrice, focus, season, seasonalNote };
 }
 
 // ============================================================

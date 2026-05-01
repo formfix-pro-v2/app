@@ -11,6 +11,7 @@ import MilestoneCelebration from "@/components/MilestoneCelebration";
 import OnboardingTutorial from "@/components/OnboardingTutorial";
 import FavoriteButton from "@/components/FavoriteButton";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { playComplete } from "@/lib/sounds";
 
 type QuizData = {
   symptoms?: string[];
@@ -64,6 +65,64 @@ const DAILY_SUPPLEMENTS: DailySupp[] = [
   { name: "Probiotics", icon: "🦠", dose: "10–30B CFU", timing: "Empty stomach", priority: "recommended", symptoms: ["Bloating", "Mood swings", "Weight gain"] },
 ];
 
+function WeeklyMiniProgress({ currentDay }: { currentDay: number }) {
+  const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const today = new Date().getDay(); // 0=Sun, 1=Mon...
+  const todayIdx = today === 0 ? 6 : today - 1; // Convert to Mon=0
+
+  const [completed, setCompleted] = useState<boolean[]>([]);
+
+  useEffect(() => {
+    const raw = localStorage.getItem("weeklyCompleted");
+    if (raw) {
+      try { setCompleted(JSON.parse(raw)); } catch { setCompleted(Array(7).fill(false)); }
+    } else {
+      setCompleted(Array(7).fill(false));
+    }
+  }, []);
+
+  const completedCount = completed.filter(Boolean).length;
+
+  return (
+    <div>
+      <div className="flex items-center gap-2 mb-4">
+        <span className="text-sm text-[#7b6870]">
+          <span className="font-bold text-[#4a3f44]">{completedCount}</span>/7 sessions this week
+        </span>
+        {completedCount >= 5 && <span className="text-sm">🔥</span>}
+      </div>
+      <div className="grid grid-cols-7 gap-2">
+        {weekDays.map((d, i) => {
+          const isDone = completed[i];
+          const isToday = i === todayIdx;
+          const isPast = i < todayIdx;
+
+          return (
+            <div key={d} className="text-center">
+              <div
+                className={`w-10 h-10 mx-auto rounded-full flex items-center justify-center text-sm font-medium transition-all ${
+                  isDone
+                    ? "bg-gradient-to-br from-[#d8a7b5] to-[#c58d9d] text-white shadow-md"
+                    : isToday
+                    ? "border-2 border-[#d8a7b5] text-[#d8a7b5] bg-[#fdf2f5]"
+                    : isPast
+                    ? "bg-[#f0e3e8] text-[#b98fa1]"
+                    : "bg-white/40 border border-[#f0e3e8] text-[#7b6870]"
+                }`}
+              >
+                {isDone ? "✓" : d[0]}
+              </div>
+              <span className={`text-[9px] mt-1 block ${isToday ? "font-bold text-[#d8a7b5]" : "text-[#b98fa1]"}`}>
+                {d}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function DailySupplements({ symptoms, age }: { symptoms: string[]; age: number }) {
   const relevant = useMemo(() => {
     return DAILY_SUPPLEMENTS
@@ -92,6 +151,7 @@ function DailySupplements({ symptoms, age }: { symptoms: string[]; age: number }
   function toggle(name: string) {
     const today = new Date().toISOString().slice(0, 10);
     const next = { ...checked, [name]: !checked[name] };
+    if (!checked[name]) playComplete();
     setChecked(next);
     localStorage.setItem(`supps_${today}`, JSON.stringify(next));
   }
@@ -187,24 +247,78 @@ export default function DashboardPage() {
     return getDayMealPlan(day, nutrition.calories, data.symptoms || [], data.goal || "tone");
   }, [nutrition, day, data.symptoms, data.goal]);
 
+  const greeting = useMemo(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    return "Good evening";
+  }, []);
+
+  const dailyQuote = useMemo(() => {
+    const quotes = [
+      "Your body is not broken. It's adapting. And so are you.",
+      "Every small step today builds the woman you'll be tomorrow.",
+      "Strength isn't loud. It's showing up, day after day.",
+      "You're not starting over. You're starting stronger.",
+      "Rest is not giving up. It's powering up.",
+      "The woman who moves her body daily changes her whole life.",
+      "Progress isn't always visible. Trust the process.",
+      "You deserve to feel good in your own skin.",
+      "Consistency beats perfection. Always.",
+      "Your future self is thanking you right now.",
+      "Menopause is not an ending. It's a powerful new chapter.",
+      "You are more resilient than you know.",
+      "Small daily improvements lead to stunning results.",
+      "Listen to your body. It knows what it needs.",
+      "You showed up today. That's already a win.",
+      "Breathe deeply. Move gently. Trust completely.",
+      "The best time to start was yesterday. The next best time is now.",
+      "Your wellness journey is uniquely yours. Own it.",
+      "Strong women lift each other up. You're one of them.",
+      "Today's effort is tomorrow's strength.",
+      "Grace over perfection. Always.",
+      "You are writing a comeback story.",
+      "Healing is not linear, but you're moving forward.",
+      "One day at a time. One breath at a time.",
+      "The strongest thing you can do is take care of yourself.",
+      "You're not too old. You're just getting started.",
+      "Movement is medicine. And you're taking yours daily.",
+      "Be proud of how far you've come.",
+      "Your body hears everything your mind says. Speak kindly.",
+      "This is your time. Make it count.",
+    ];
+    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
+    return quotes[dayOfYear % quotes.length];
+  }, []);
+
   return (
     <main className="max-w-6xl mx-auto px-6 py-6 bg-transparent">
       {/* HEADER */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-[#4a3f44]">{t("Your Dashboard")}</h1>
-        <div className="flex gap-3">
-          <Link
-            href="/checkin"
-            className="btn-outline px-5 py-2 text-xs uppercase tracking-widest"
-          >
-            {t("Daily Check-In")}
-          </Link>
-          <Link
-            href="/"
-            className="btn-outline px-5 py-2 text-xs uppercase tracking-widest"
-          >
-            {t("Home")}
-          </Link>
+      <div className="mb-6">
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h1 className="text-3xl font-light text-[#4a3f44]">
+              {greeting} <span className="text-[#d8a7b5]">✨</span>
+            </h1>
+            <p className="text-sm text-[#7b6870] mt-1">Day {day} of your journey</p>
+          </div>
+          <div className="flex gap-3">
+            <Link
+              href="/checkin"
+              className="btn-outline px-5 py-2 text-xs uppercase tracking-widest"
+            >
+              {t("Daily Check-In")}
+            </Link>
+            <Link
+              href="/"
+              className="btn-outline px-5 py-2 text-xs uppercase tracking-widest"
+            >
+              {t("Home")}
+            </Link>
+          </div>
+        </div>
+        <div className="soft-card p-4 border-l-4 border-l-[#d8a7b5]">
+          <p className="text-sm text-[#6f5a62] italic">&ldquo;{dailyQuote}&rdquo;</p>
         </div>
       </div>
 
@@ -306,6 +420,7 @@ export default function DashboardPage() {
                 €{mealPlan.totalPrice.toFixed(2)}
               </p>
               <p className="text-[9px] text-[#b98fa1] mt-1">{mealPlan.focus}</p>
+              <p className="text-[8px] text-[#7b6870] mt-0.5">🍂 {mealPlan.seasonalNote}</p>
             </div>
           </div>
         </div>
@@ -488,6 +603,22 @@ export default function DashboardPage() {
         </div>
 
         <DailySupplements symptoms={data.symptoms || []} age={Number(data.age) || 48} />
+      </section>
+
+      {/* WEEKLY PROGRESS */}
+      <section className="soft-card p-8 mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <p className="uppercase tracking-[0.25em] text-[10px] text-[#d8a7b5] mb-1 font-bold">
+              This Week
+            </p>
+            <h2 className="text-2xl text-[#4a3f44] font-light italic">Weekly Progress</h2>
+          </div>
+          <Link href="/progress" className="btn-outline text-xs px-4 py-2">
+            Full Stats
+          </Link>
+        </div>
+        <WeeklyMiniProgress currentDay={day} />
       </section>
 
       {/* EXERCISES LIST */}

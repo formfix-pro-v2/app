@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
+import { playCelebration } from "@/lib/sounds";
 const MILESTONES: Record<number, { emoji: string; title: string; message: string }> = {
   7:  { emoji: "🌟", title: "1 Week Complete!", message: "You've built the foundation. Your body is already adapting." },
   14: { emoji: "💪", title: "2 Weeks Strong!", message: "Most women notice better sleep and less stiffness by now." },
@@ -22,6 +22,7 @@ export default function MilestoneCelebration() {
     if (MILESTONES[day] && !celebrated.includes(day)) {
       setMilestone(MILESTONES[day]);
       setShow(true);
+      playCelebration();
       celebrated.push(day);
       localStorage.setItem("celebratedMilestones", JSON.stringify(celebrated));
     }

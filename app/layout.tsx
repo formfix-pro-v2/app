@@ -9,6 +9,7 @@ import CookieConsent from "@/components/CookieConsent";
 import NotificationPrompt from "@/components/NotificationPrompt";
 import SplashScreen from "@/components/SplashScreen";
 import DragScroll from "@/components/DragScroll";
+import PageTransition from "@/components/PageTransition";
 
 export const metadata: Metadata = {
   title: {
@@ -135,7 +136,9 @@ export default function RootLayout({
           <Header />
 
           <main className="relative z-10 flex-1">
-            {children}
+            <PageTransition>
+              {children}
+            </PageTransition>
           </main>
 
           <Footer />

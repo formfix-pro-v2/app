@@ -28,11 +28,28 @@ export default function SessionPage() {
   const [finished, setFinished] = useState(false);
   const [index, setIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState(120);
+  const [voiceGuide, setVoiceGuide] = useState(false);
 
   useEffect(() => {
     const savedDay = localStorage.getItem("day");
     if (savedDay) setDay(Number(savedDay));
+    const savedVoice = localStorage.getItem("voiceGuide");
+    if (savedVoice === "true") setVoiceGuide(true);
   }, []);
+
+  // Speak exercise instructions when voice guide is on
+  useEffect(() => {
+    if (!voiceGuide || !started || !current) return;
+    if (!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(
+      `${current.name}. ${current.start} ${current.end}`
+    );
+    utterance.rate = 0.85;
+    utterance.pitch = 1.1;
+    utterance.lang = "en-US";
+    window.speechSynthesis.speak(utterance);
+  }, [index, started, voiceGuide, current]);
 
   const program = useMemo(() => {
     return getTodayProgram(day);
@@ -211,13 +228,25 @@ export default function SessionPage() {
           </p>
 
           {!started ? (
-            <button
-              onClick={handleStart}
-              className="w-40 h-40 rounded-full bg-[#d9a8b8] text-white text-5xl mx-auto shadow-xl hover:scale-105 transition flex items-center justify-center"
-              aria-label="Start session"
-            >
-              ▶
-            </button>
+            <div className="flex flex-col items-center gap-4">
+              <button
+                onClick={handleStart}
+                className="w-40 h-40 rounded-full bg-[#d9a8b8] text-white text-5xl mx-auto shadow-xl hover:scale-105 transition flex items-center justify-center"
+                aria-label="Start session"
+              >
+                ▶
+              </button>
+              <button
+                onClick={() => { setVoiceGuide(!voiceGuide); localStorage.setItem("voiceGuide", String(!voiceGuide)); }}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium transition-all ${
+                  voiceGuide
+                    ? "bg-[#d8a7b5] text-white"
+                    : "bg-[#fdf2f5] text-[#b98fa1] border border-[#f0e3e8]"
+                }`}
+              >
+                🎧 Voice Guide {voiceGuide ? "ON" : "OFF"}
+              </button>
+            </div>
           ) : (
             <CircularTimer timeLeft={timeLeft} totalTime={currentTime} />
           )}

@@ -18,6 +18,16 @@
   --line: rgba(220, 200, 210, 0.5);
 }
 
+html.dark {
+  --bg-base: #1a1215;
+  --rose: #c9929f;
+  --rose-light: #2d1f24;
+  --rose-dark: #e8b8c4;
+  --text-main: #f0e3e8;
+  --text-muted: #b98fa1;
+  --line: rgba(200, 160, 175, 0.2);
+}
+
 @layer base {
   body {
     background-color: var(--bg-base) !important;
@@ -59,11 +69,12 @@
     border: 1px solid var(--line);
     border-radius: 24px;
     box-shadow: 0 4px 24px rgba(115, 72, 87, 0.04);
-    transition: all 0.25s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .soft-card:hover {
-    box-shadow: 0 8px 32px rgba(115, 72, 87, 0.07);
+    box-shadow: 0 12px 40px rgba(115, 72, 87, 0.08);
+    transform: translateY(-2px);
   }
 
   /* Buttons - slightly smaller */
@@ -273,4 +284,46 @@ button:active, a:active, [role="button"]:active {
 @keyframes pullDown {
   0% { transform: translateY(-100%); opacity: 0; }
   100% { transform: translateY(0); opacity: 1; }
+}
+
+/* =======================================================
+   DARK MODE
+======================================================= */
+
+html.dark body {
+  background-color: var(--bg-base) !important;
+  background-image: none !important;
+  color: var(--text-main);
+}
+
+html.dark .soft-card {
+  background: rgba(45, 31, 36, 0.85) !important;
+  border-color: var(--line);
+}
+
+html.dark .soft-card:hover {
+  box-shadow: 0 8px 32px rgba(200, 146, 159, 0.08);
+}
+
+html.dark .btn-primary {
+  background: linear-gradient(135deg, #c9929f, #a67080);
+}
+
+html.dark .btn-outline {
+  border-color: var(--rose);
+  background: rgba(45, 31, 36, 0.5);
+  color: var(--text-main);
+}
+
+html.dark h1, html.dark h2, html.dark h3, html.dark h4 {
+  color: var(--text-main);
+}
+
+html.dark p {
+  color: var(--text-muted);
+}
+
+html.dark header .mx-4 {
+  background: rgba(26, 18, 21, 0.85) !important;
+  border-color: var(--line);
 }
