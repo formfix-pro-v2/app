@@ -37,8 +37,8 @@ html.dark {
     color: var(--text-main);
     font-family: "Inter", sans-serif;
     min-height: 100vh;
-    font-size: 17px;
-    line-height: 1.65;
+    font-size: 19px;
+    line-height: 1.7;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -49,9 +49,9 @@ html.dark {
   }
 
   /* Tighter default heading sizes */
-  h1 { font-size: 2.75rem; }
-  h2 { font-size: 2rem; }
-  h3 { font-size: 1.5rem; }
+  h1 { font-size: 3rem; }
+  h2 { font-size: 2.25rem; }
+  h3 { font-size: 1.65rem; }
 
   p { line-height: 1.6; }
 }
@@ -156,11 +156,11 @@ main > *:first-child {
 @media (max-width: 768px) {
   body {
     background-size: 280px !important;
-    font-size: 16px;
+    font-size: 17px;
   }
 
-  h1 { font-size: 2.25rem; }
-  h2 { font-size: 1.65rem; }
+  h1 { font-size: 2.5rem; }
+  h2 { font-size: 1.85rem; }
 
   .soft-card {
     border-radius: 20px;
