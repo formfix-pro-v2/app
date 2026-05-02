@@ -37,6 +37,13 @@ export default function SessionPage() {
     if (savedVoice === "true") setVoiceGuide(true);
   }, []);
 
+  const program = useMemo(() => {
+    return getTodayProgram(day);
+  }, [day]);
+
+  const current = program.exercises[index];
+  const currentTime = current?.seconds || 120;
+
   // Speak exercise instructions when voice guide is on
   useEffect(() => {
     if (!voiceGuide || !started || !current) return;
@@ -50,13 +57,6 @@ export default function SessionPage() {
     utterance.lang = "en-US";
     window.speechSynthesis.speak(utterance);
   }, [index, started, voiceGuide, current]);
-
-  const program = useMemo(() => {
-    return getTodayProgram(day);
-  }, [day]);
-
-  const current = program.exercises[index];
-  const currentTime = current?.seconds || 120;
 
   // Reset timer when exercise changes
   useEffect(() => {
