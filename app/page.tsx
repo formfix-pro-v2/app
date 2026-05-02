@@ -4,9 +4,19 @@ import Link from "next/link";
 import EmailCapture from "@/components/EmailCapture";
 import ExitIntent from "@/components/ExitIntent";
 import { useTranslation } from "@/lib/i18n/useTranslation";
+import { buildPlan } from "@/lib/programs";
+import { useMemo } from "react";
 
 export default function HomePage() {
   const { t } = useTranslation();
+
+  // Sample plan for preview (Day 1, common symptoms)
+  const samplePlan = useMemo(() => buildPlan(1, {
+    symptoms: ["Hot flashes", "Poor sleep", "Joint pain"],
+    goal: "tone",
+    time: "20 min",
+    age: 48,
+  }), []);
 
   return (
     <main className="relative min-h-screen bg-transparent">
@@ -147,6 +157,67 @@ export default function HomePage() {
               <p className="text-[11px] text-[#7b6870]">{s.desc}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* SAMPLE DAILY PLAN */}
+      <section className="max-w-7xl mx-auto py-6">
+        <div className="soft-card p-6 md:p-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-5 gap-3">
+            <div>
+              <p className="uppercase tracking-[0.2em] text-[10px] font-bold text-[#d8a7b5] mb-1">Preview</p>
+              <h2 className="text-3xl text-[#4a3f44] italic">Sample Daily Plan</h2>
+              <p className="text-sm text-[#7b6870] mt-1">Here&apos;s what a typical day looks like — no sign-up needed to see this.</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="bg-[#fdf2f5]/80 border border-[#f8d7e1] px-4 py-2 rounded-2xl text-center">
+                <p className="text-[9px] uppercase tracking-widest text-[#d8a7b5] font-bold">Duration</p>
+                <p className="text-lg font-semibold text-[#4a3f44]">~{samplePlan.totalMinutes} min</p>
+              </div>
+              <div className="bg-[#fdf2f5]/80 border border-[#f8d7e1] px-4 py-2 rounded-2xl text-center">
+                <p className="text-[9px] uppercase tracking-widest text-[#d8a7b5] font-bold">Exercises</p>
+                <p className="text-lg font-semibold text-[#4a3f44]">{samplePlan.exercises.length}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Exercise list */}
+          <div className="grid sm:grid-cols-2 gap-2 mb-5">
+            {samplePlan.exercises.map((ex, i) => (
+              <div
+                key={ex.name}
+                className="flex items-center gap-3 p-3 rounded-xl bg-white/50 border border-[#f0e3e8]"
+              >
+                <span className="w-7 h-7 rounded-full bg-[#fdf2f5] flex items-center justify-center text-[#d8a7b5] text-xs font-bold shrink-0">
+                  {i + 1}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-[#4a3f44] truncate">{ex.name}</p>
+                  <div className="flex items-center gap-2 text-[10px] text-[#b98fa1]">
+                    <span>{ex.reps}</span>
+                    <span className="px-1.5 py-0.5 rounded-full bg-[#fdf2f5] border border-[#f0e3e8] capitalize">{ex.category}</span>
+                  </div>
+                </div>
+                <span className="text-xs text-[#7b6870] shrink-0">
+                  {Math.floor(ex.seconds / 60)}:{String(ex.seconds % 60).padStart(2, "0")}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Why it works */}
+          <div className="p-4 rounded-xl bg-[#fdf2f5]/50 border border-[#f0e3e8] mb-5">
+            <p className="text-xs text-[#6f5a62] leading-relaxed">
+              <strong className="text-[#4a3f44]">Why this combination?</strong> This plan starts with a warm-up to prepare your joints, includes breathing exercises for hot flash relief, mobility work for joint pain, and ends with a calming cool-down for better sleep. Every session is built around your specific symptoms.
+            </p>
+          </div>
+
+          <div className="text-center">
+            <p className="text-xs text-[#7b6870] mb-3">Take the assessment to get a plan personalized for <em>your</em> symptoms, age and goals.</p>
+            <Link href="/quiz" className="btn-primary px-8 py-3 text-sm">
+              Get My Personalized Plan — Free
+            </Link>
+          </div>
         </div>
       </section>
 

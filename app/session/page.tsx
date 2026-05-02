@@ -50,10 +50,25 @@ export default function SessionPage() {
     if (!("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(
-      `${current.name}. ${current.start} ${current.end}`
+      `${current.name}. ${current.start} ... ${current.end}`
     );
-    utterance.rate = 0.85;
-    utterance.pitch = 1.1;
+
+    // Pick a soft female voice
+    const voices = window.speechSynthesis.getVoices();
+    const preferred = [
+      "Samantha", "Karen", "Moira", "Tessa", "Victoria",   // macOS/iOS
+      "Microsoft Zira", "Microsoft Aria", "Google UK English Female", // Windows/Chrome
+      "Female",
+    ];
+    const femaleVoice = voices.find((v) =>
+      preferred.some((p) => v.name.includes(p))
+    ) || voices.find((v) => v.name.toLowerCase().includes("female"))
+      || voices.find((v) => v.lang.startsWith("en"));
+
+    if (femaleVoice) utterance.voice = femaleVoice;
+    utterance.rate = 0.8;
+    utterance.pitch = 1.15;
+    utterance.volume = 0.85;
     utterance.lang = "en-US";
     window.speechSynthesis.speak(utterance);
   }, [index, started, voiceGuide, current]);

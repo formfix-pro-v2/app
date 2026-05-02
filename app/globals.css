@@ -19,13 +19,13 @@
 }
 
 html.dark {
-  --bg-base: #1a1215;
-  --rose: #c9929f;
-  --rose-light: #2d1f24;
-  --rose-dark: #e8b8c4;
-  --text-main: #f0e3e8;
-  --text-muted: #b98fa1;
-  --line: rgba(200, 160, 175, 0.2);
+  --bg-base: #110d0e;
+  --rose: #d4a0ae;
+  --rose-light: #231a1e;
+  --rose-dark: #f0c8d4;
+  --text-main: #f5eef0;
+  --text-muted: #c9adb8;
+  --line: rgba(200, 160, 175, 0.15);
 }
 
 @layer base {
@@ -296,34 +296,118 @@ html.dark body {
   color: var(--text-main);
 }
 
+/* Cards - darker, more contrast */
 html.dark .soft-card {
-  background: rgba(45, 31, 36, 0.85) !important;
-  border-color: var(--line);
+  background: rgba(30, 22, 26, 0.92) !important;
+  border-color: rgba(180, 130, 150, 0.12);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
 }
 
 html.dark .soft-card:hover {
-  box-shadow: 0 8px 32px rgba(200, 146, 159, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border-color: rgba(200, 146, 159, 0.2);
 }
 
+/* Buttons */
 html.dark .btn-primary {
-  background: linear-gradient(135deg, #c9929f, #a67080);
+  background: linear-gradient(135deg, #d4a0ae, #b07888);
+  color: #fff !important;
+  box-shadow: 0 6px 20px rgba(180, 120, 136, 0.3);
 }
 
 html.dark .btn-outline {
-  border-color: var(--rose);
-  background: rgba(45, 31, 36, 0.5);
+  border-color: rgba(212, 160, 174, 0.4);
+  background: rgba(30, 22, 26, 0.6);
   color: var(--text-main);
 }
 
-html.dark h1, html.dark h2, html.dark h3, html.dark h4 {
-  color: var(--text-main);
+html.dark .btn-outline:hover {
+  background: rgba(212, 160, 174, 0.1);
 }
 
-html.dark p {
+/* Typography - high contrast */
+html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark h6 {
+  color: #f5eef0 !important;
+}
+
+html.dark p, html.dark span, html.dark div {
   color: var(--text-muted);
 }
 
+html.dark .text-\[\#4a3f44\] { color: #f5eef0 !important; }
+html.dark .text-\[\#6f5a62\] { color: #c9adb8 !important; }
+html.dark .text-\[\#7b6870\] { color: #bfa3ad !important; }
+html.dark .text-\[\#3d2b32\] { color: #f0e8eb !important; }
+html.dark .text-\[\#8f5d6f\] { color: #d4a0ae !important; }
+
+/* Backgrounds */
+html.dark .bg-white, html.dark .bg-white\/40, html.dark .bg-white\/60 {
+  background-color: rgba(30, 22, 26, 0.6) !important;
+}
+
+html.dark .bg-\[\#fdf2f5\], html.dark .bg-\[\#fdf2f5\]\/80 {
+  background-color: rgba(50, 35, 42, 0.5) !important;
+}
+
+html.dark .bg-\[\#fff4f7\] {
+  background-color: rgba(50, 35, 42, 0.4) !important;
+}
+
+html.dark .bg-\[\#fff1f5\] {
+  background-color: rgba(50, 35, 42, 0.5) !important;
+}
+
+/* Borders */
+html.dark .border-\[\#f0e3e8\], html.dark .border-\[\#f0e3e8\]\/50 {
+  border-color: rgba(180, 130, 150, 0.12) !important;
+}
+
+html.dark .border-white\/60 {
+  border-color: rgba(180, 130, 150, 0.1) !important;
+}
+
+/* Header */
 html.dark header .mx-4 {
-  background: rgba(26, 18, 21, 0.85) !important;
-  border-color: var(--line);
+  background: rgba(17, 13, 14, 0.92) !important;
+  border-color: rgba(180, 130, 150, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+/* Decorative blurs - darker */
+html.dark .bg-\[\#e4c5cf\] { background-color: rgba(100, 60, 75, 0.3) !important; }
+html.dark .bg-\[\#dbb8c4\] { background-color: rgba(90, 55, 70, 0.3) !important; }
+
+/* Fixed gradient backgrounds */
+html.dark .fixed.inset-0.-z-20 {
+  background: #110d0e !important;
+}
+
+html.dark .fixed.inset-0.-z-10 {
+  opacity: 0.3 !important;
+}
+
+/* Input fields */
+html.dark .input-premium, html.dark input, html.dark select, html.dark textarea {
+  background-color: rgba(30, 22, 26, 0.8) !important;
+  border-color: rgba(180, 130, 150, 0.2) !important;
+  color: var(--text-main) !important;
+}
+
+/* Scrollbar dark */
+html.dark ::-webkit-scrollbar-track {
+  background: #1a1215;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #3d2b32;
+  border-color: #1a1215;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #5a3d4a;
+}
+
+html.dark ::-webkit-scrollbar-button:single-button:vertical:decrement,
+html.dark ::-webkit-scrollbar-button:single-button:vertical:increment {
+  background-color: #1a1215;
 }
