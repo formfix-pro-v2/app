@@ -19,13 +19,13 @@
 }
 
 html.dark {
-  --bg-base: #110d0e;
+  --bg-base: #13141a;
   --rose: #d4a0ae;
-  --rose-light: #231a1e;
+  --rose-light: #1c1d26;
   --rose-dark: #f0c8d4;
-  --text-main: #f5eef0;
-  --text-muted: #c9adb8;
-  --line: rgba(200, 160, 175, 0.15);
+  --text-main: #edeef2;
+  --text-muted: #a8aab8;
+  --line: rgba(180, 180, 200, 0.12);
 }
 
 @layer base {
@@ -37,8 +37,8 @@ html.dark {
     color: var(--text-main);
     font-family: "Inter", sans-serif;
     min-height: 100vh;
-    font-size: 15px;
-    line-height: 1.6;
+    font-size: 17px;
+    line-height: 1.65;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -49,9 +49,9 @@ html.dark {
   }
 
   /* Tighter default heading sizes */
-  h1 { font-size: 2.5rem; }
-  h2 { font-size: 1.75rem; }
-  h3 { font-size: 1.35rem; }
+  h1 { font-size: 2.75rem; }
+  h2 { font-size: 2rem; }
+  h3 { font-size: 1.5rem; }
 
   p { line-height: 1.6; }
 }
@@ -156,11 +156,11 @@ main > *:first-child {
 @media (max-width: 768px) {
   body {
     background-size: 280px !important;
-    font-size: 14px;
+    font-size: 16px;
   }
 
-  h1 { font-size: 2rem; }
-  h2 { font-size: 1.5rem; }
+  h1 { font-size: 2.25rem; }
+  h2 { font-size: 1.65rem; }
 
   .soft-card {
     border-radius: 20px;
@@ -296,16 +296,16 @@ html.dark body {
   color: var(--text-main);
 }
 
-/* Cards - darker, more contrast */
+/* Cards */
 html.dark .soft-card {
-  background: rgba(30, 22, 26, 0.92) !important;
-  border-color: rgba(180, 130, 150, 0.12);
+  background: rgba(24, 25, 32, 0.92) !important;
+  border-color: rgba(160, 160, 180, 0.1);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
 }
 
 html.dark .soft-card:hover {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  border-color: rgba(200, 146, 159, 0.2);
+  border-color: rgba(212, 160, 174, 0.18);
 }
 
 /* Buttons */
@@ -316,8 +316,8 @@ html.dark .btn-primary {
 }
 
 html.dark .btn-outline {
-  border-color: rgba(212, 160, 174, 0.4);
-  background: rgba(30, 22, 26, 0.6);
+  border-color: rgba(212, 160, 174, 0.35);
+  background: rgba(24, 25, 32, 0.6);
   color: var(--text-main);
 }
 
@@ -327,59 +327,59 @@ html.dark .btn-outline:hover {
 
 /* Typography - high contrast */
 html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark h6 {
-  color: #f5eef0 !important;
+  color: #edeef2 !important;
 }
 
 html.dark p, html.dark span, html.dark div {
   color: var(--text-muted);
 }
 
-html.dark .text-\[\#4a3f44\] { color: #f5eef0 !important; }
-html.dark .text-\[\#6f5a62\] { color: #c9adb8 !important; }
-html.dark .text-\[\#7b6870\] { color: #bfa3ad !important; }
-html.dark .text-\[\#3d2b32\] { color: #f0e8eb !important; }
+html.dark .text-\[\#4a3f44\] { color: #edeef2 !important; }
+html.dark .text-\[\#6f5a62\] { color: #b5b7c5 !important; }
+html.dark .text-\[\#7b6870\] { color: #a8aab8 !important; }
+html.dark .text-\[\#3d2b32\] { color: #e8e9ee !important; }
 html.dark .text-\[\#8f5d6f\] { color: #d4a0ae !important; }
 
 /* Backgrounds */
 html.dark .bg-white, html.dark .bg-white\/40, html.dark .bg-white\/60 {
-  background-color: rgba(30, 22, 26, 0.6) !important;
+  background-color: rgba(24, 25, 32, 0.6) !important;
 }
 
 html.dark .bg-\[\#fdf2f5\], html.dark .bg-\[\#fdf2f5\]\/80 {
-  background-color: rgba(50, 35, 42, 0.5) !important;
+  background-color: rgba(35, 36, 46, 0.5) !important;
 }
 
 html.dark .bg-\[\#fff4f7\] {
-  background-color: rgba(50, 35, 42, 0.4) !important;
+  background-color: rgba(35, 36, 46, 0.4) !important;
 }
 
 html.dark .bg-\[\#fff1f5\] {
-  background-color: rgba(50, 35, 42, 0.5) !important;
+  background-color: rgba(35, 36, 46, 0.5) !important;
 }
 
 /* Borders */
 html.dark .border-\[\#f0e3e8\], html.dark .border-\[\#f0e3e8\]\/50 {
-  border-color: rgba(180, 130, 150, 0.12) !important;
+  border-color: rgba(160, 160, 180, 0.1) !important;
 }
 
 html.dark .border-white\/60 {
-  border-color: rgba(180, 130, 150, 0.1) !important;
+  border-color: rgba(160, 160, 180, 0.08) !important;
 }
 
 /* Header */
 html.dark header .mx-4 {
-  background: rgba(17, 13, 14, 0.92) !important;
-  border-color: rgba(180, 130, 150, 0.1);
+  background: rgba(19, 20, 26, 0.94) !important;
+  border-color: rgba(160, 160, 180, 0.08);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
 }
 
-/* Decorative blurs - darker */
-html.dark .bg-\[\#e4c5cf\] { background-color: rgba(100, 60, 75, 0.3) !important; }
-html.dark .bg-\[\#dbb8c4\] { background-color: rgba(90, 55, 70, 0.3) !important; }
+/* Decorative blurs */
+html.dark .bg-\[\#e4c5cf\] { background-color: rgba(80, 70, 100, 0.2) !important; }
+html.dark .bg-\[\#dbb8c4\] { background-color: rgba(70, 60, 90, 0.2) !important; }
 
 /* Fixed gradient backgrounds */
 html.dark .fixed.inset-0.-z-20 {
-  background: #110d0e !important;
+  background: #13141a !important;
 }
 
 html.dark .fixed.inset-0.-z-10 {
@@ -388,26 +388,26 @@ html.dark .fixed.inset-0.-z-10 {
 
 /* Input fields */
 html.dark .input-premium, html.dark input, html.dark select, html.dark textarea {
-  background-color: rgba(30, 22, 26, 0.8) !important;
-  border-color: rgba(180, 130, 150, 0.2) !important;
+  background-color: rgba(24, 25, 32, 0.8) !important;
+  border-color: rgba(160, 160, 180, 0.15) !important;
   color: var(--text-main) !important;
 }
 
 /* Scrollbar dark */
 html.dark ::-webkit-scrollbar-track {
-  background: #1a1215;
+  background: #1a1b22;
 }
 
 html.dark ::-webkit-scrollbar-thumb {
-  background: #3d2b32;
-  border-color: #1a1215;
+  background: #2e3040;
+  border-color: #1a1b22;
 }
 
 html.dark ::-webkit-scrollbar-thumb:hover {
-  background: #5a3d4a;
+  background: #3e4055;
 }
 
 html.dark ::-webkit-scrollbar-button:single-button:vertical:decrement,
 html.dark ::-webkit-scrollbar-button:single-button:vertical:increment {
-  background-color: #1a1215;
+  background-color: #1a1b22;
 }

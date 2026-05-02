@@ -209,6 +209,7 @@ function DailySupplements({ symptoms, age }: { symptoms: string[]; age: number }
 export default function DashboardPage() {
   const { t } = useTranslation();
   const [day, setDay] = useState(1);
+  const [viewDay, setViewDay] = useState(1);
   const [plan, setPlan] = useState("free");
   const [data, setData] = useState<QuizData>({});
 
@@ -217,7 +218,7 @@ export default function DashboardPage() {
     const savedPlan = localStorage.getItem("plan");
     const raw = localStorage.getItem("quizData");
 
-    if (savedDay) setDay(Number(savedDay));
+    if (savedDay) { setDay(Number(savedDay)); setViewDay(Number(savedDay)); }
     if (savedPlan) setPlan(savedPlan);
     if (raw) {
       try {
@@ -229,8 +230,8 @@ export default function DashboardPage() {
   }, []);
 
   const program = useMemo(() => {
-    return getTodayProgram(day);
-  }, [day]);
+    return getTodayProgram(viewDay);
+  }, [viewDay]);
 
   const nutrition = useMemo(() => {
     return calculateNutrition({

@@ -30,6 +30,8 @@ export default function SessionPage() {
   const [timeLeft, setTimeLeft] = useState(120);
   const [voiceGuide, setVoiceGuide] = useState(false);
 
+  const [paused, setPaused] = useState(false);
+
   useEffect(() => {
     const savedDay = localStorage.getItem("day");
     if (savedDay) setDay(Number(savedDay));
@@ -81,7 +83,7 @@ export default function SessionPage() {
   }, [index, current]);
 
   useEffect(() => {
-    if (!started || finished) return;
+    if (!started || finished || paused) return;
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
@@ -95,7 +97,7 @@ export default function SessionPage() {
 
     return () => clearInterval(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [started, index, finished]);
+  }, [started, index, finished, paused]);
 
   // Play soft gong sound when exercise ends
   function playBeep() {
@@ -144,13 +146,29 @@ export default function SessionPage() {
 
   function handleStart() {
     setStarted(true);
+    setPaused(false);
     setTimeLeft(current.seconds);
     haptic("light");
+  }
+
+  function handleStop() {
+    setPaused(!paused);
+    haptic("light");
+  }
+
+  function handlePrev() {
+    if (index > 0) {
+      playBeep();
+      haptic("medium");
+      setIndex((prev) => prev - 1);
+      setPaused(false);
+    }
   }
 
   function handleNext() {
     playBeep();
     haptic("medium");
+    setPaused(false);
     if (index < program.exercises.length - 1) {
       setIndex((prev) => prev + 1);
     } else {
@@ -263,7 +281,37 @@ export default function SessionPage() {
               </button>
             </div>
           ) : (
-            <CircularTimer timeLeft={timeLeft} totalTime={currentTime} />
+            <div className="flex flex-col items-center gap-4">
+              <CircularTimer timeLeft={timeLeft} totalTime={currentTime} />
+              {/* Playback controls */}
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={handlePrev}
+                  disabled={index === 0}
+                  className="w-12 h-12 rounded-full bg-white border border-[#f0e3e8] flex items-center justify-center text-[#b98fa1] hover:border-[#d8a7b5] transition disabled:opacity-30 disabled:cursor-not-allowed"
+                  aria-label="Previous exercise"
+                >
+                  ⏮
+                </button>
+                <button
+                  onClick={handleStop}
+                  className="w-16 h-16 rounded-full bg-[#d9a8b8] text-white text-2xl shadow-lg hover:scale-105 transition flex items-center justify-center"
+                  aria-label={paused ? "Resume" : "Pause"}
+                >
+                  {paused ? "▶" : "⏸"}
+                </button>
+                <button
+                  onClick={handleNext}
+                  className="w-12 h-12 rounded-full bg-white border border-[#f0e3e8] flex items-center justify-center text-[#b98fa1] hover:border-[#d8a7b5] transition"
+                  aria-label="Next exercise"
+                >
+                  ⏭
+                </button>
+              </div>
+              {paused && (
+                <p className="text-sm text-[#d8a7b5] font-medium animate-pulse">Paused</p>
+              )}
+            </div>
           )}
         </div>
 
@@ -320,13 +368,27 @@ export default function SessionPage() {
           <span className="mr-2">✨</span> {current.why}
         </div>
 
-        <div className="flex gap-4">
-          <button onClick={handleSkip} className="btn-outline flex-1">
-            {t("Skip")}
+        <div className="flex gap-3">
+          <button
+            onClick={handlePrev}
+            disabled={index === 0}
+            className="btn-outline flex-1 disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            ← {t("Previous")}
           </button>
-          <button onClick={handleNext} className="btn-primary flex-[2]">
+          <button
+            onClick={() => { setVoiceGuide(!voiceGuide); localStorage.setItem("voiceGuide", String(!voiceGuide)); }}
+            className={`px-4 rounded-full text-xs font-medium transition-all shrink-0 ${
+              voiceGuide
+                ? "bg-[#d8a7b5] text-white"
+                : "bg-[#fdf2f5] text-[#b98fa1] border border-[#f0e3e8]"
+            }`}
+          >
+            🎧 {voiceGuide ? "ON" : "OFF"}
+          </button>
+          <button onClick={handleNext} className="btn-primary flex-1">
             {index < program.exercises.length - 1
-              ? t("Next Exercise")
+              ? t("Next") + " →"
               : t("Finish Session")}
           </button>
         </div>
