@@ -48,8 +48,15 @@ export default function SessionPage() {
 
   // Speak exercise instructions when voice guide is on
   useEffect(() => {
-    if (!voiceGuide || !started || !current) return;
     if (!("speechSynthesis" in window)) return;
+
+    // Stop speech immediately when paused or not active
+    if (!voiceGuide || !started || paused || !current) {
+      window.speechSynthesis.cancel();
+      return;
+    }
+
+    // Start speaking from the beginning
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(
       `${current.name}. ${current.start} ... ${current.end}`
@@ -58,8 +65,8 @@ export default function SessionPage() {
     // Pick a soft female voice
     const voices = window.speechSynthesis.getVoices();
     const preferred = [
-      "Samantha", "Karen", "Moira", "Tessa", "Victoria",   // macOS/iOS
-      "Microsoft Zira", "Microsoft Aria", "Google UK English Female", // Windows/Chrome
+      "Samantha", "Karen", "Moira", "Tessa", "Victoria",
+      "Microsoft Zira", "Microsoft Aria", "Google UK English Female",
       "Female",
     ];
     const femaleVoice = voices.find((v) =>
@@ -73,7 +80,9 @@ export default function SessionPage() {
     utterance.volume = 0.85;
     utterance.lang = "en-US";
     window.speechSynthesis.speak(utterance);
-  }, [index, started, voiceGuide, current]);
+
+    return () => { window.speechSynthesis.cancel(); };
+  }, [index, started, paused, voiceGuide, current]);
 
   // Reset timer when exercise changes
   useEffect(() => {
