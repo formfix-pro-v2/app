@@ -3,7 +3,8 @@
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { getPlan } from "@/lib/checkout";
+import { getPlan, activatePlan } from "@/lib/checkout";
+import { activateSubscription } from "@/lib/subscription";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
 
@@ -170,6 +171,36 @@ function CheckoutContent() {
                 <br />
                 <strong>30-Day Money-Back Guarantee included.</strong>
               </p>
+
+              {/* Dev bypass — aktiviraj plan bez plaćanja */}
+              <div className="mt-6 pt-6 border-t border-dashed border-[#f0e3e8]">
+                <p className="text-[10px] text-[#b98fa1] text-center mb-3 uppercase tracking-widest font-bold">
+                  ⚙️ Dev / Test Mode
+                </p>
+                <button
+                  onClick={async () => {
+                    setLoading(true);
+                    setError("");
+                    try {
+                      // Aktiviraj lokalno
+                      activatePlan(data.id);
+                      // Pokušaj i na serveru
+                      await activateSubscription(data.id);
+                      router.push("/checkout/success?plan=" + data.id);
+                    } catch {
+                      // Ako server ne radi, lokalna aktivacija je dovoljna
+                      router.push("/checkout/success?plan=" + data.id);
+                    }
+                  }}
+                  disabled={loading}
+                  className="w-full py-3 rounded-2xl border-2 border-dashed border-[#d8a7b5] text-[#d8a7b5] text-sm font-medium hover:bg-[#fdf2f5] transition-all disabled:opacity-40"
+                >
+                  {loading ? "Activating..." : `⚡ Activate ${data.name} (Skip Payment)`}
+                </button>
+                <p className="text-[9px] text-[#b98fa1]/60 text-center mt-2">
+                  Ovo dugme preskače plaćanje i direktno aktivira plan. Samo za testiranje.
+                </p>
+              </div>
             </div>
           )}
         </section>
