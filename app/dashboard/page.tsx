@@ -212,6 +212,7 @@ export default function DashboardPage() {
   const [day, setDay] = useState(1);
   const [viewDay, setViewDay] = useState(1);
   const [plan, setPlan] = useState("free");
+  const [isPremium, setIsPremium] = useState(false);
   const [data, setData] = useState<QuizData>({});
 
   useEffect(() => {
@@ -221,6 +222,13 @@ export default function DashboardPage() {
 
     if (savedDay) { setDay(Number(savedDay)); setViewDay(Number(savedDay)); }
     if (savedPlan) setPlan(savedPlan);
+
+    // Proveri premium status — plan + premium flag + expiry
+    const premiumFlag = localStorage.getItem("premium") === "true";
+    const expiryDate = localStorage.getItem("expiryDate");
+    const isActive = premiumFlag && (!expiryDate || new Date(expiryDate) > new Date());
+    const hasPaidPlan = savedPlan === "glow" || savedPlan === "elite";
+    setIsPremium(isActive && hasPaidPlan);
     if (raw) {
       try {
         setData(JSON.parse(raw));
@@ -460,12 +468,11 @@ export default function DashboardPage() {
         {/* Meals */}
         <div className="grid md:grid-cols-2 gap-4">
           {mealPlan.meals.map(({ slot, meal }, i) => {
-            const isFree = plan === "free";
-            // Free plan: Day 1 = all 4 meals, Day 2-7 = only breakfast, Day 8+ = locked
+            // Premium korisnici vide sve obroke bez ograničenja
+            const isFree = !isPremium;
             const freeDayLimit = 7;
-            const isFreeTrial = isFree && day <= freeDayLimit;
             const isFreeExpired = isFree && day > freeDayLimit;
-            const isLocked = isFreeExpired || (isFree && day > 1 && slot !== "breakfast");
+            const isLocked = isFree && (isFreeExpired || (day > 1 && slot !== "breakfast"));
             const slotLabels: Record<string, string> = {
               breakfast: "Breakfast",
               lunch: "Lunch",
@@ -557,7 +564,7 @@ export default function DashboardPage() {
           })}
         </div>
 
-        {plan === "free" && (
+        {!isPremium && (
           <div className="mt-8 text-center p-8 rounded-[34px] bg-[#fdf2f5]/60 border border-dashed border-[#d8a7b5]/40 backdrop-blur-sm">
             {day <= 7 ? (
               <>

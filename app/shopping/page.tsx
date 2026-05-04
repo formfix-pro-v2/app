@@ -106,7 +106,12 @@ export default function ShoppingPage() {
 
   const weeklyBudget = (nutrition.dailyBudget * days).toFixed(2);
 
-  const isPremium = plan === "glow" || plan === "elite";
+  const isPremium = (() => {
+    const premiumFlag = typeof window !== "undefined" && localStorage.getItem("premium") === "true";
+    const expiryDate = typeof window !== "undefined" ? localStorage.getItem("expiryDate") : null;
+    const isActive = premiumFlag && (!expiryDate || new Date(expiryDate) > new Date());
+    return isActive && (plan === "glow" || plan === "elite");
+  })();
 
   // Free users get 7-day list, premium get 3/7/14 options
   const maxFreeDays = 7;

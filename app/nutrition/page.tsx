@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   calculateNutrition,
   getDayMealPlan,
@@ -9,6 +9,7 @@ import {
 export default function NutritionPage() {
   const [saved, setSaved] =
     useState(false);
+  const [isPremium, setIsPremium] = useState(false);
 
   const [form, setForm] =
     useState({
@@ -56,9 +57,17 @@ export default function NutritionPage() {
       "nutritionData",
       JSON.stringify(form)
     );
-
     setSaved(true);
   }
+
+  // Proveri premium status
+  useEffect(() => {
+    const plan = localStorage.getItem("plan");
+    const premiumFlag = localStorage.getItem("premium") === "true";
+    const expiryDate = localStorage.getItem("expiryDate");
+    const isActive = premiumFlag && (!expiryDate || new Date(expiryDate) > new Date());
+    setIsPremium(isActive && (plan === "glow" || plan === "elite"));
+  }, []);
 
   return (
     <main className="max-w-6xl mx-auto px-6 py-14">
@@ -317,7 +326,8 @@ export default function NutritionPage() {
         </div>
       </section>
 
-      {/* PREMIUM LOCK */}
+      {/* PREMIUM LOCK — samo za free korisnike */}
+      {!isPremium && (
       <section className="soft-card p-10 text-center">
         <h2 className="text-5xl mb-4">
           Unlock Days 2–30
@@ -336,6 +346,7 @@ export default function NutritionPage() {
           Upgrade Premium
         </a>
       </section>
+      )}
     </main>
   );
 }
