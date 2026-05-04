@@ -61,7 +61,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-        <meta name="theme-color" content="#d8a7b5" />
+        <meta name="theme-color" content="#c4909e" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Veronica Method" />
@@ -115,18 +115,18 @@ export default function RootLayout({
             className="fixed inset-0 -z-20"
             style={{
               background:
-                "linear-gradient(180deg, #f2e4e8 0%, #f0dde3 50%, #ede0df 100%)",
+                "linear-gradient(180deg, #ede0e3 0%, #e6d5da 50%, #e2d3d5 100%)",
             }}
           />
           <div
             className="fixed inset-0 -z-10 opacity-60"
             style={{
               background:
-                "radial-gradient(circle at 90% 5%, rgba(214,167,177,.18), transparent 15%), radial-gradient(circle at 5% 85%, rgba(185,143,161,.15), transparent 18%)",
+                "radial-gradient(circle at 90% 5%, rgba(196,144,158,.15), transparent 15%), radial-gradient(circle at 5% 85%, rgba(160,120,140,.12), transparent 18%)",
             }}
           />
-          <div className="fixed top-10 -left-16 w-48 h-48 rounded-full bg-[#e4c5cf] blur-3xl opacity-25 -z-10" />
-          <div className="fixed bottom-10 -right-16 w-56 h-56 rounded-full bg-[#dbb8c4] blur-3xl opacity-25 -z-10" />
+          <div className="fixed top-10 -left-16 w-48 h-48 rounded-full bg-[#d4b5be] blur-3xl opacity-20 -z-10" />
+          <div className="fixed bottom-10 -right-16 w-56 h-56 rounded-full bg-[#c8a0ac] blur-3xl opacity-20 -z-10" />
 
           <Header />
 
