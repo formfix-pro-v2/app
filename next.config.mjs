@@ -7,16 +7,9 @@ const nextConfig = {
     optimizeCss: true,
   },
   compress: true,
-  // Performance headers
   headers: async () => [
     {
-      source: "/exercises/:path*",
-      headers: [
-        { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
-      ],
-    },
-    {
-      source: "/icon:path*",
+      source: "/exercises/(.*)",
       headers: [
         { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
       ],
@@ -29,8 +22,7 @@ const nextConfig = {
       ],
     },
     {
-      // Security headers for all routes
-      source: "/:path*",
+      source: "/(.*)",
       headers: [
         { key: "X-Content-Type-Options", value: "nosniff" },
         { key: "X-Frame-Options", value: "DENY" },
