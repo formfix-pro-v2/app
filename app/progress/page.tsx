@@ -15,6 +15,7 @@ type CheckinEntry = {
   stress: number;
   symptoms: string[];
   date: string;
+  completedSession?: boolean;
 };
 
 type Stats = {
@@ -39,6 +40,14 @@ function BarChart({
   color: string;
   max?: number;
 }) {
+  if (data.length === 0) {
+    return (
+      <div className="h-32 flex items-center justify-center text-sm text-[#b98fa1] italic">
+        No data yet — complete a daily check-in to see your {label.toLowerCase()} chart.
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
@@ -49,9 +58,9 @@ function BarChart({
       </div>
       <div className="flex items-end gap-1 h-32">
         {data.map((d, i) => {
-          const height = (d.value / max) * 100;
+          const height = Math.max((d.value / max) * 100, 4); // min 4% za vidljivost
           return (
-            <div key={i} className="flex-1 flex flex-col items-center gap-1">
+            <div key={`${d.date}-${i}`} className="flex-1 flex flex-col items-center gap-1">
               <span className="text-[9px] text-[#7b6870]">{d.value}</span>
               <div
                 className="w-full rounded-t-lg transition-all duration-500"
@@ -62,7 +71,7 @@ function BarChart({
                 }}
               />
               <span className="text-[8px] text-[#b98fa1]">
-                {new Date(d.date).toLocaleDateString("en", { weekday: "short" })}
+                {formatDay(d.date)}
               </span>
             </div>
           );
@@ -70,6 +79,13 @@ function BarChart({
       </div>
     </div>
   );
+}
+
+/** Formatira datum u kratki dan (Mon, Tue...) bez timezone problema */
+function formatDay(dateStr: string): string {
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const d = new Date(dateStr);
+  return days[d.getDay()];
 }
 
 function TrendBadge({ trend }: { trend: "improving" | "declining" | "stable" }) {
@@ -87,7 +103,10 @@ function TrendBadge({ trend }: { trend: "improving" | "declining" | "stable" }) 
 }
 
 function calculateStats(entries: CheckinEntry[]): Stats {
-  const sorted = [...entries].sort(
+  // Filtriraj samo entries sa pravim check-in podacima (ne auto-save iz sesije)
+  const valid = entries.filter((e) => e.sleep > 0 && e.energy > 0 && e.stress > 0);
+
+  const sorted = [...valid].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
 
@@ -96,12 +115,13 @@ function calculateStats(entries: CheckinEntry[]): Stats {
   // Current streak
   let currentStreak = 0;
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   for (let i = sorted.length - 1; i >= 0; i--) {
     const d = new Date(sorted[i].date);
-    const diff = Math.floor(
-      (today.getTime() - d.getTime()) / (1000 * 60 * 60 * 24)
-    );
-    if (diff <= currentStreak + 1) {
+    d.setHours(0, 0, 0, 0);
+    const diffDays = Math.round((today.getTime() - d.getTime()) / (1000 * 60 * 60 * 24));
+    if (diffDays <= currentStreak + 1) {
       currentStreak++;
     } else {
       break;
@@ -130,7 +150,6 @@ function calculateStats(entries: CheckinEntry[]): Stats {
     .sort((a, b) => b.count - a.count)
     .slice(0, 5);
 
-  // Trends (compare first half vs second half)
   function getTrend(values: number[]): "improving" | "declining" | "stable" {
     if (values.length < 4) return "stable";
     const mid = Math.floor(values.length / 2);
@@ -142,9 +161,6 @@ function calculateStats(entries: CheckinEntry[]): Stats {
     return "stable";
   }
 
-  const sleepTrend = getTrend(sorted.map((e) => e.sleep));
-  const energyTrend = getTrend(sorted.map((e) => e.energy));
-
   return {
     totalDays,
     currentStreak,
@@ -152,9 +168,43 @@ function calculateStats(entries: CheckinEntry[]): Stats {
     avgEnergy,
     avgStress,
     topSymptoms,
-    sleepTrend,
-    energyTrend,
+    sleepTrend: getTrend(sorted.map((e) => e.sleep)),
+    energyTrend: getTrend(sorted.map((e) => e.energy)),
   };
+}
+
+/** Deduplikacija po datumu — zadržava poslednji entry za svaki dan */
+function deduplicateByDate(entries: CheckinEntry[]): CheckinEntry[] {
+  const map = new Map<string, CheckinEntry>();
+  for (const e of entries) {
+    const key = e.date.split("T")[0];
+    // Preferiraj entries sa pravim podacima (sleep > 0) nad auto-save
+    const existing = map.get(key);
+    if (!existing || (e.sleep > 0 && existing.sleep === 0)) {
+      map.set(key, e);
+    }
+  }
+  return [...map.values()];
+}
+
+/** Generiše stabilne demo podatke (isti seed = isti rezultat) */
+function generateDemoData(): CheckinEntry[] {
+  const entries: CheckinEntry[] = [];
+  const now = new Date();
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    // Deterministički "random" na osnovu dana
+    const seed = d.getDate() + d.getMonth() * 31;
+    entries.push({
+      sleep: 5 + (seed % 4),
+      energy: 4 + ((seed * 3) % 4),
+      stress: 3 + ((seed * 7) % 4),
+      symptoms: i % 2 === 0 ? ["Low energy", "Poor sleep"] : ["Joint pain"],
+      date: d.toISOString(),
+    });
+  }
+  return entries;
 }
 
 export default function ProgressPage() {
@@ -162,20 +212,18 @@ export default function ProgressPage() {
   const [day, setDay] = useState(1);
   const [unlocked, setUnlocked] = useState<Achievement[]>([]);
   const [nextUp, setNextUp] = useState<Achievement[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    // Load check-in history from localStorage
     const history: CheckinEntry[] = [];
 
-    // Load current check-in
+    // Učitaj trenutni check-in
     const current = localStorage.getItem("dailyCheckin");
     if (current) {
-      try {
-        history.push(JSON.parse(current));
-      } catch { /* ignore */ }
+      try { history.push(JSON.parse(current)); } catch { /* ignore */ }
     }
 
-    // Load history array if exists
+    // Učitaj istoriju
     const historyRaw = localStorage.getItem("checkinHistory");
     if (historyRaw) {
       try {
@@ -184,42 +232,47 @@ export default function ProgressPage() {
       } catch { /* ignore */ }
     }
 
-    // If no real data, generate sample data for demo
-    if (history.length < 3) {
-      const now = new Date();
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date(now);
-        d.setDate(d.getDate() - i);
-        history.push({
-          sleep: Math.floor(Math.random() * 4) + 5,
-          energy: Math.floor(Math.random() * 4) + 4,
-          stress: Math.floor(Math.random() * 4) + 3,
-          symptoms: i % 2 === 0 ? ["Low energy", "Poor sleep"] : ["Joint pain"],
-          date: d.toISOString(),
-        });
-      }
+    // Deduplikacija — ukloni duplikate istog dana
+    let cleaned = deduplicateByDate(history);
+
+    // Ako nema dovoljno pravih podataka, koristi demo
+    const realEntries = cleaned.filter((e) => e.sleep > 0);
+    if (realEntries.length < 3) {
+      cleaned = generateDemoData();
     }
 
-    setEntries(history);
+    setEntries(cleaned);
 
     const savedDay = localStorage.getItem("day");
     if (savedDay) setDay(Number(savedDay));
 
-    // Load achievements
     const achStats = loadAchievementStats();
     setUnlocked(getUnlockedAchievements(achStats));
     setNextUp(getNextAchievements(achStats));
+    setLoaded(true);
   }, []);
+
+  // Ne renderuj ništa dok se podaci ne učitaju (sprečava hydration mismatch)
+  if (!loaded) {
+    return (
+      <main className="max-w-6xl mx-auto px-6 py-14">
+        <div className="soft-card p-10 text-center">
+          <div className="animate-pulse text-[#b98fa1]">Loading progress...</div>
+        </div>
+      </main>
+    );
+  }
 
   const stats = calculateStats(entries);
 
-  const sorted = [...entries].sort(
-    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-  );
+  // Filtriraj samo entries sa pravim podacima za grafove
+  const validEntries = entries
+    .filter((e) => e.sleep > 0 && e.energy > 0 && e.stress > 0)
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-  const sleepData = sorted.map((e) => ({ value: e.sleep, date: e.date }));
-  const energyData = sorted.map((e) => ({ value: e.energy, date: e.date }));
-  const stressData = sorted.map((e) => ({ value: e.stress, date: e.date }));
+  const sleepData = validEntries.map((e) => ({ value: e.sleep, date: e.date }));
+  const energyData = validEntries.map((e) => ({ value: e.energy, date: e.date }));
+  const stressData = validEntries.map((e) => ({ value: e.stress, date: e.date }));
 
   return (
     <main className="max-w-6xl mx-auto px-6 py-14">
@@ -295,7 +348,7 @@ export default function ProgressPage() {
           <h3 className="text-2xl text-[#4a3f44] mb-6">Most Reported Symptoms</h3>
           <div className="space-y-3">
             {stats.topSymptoms.map((s) => {
-              const pct = (s.count / stats.totalDays) * 100;
+              const pct = stats.totalDays > 0 ? (s.count / stats.totalDays) * 100 : 0;
               return (
                 <div key={s.name}>
                   <div className="flex justify-between text-sm mb-1">
