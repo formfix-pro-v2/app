@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { pushSingle } from "@/lib/sync";
 
 export default function CheckinPage() {
   const router = useRouter();
@@ -66,6 +67,9 @@ export default function CheckinPage() {
     } catch {
       // Silently fail - local storage has the data
     }
+
+    // Sync checkins to server
+    pushSingle("checkins");
 
     router.push("/dashboard");
   }

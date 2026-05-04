@@ -3,9 +3,45 @@
 import Link from "next/link";
 import EmailCapture from "@/components/EmailCapture";
 import ExitIntent from "@/components/ExitIntent";
+import FaqJsonLd from "@/components/FaqJsonLd";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { buildPlan } from "@/lib/programs";
 import { useMemo } from "react";
+
+const FAQ_DATA = [
+  {
+    question: "Is this program safe for women over 50?",
+    answer: "Yes. Every exercise starts gentle (Foundation phase) and progresses gradually. The program is designed specifically for women 40-65+ experiencing menopause symptoms. Always consult your doctor before starting any new exercise program.",
+  },
+  {
+    question: "Do I need any equipment?",
+    answer: "No equipment needed. All exercises use your body weight and common household items like a chair or wall. You can do everything at home in a small space.",
+  },
+  {
+    question: "How much time do I need per day?",
+    answer: "Sessions range from 10 to 30 minutes depending on your preference. You choose your daily time commitment during the assessment, and the program adapts accordingly.",
+  },
+  {
+    question: "Are the meal plans really under €7 per day?",
+    answer: "Yes. All recipes use affordable, widely available ingredients. The average daily cost is €5-7 depending on your location. Shopping lists are auto-generated and organized by category to save time.",
+  },
+  {
+    question: "What if I miss a day?",
+    answer: "No problem. The program includes streak freezes and rest days. Missing a day doesn't reset your progress. Consistency over perfection is our philosophy.",
+  },
+  {
+    question: "Is this a subscription or one-time payment?",
+    answer: "One-time payment. The Glow plan (€29) gives you 30 days of full access, and the Elite plan (€79) gives you 90 days. No recurring charges, no hidden fees.",
+  },
+  {
+    question: "Can I try it for free first?",
+    answer: "Yes. The free plan includes 7 days of exercises, Day 1 full meal plan with recipes, supplement guide preview, and progress tracking. No credit card required.",
+  },
+  {
+    question: "Will this help with hot flashes and sleep problems?",
+    answer: "The program includes specific breathing techniques for hot flash relief and evening wind-down routines for better sleep. Many users report improvements within the first two weeks, though individual results vary.",
+  },
+];
 
 export default function HomePage() {
   const { t } = useTranslation();
@@ -310,6 +346,32 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="max-w-4xl mx-auto py-6">
+        <div className="soft-card p-6 md:p-8">
+          <h2 className="text-3xl text-center text-[#4a3f44] mb-6 italic">
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-3">
+            {FAQ_DATA.map((faq, i) => (
+              <details
+                key={i}
+                className="group rounded-xl border border-[#f0e3e8] bg-white/40 overflow-hidden"
+              >
+                <summary className="flex items-center justify-between p-4 cursor-pointer text-sm font-medium text-[#4a3f44] hover:bg-[#fdf2f5]/50 transition-colors list-none">
+                  <span>{faq.question}</span>
+                  <span className="text-[#d8a7b5] text-lg shrink-0 ml-3 group-open:rotate-45 transition-transform">+</span>
+                </summary>
+                <div className="px-4 pb-4 text-sm text-[#7b6870] leading-relaxed">
+                  {faq.answer}
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+        <FaqJsonLd faqs={FAQ_DATA} />
       </section>
 
       {/* FINAL CTA */}

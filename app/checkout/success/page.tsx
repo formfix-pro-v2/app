@@ -88,7 +88,7 @@ function SuccessContent() {
         </div>
 
         <p className="mt-10 text-xs text-[#b98fa1]">
-          A confirmation receipt has been sent to your email by Stripe.
+          A confirmation receipt has been sent to your email.
         </p>
       </section>
     </main>

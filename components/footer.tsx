@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="mt-auto border-t border-[#f0e3e8]/50">
+    <footer className="mt-auto border-t border-[#f0e3e8]/50" role="contentinfo">
       <div className="max-w-7xl mx-auto px-6 py-10">
         <div className="grid md:grid-cols-3 gap-8">
           {/* Brand */}
@@ -26,7 +26,7 @@ export default function Footer() {
             <h4 className="text-sm font-bold text-[#4a3f44] uppercase tracking-widest mb-3">
               Quick Links
             </h4>
-            <nav className="flex flex-col gap-2">
+            <nav aria-label="Quick links" className="flex flex-col gap-2">
               {[
                 ["Dashboard", "/dashboard"],
                 ["Assessment", "/quiz"],
@@ -51,7 +51,7 @@ export default function Footer() {
             <h4 className="text-sm font-bold text-[#4a3f44] uppercase tracking-widest mb-3">
               Legal
             </h4>
-            <nav className="flex flex-col gap-2">
+            <nav aria-label="Legal links" className="flex flex-col gap-2">
               {[
                 ["Privacy Policy", "/privacy"],
                 ["Terms of Service", "/terms"],

@@ -12,6 +12,7 @@ import OnboardingTutorial from "@/components/OnboardingTutorial";
 import FavoriteButton from "@/components/FavoriteButton";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { playComplete } from "@/lib/sounds";
+import SectionErrorBoundary from "@/components/SectionErrorBoundary";
 
 type QuizData = {
   symptoms?: string[];
@@ -330,6 +331,7 @@ export default function DashboardPage() {
       <UpsellBanner />
 
       {/* TODAY PROGRAM */}
+      <SectionErrorBoundary section="Today's Program">
       <section className="soft-card p-8 mb-6 relative overflow-hidden">
         <div className="relative z-10">
           <div className="flex flex-wrap items-center gap-3 mb-3">
@@ -398,8 +400,10 @@ export default function DashboardPage() {
           </Link>
         </div>
       </section>
+      </SectionErrorBoundary>
 
       {/* NUTRITION */}
+      <SectionErrorBoundary section="Nutrition">
       <section className="soft-card p-8 mb-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
           <div>
@@ -586,8 +590,10 @@ export default function DashboardPage() {
         )}
         </div>{/* close printable-meals */}
       </section>
+      </SectionErrorBoundary>
 
       {/* DAILY SUPPLEMENTS */}
+      <SectionErrorBoundary section="Supplements">
       <section className="soft-card p-8 mb-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-3">
           <div>
@@ -605,8 +611,10 @@ export default function DashboardPage() {
 
         <DailySupplements symptoms={data.symptoms || []} age={Number(data.age) || 48} />
       </section>
+      </SectionErrorBoundary>
 
       {/* WEEKLY PROGRESS */}
+      <SectionErrorBoundary section="Weekly Progress">
       <section className="soft-card p-8 mb-6">
         <div className="flex items-center justify-between mb-4">
           <div>
@@ -621,8 +629,10 @@ export default function DashboardPage() {
         </div>
         <WeeklyMiniProgress currentDay={day} />
       </section>
+      </SectionErrorBoundary>
 
       {/* EXERCISES LIST */}
+      <SectionErrorBoundary section="Exercises">
       <section className="soft-card p-8">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl text-[#4a3f44] italic">{t("Today's Routine")}</h2>
@@ -665,6 +675,7 @@ export default function DashboardPage() {
           ))}
         </div>
       </section>
+      </SectionErrorBoundary>
 
       <MilestoneCelebration />
       <OnboardingTutorial />

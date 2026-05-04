@@ -7,6 +7,7 @@ import { useTranslation } from "@/lib/i18n/useTranslation";
 import CircularTimer from "@/components/CircularTimer";
 import { useSwipe } from "@/lib/hooks/useSwipe";
 import { haptic } from "@/lib/haptic";
+import { pushSession, pushSingle } from "@/lib/sync";
 
 const CATEGORY_LABELS: Record<string, string> = {
   warmup: "Warm-Up",
@@ -200,6 +201,15 @@ export default function SessionPage() {
         history.push(entry);
         localStorage.setItem("checkinHistory", JSON.stringify(history.slice(-90)));
       } catch { /* ignore */ }
+      // Sync completed session to server
+      pushSession({
+        day,
+        phase: program.phase,
+        title: program.title,
+        exercisesCount: program.exercises.length,
+        durationSeconds: program.totalMinutes * 60,
+      });
+      pushSingle("profile");
     }
   }
 

@@ -52,15 +52,18 @@ export default function BottomNav() {
   if (shouldHide) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden" aria-label="Bottom navigation">
       <div className="bg-white/90 backdrop-blur-xl border-t border-[#f0e3e8] px-2 pb-[env(safe-area-inset-bottom)]">
-        <div className="flex items-center justify-around">
+        <div className="flex items-center justify-around" role="tablist">
           {tabs.map((tab) => {
             const active = pathname === tab.href || pathname.startsWith(tab.href + "/");
             return (
               <Link
                 key={tab.href}
                 href={tab.href}
+                role="tab"
+                aria-selected={active}
+                aria-label={tab.label}
                 className={`flex flex-col items-center gap-0.5 py-2.5 px-4 min-w-[64px] min-h-[48px] justify-center transition-colors ${
                   active ? "text-[#d8a7b5]" : "text-[#b98fa1]/60"
                 }`}

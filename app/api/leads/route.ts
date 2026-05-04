@@ -1,15 +1,18 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { leadSchema, validateBody } from "@/lib/validations";
+import { checkRateLimit, getRateLimitKey, rateLimitResponse, PUBLIC_LIMIT } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
-  const body = await request.json();
-  const email = body.email;
+  // Rate limit — public endpoint, strict
+  const rlKey = getRateLimitKey(request, "leads");
+  const rl = checkRateLimit(rlKey, PUBLIC_LIMIT);
+  if (!rl.allowed) return rateLimitResponse(rl.resetAt);
 
-  if (!email || !email.includes("@")) {
-    return NextResponse.json({ error: "Invalid email" }, { status: 400 });
-  }
+  const { data: body, error: validationError } = await validateBody(request, leadSchema);
+  if (validationError) return validationError;
 
   // Try to save to Supabase (if leads table exists)
   try {
@@ -19,7 +22,7 @@ export async function POST(request: Request) {
     );
 
     await supabase.from("leads").insert({
-      email,
+      email: body.email,
       source: body.source || "website",
       created_at: new Date().toISOString(),
     });

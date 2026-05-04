@@ -35,14 +35,26 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // Protected routes that require authentication
-  // Dashboard, session, nutrition, shopping, progress are FREE (no login needed)
-  // Only account and checkin require login
-  const protectedRoutes = ["/account", "/checkin"];
+  const protectedRoutes = [
+    "/account",
+    "/checkin",
+    "/dashboard",
+    "/session",
+    "/progress",
+    "/journal",
+    "/favorites",
+    "/shopping",
+    "/weekly-summary",
+    "/rest-day",
+  ];
   const isProtected = protectedRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   );
 
-  if (isProtected && !user) {
+  // Admin route — requires auth (admin check happens in the page itself)
+  const isAdmin = request.nextUrl.pathname.startsWith("/admin");
+
+  if ((isProtected || isAdmin) && !user) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("redirect", request.nextUrl.pathname);

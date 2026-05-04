@@ -1,16 +1,21 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import BottomNav from "@/components/BottomNav";
-import InstallPrompt from "@/components/InstallPrompt";
-import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
-import CookieConsent from "@/components/CookieConsent";
-import NotificationPrompt from "@/components/NotificationPrompt";
-import SplashScreen from "@/components/SplashScreen";
-import DragScroll from "@/components/DragScroll";
 import PageTransition from "@/components/PageTransition";
-import SocialProof from "@/components/SocialProof";
+
+// Lazy-loaded client components — not needed for first paint
+const BottomNav = dynamic(() => import("@/components/BottomNav"), { ssr: false });
+const InstallPrompt = dynamic(() => import("@/components/InstallPrompt"), { ssr: false });
+const ServiceWorkerRegister = dynamic(() => import("@/components/ServiceWorkerRegister"), { ssr: false });
+const CookieConsent = dynamic(() => import("@/components/CookieConsent"), { ssr: false });
+const NotificationPrompt = dynamic(() => import("@/components/NotificationPrompt"), { ssr: false });
+const SplashScreen = dynamic(() => import("@/components/SplashScreen"), { ssr: false });
+const DragScroll = dynamic(() => import("@/components/DragScroll"), { ssr: false });
+const SocialProof = dynamic(() => import("@/components/SocialProof"), { ssr: false });
+const SyncProvider = dynamic(() => import("@/components/SyncProvider"), { ssr: false });
+const OfflineIndicator = dynamic(() => import("@/components/OfflineIndicator"), { ssr: false });
 
 export const metadata: Metadata = {
   title: {
@@ -159,6 +164,8 @@ export default function RootLayout({
           <SplashScreen />
           <DragScroll />
           <SocialProof />
+          <SyncProvider />
+          <OfflineIndicator />
         </div>
       </body>
     </html>

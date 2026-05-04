@@ -60,6 +60,15 @@ type State = {
 export default function AccountPage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+
+  function safeParseLocal(key: string): unknown {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }
   const [data, setData] = useState<State>({
     plan: "free",
     status: "none",
@@ -112,6 +121,62 @@ export default function AccountPage() {
     clearMembership();
     router.push("/");
     router.refresh();
+  }
+
+  function handleExportData() {
+    const exportData = {
+      exportedAt: new Date().toISOString(),
+      email: user?.email || null,
+      plan: data.plan,
+      membership: data,
+      quizData: safeParseLocal("quizData"),
+      checkinHistory: safeParseLocal("checkinHistory"),
+      journalEntries: safeParseLocal("journalEntries"),
+      favorites: safeParseLocal("favorites"),
+      sessionHistory: safeParseLocal("sessionHistory"),
+      currentDay: localStorage.getItem("day"),
+    };
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `veronica-method-data-${new Date().toISOString().split("T")[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async function handleDeleteAccount() {
+    const confirmed = window.confirm(
+      "⚠️ This will permanently delete your account and ALL your data (check-ins, journal, progress, favorites). This cannot be undone.\n\nAre you absolutely sure?"
+    );
+    if (!confirmed) return;
+
+    const doubleConfirm = window.confirm(
+      "Last chance: Type OK to confirm you want to delete everything."
+    );
+    if (!doubleConfirm) return;
+
+    try {
+      // Clear all local data
+      const keysToRemove = [
+        "day", "plan", "premium", "quizData", "purchaseDate", "expiryDate",
+        "checkinHistory", "dailyCheckin", "journalEntries", "favorites",
+        "sessionHistory", "weeklyCompleted", "unlockedAchievements",
+        "nutritionData", "lastSyncedAt", "deviceId",
+      ];
+      keysToRemove.forEach((k) => localStorage.removeItem(k));
+      clearMembership();
+
+      // Sign out
+      const supabase = createClient();
+      await supabase.auth.signOut();
+
+      router.push("/");
+      router.refresh();
+    } catch {
+      alert("Something went wrong. Please contact support.");
+    }
   }
 
   return (
@@ -210,7 +275,35 @@ export default function AccountPage() {
         </div>
       </section>
 
-      {/* REFERRAL */}
+      {/* DATA & PRIVACY (GDPR) */}
+      <section className="soft-card p-8 mb-8">
+        <h2 className="text-2xl text-[#4a3f44] mb-2">Your Data & Privacy</h2>
+        <p className="text-sm text-[#7b6870] mb-6">
+          You own your data. Export it anytime or request account deletion.
+        </p>
+
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div className="p-5 rounded-2xl bg-white/40 border border-[#f0e3e8]">
+            <h3 className="text-sm font-medium text-[#4a3f44] mb-1">📦 Export My Data</h3>
+            <p className="text-xs text-[#7b6870] mb-3">
+              Download all your check-ins, journal entries, favorites and progress as a JSON file.
+            </p>
+            <button onClick={handleExportData} className="btn-outline text-xs px-4 py-2">
+              Download Data
+            </button>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-white/40 border border-[#f0e3e8]">
+            <h3 className="text-sm font-medium text-[#4a3f44] mb-1">🗑️ Delete Account</h3>
+            <p className="text-xs text-[#7b6870] mb-3">
+              Permanently delete your account and all associated data. This cannot be undone.
+            </p>
+            <button onClick={handleDeleteAccount} className="btn-outline text-xs px-4 py-2 !border-red-200 !text-red-400 hover:!bg-red-50">
+              Delete Account
+            </button>
+          </div>
+        </div>
+      </section>
       <ReferralCard />
 
       {/* RETENTION */}

@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { profileSchema, validateBody } from "@/lib/validations";
+import { checkRateLimit, getRateLimitKey, rateLimitResponse, STANDARD_LIMIT } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 // GET /api/profile - Get current user profile
-export async function GET() {
+export async function GET(request: Request) {
+  const rlKey = getRateLimitKey(request, "profile");
+  const rl = checkRateLimit(rlKey, STANDARD_LIMIT);
+  if (!rl.allowed) return rateLimitResponse(rl.resetAt);
+
   const supabase = await createClient();
 
   const {
@@ -48,15 +54,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await request.json();
+  const { data: body, error: validationError } = await validateBody(request, profileSchema);
+  if (validationError) return validationError;
 
   const profileData = {
     id: user.id,
     email: user.email,
     quiz_data: body.quizData || null,
-    plan: body.plan || "free",
-    premium: body.premium || false,
-    current_day: body.currentDay || 1,
+    plan: body.plan,
+    premium: body.premium,
+    current_day: body.currentDay,
     purchase_date: body.purchaseDate || null,
     expiry_date: body.expiryDate || null,
     updated_at: new Date().toISOString(),

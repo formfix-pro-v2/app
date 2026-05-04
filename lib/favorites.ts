@@ -24,10 +24,14 @@ export function toggleFavorite(type: "meal" | "exercise", name: string): boolean
   if (exists >= 0) {
     favs.splice(exists, 1);
     localStorage.setItem("favorites", JSON.stringify(favs));
+    // Async sync — fire and forget
+    import("@/lib/sync").then((m) => m.pushSingle("favorites")).catch(() => {});
     return false; // removed
   } else {
     favs.push({ type, name, addedAt: new Date().toISOString() });
     localStorage.setItem("favorites", JSON.stringify(favs));
+    // Async sync — fire and forget
+    import("@/lib/sync").then((m) => m.pushSingle("favorites")).catch(() => {});
     return true; // added
   }
 }

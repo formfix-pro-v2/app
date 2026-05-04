@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { subscriptionSchema, validateBody } from "@/lib/validations";
+import { checkRateLimit, getRateLimitKey, rateLimitResponse, AUTH_LIMIT } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 // POST /api/subscription - Activate a subscription
 export async function POST(request: Request) {
+  const rlKey = getRateLimitKey(request, "subscription");
+  const rl = checkRateLimit(rlKey, AUTH_LIMIT);
+  if (!rl.allowed) return rateLimitResponse(rl.resetAt);
+
   const supabase = await createClient();
 
   const {
@@ -16,14 +22,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await request.json();
-  const plan = body.plan as "glow" | "elite";
+  const { data: body, error: validationError } = await validateBody(request, subscriptionSchema);
+  if (validationError) return validationError;
 
-  if (!["glow", "elite"].includes(plan)) {
-    return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
-  }
-
-  const durationDays = plan === "elite" ? 90 : 30;
+  const durationDays = body.plan === "elite" ? 90 : 30;
   const now = new Date();
   const expiry = new Date(now);
   expiry.setDate(expiry.getDate() + durationDays);
@@ -34,7 +36,7 @@ export async function POST(request: Request) {
       {
         id: user.id,
         email: user.email,
-        plan,
+        plan: body.plan,
         premium: true,
         current_day: 1,
         purchase_date: now.toISOString(),

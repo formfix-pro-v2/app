@@ -1,16 +1,33 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { pushSingle } from "@/lib/sync";
 
 export default function OnboardingPage() {
   const [step, setStep] = useState(0);
   const [plan, setPlan] = useState("free");
+  const syncedRef = useRef(false);
 
   useEffect(() => {
     const savedPlan = localStorage.getItem("plan");
     if (savedPlan) setPlan(savedPlan);
+
+    // Sync quiz data to Supabase when onboarding loads
+    if (!syncedRef.current) {
+      syncedRef.current = true;
+      syncQuizData();
+    }
   }, []);
+
+  async function syncQuizData() {
+    try {
+      // Push profile (includes quiz_data) to server
+      await pushSingle("profile");
+    } catch {
+      // Silently fail — local data is the fallback
+    }
+  }
 
   const steps = [
     {

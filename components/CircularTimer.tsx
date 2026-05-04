@@ -18,7 +18,13 @@ export default function CircularTimer({
   const seconds = timeLeft % 60;
 
   return (
-    <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
+    <div
+      className="relative inline-flex items-center justify-center"
+      style={{ width: size, height: size }}
+      role="timer"
+      aria-live="polite"
+      aria-label={`${minutes} minutes and ${seconds} seconds remaining`}
+    >
       <svg width={size} height={size} className="-rotate-90">
         {/* Background circle */}
         <circle

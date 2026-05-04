@@ -84,7 +84,7 @@ export default function Header() {
           </Link>
 
           {/* NAV - Desktop */}
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav aria-label="Main navigation" className="hidden lg:flex items-center gap-1">
             {desktopLinks.map(([label, href]) => (
               <Link
                 key={label}
@@ -146,7 +146,9 @@ export default function Header() {
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="lg:hidden p-2 rounded-xl hover:bg-[#fdf2f5] transition-colors"
-              aria-label="Toggle menu"
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-nav"
             >
               <svg
                 className="w-5 h-5 text-[#6f5a62]"
@@ -166,7 +168,7 @@ export default function Header() {
 
         {/* Mobile Nav */}
         {mobileOpen && (
-          <div className="lg:hidden px-6 pb-5 border-t border-[#f0e3e8]/50">
+          <div className="lg:hidden px-6 pb-5 border-t border-[#f0e3e8]/50" id="mobile-nav" role="navigation" aria-label="Mobile navigation">
             <nav className="flex flex-col gap-1 pt-3">
               {mobileLinks.map(([label, href]) => (
                 <Link

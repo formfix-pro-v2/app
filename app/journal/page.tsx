@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { pushSingle } from "@/lib/sync";
 
 type JournalEntry = {
   day: number;
@@ -58,6 +59,9 @@ export default function JournalPage() {
     setEditingDay(null);
     setText("");
     setMood(5);
+
+    // Sync journal to server
+    pushSingle("journal");
   }
 
   function getEntry(day: number): JournalEntry | undefined {
