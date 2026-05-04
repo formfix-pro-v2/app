@@ -187,14 +187,15 @@ function deduplicateByDate(entries: CheckinEntry[]): CheckinEntry[] {
   return [...map.values()];
 }
 
-/** Generiše stabilne demo podatke (isti seed = isti rezultat) */
-function generateDemoData(): CheckinEntry[] {
+/** Generiše stabilne demo podatke ograničene na current day korisnika */
+function generateDemoData(currentDay: number): CheckinEntry[] {
   const entries: CheckinEntry[] = [];
   const now = new Date();
-  for (let i = 6; i >= 0; i--) {
+  // Demo podaci samo za onoliko dana koliko je korisnik aktivan, max 7
+  const demoCount = Math.min(Math.max(currentDay, 1), 7);
+  for (let i = demoCount - 1; i >= 0; i--) {
     const d = new Date(now);
     d.setDate(d.getDate() - i);
-    // Deterministički "random" na osnovu dana
     const seed = d.getDate() + d.getMonth() * 31;
     entries.push({
       sleep: 5 + (seed % 4),
@@ -235,16 +236,16 @@ export default function ProgressPage() {
     // Deduplikacija — ukloni duplikate istog dana
     let cleaned = deduplicateByDate(history);
 
-    // Ako nema dovoljno pravih podataka, koristi demo
+    const savedDay = Number(localStorage.getItem("day") || "1");
+
+    // Ako nema dovoljno pravih podataka, koristi demo ograničen na current day
     const realEntries = cleaned.filter((e) => e.sleep > 0);
     if (realEntries.length < 3) {
-      cleaned = generateDemoData();
+      cleaned = generateDemoData(savedDay);
     }
 
     setEntries(cleaned);
-
-    const savedDay = localStorage.getItem("day");
-    if (savedDay) setDay(Number(savedDay));
+    setDay(savedDay);
 
     const achStats = loadAchievementStats();
     setUnlocked(getUnlockedAchievements(achStats));
