@@ -9,6 +9,7 @@ type GroceryItem = {
   name: string;
   category: string;
   count: number;
+  amounts: string[];  // sve količine iz različitih obroka
 };
 
 const CATEGORIES: Record<string, string[]> = {
@@ -74,15 +75,22 @@ export default function ShoppingPage() {
       );
 
       for (const { meal } of dayPlan.meals) {
-        for (const ing of meal.ingredients) {
+        for (let idx = 0; idx < meal.ingredients.length; idx++) {
+          const ing = meal.ingredients[idx];
+          const amount = meal.amounts?.[idx] || "";
           const key = ing.toLowerCase();
+
           if (allIngredients[key]) {
             allIngredients[key].count++;
+            if (amount && !allIngredients[key].amounts.includes(amount)) {
+              allIngredients[key].amounts.push(amount);
+            }
           } else {
             allIngredients[key] = {
               name: ing,
               category: categorize(ing),
               count: 1,
+              amounts: amount ? [amount] : [],
             };
           }
         }
@@ -207,11 +215,16 @@ export default function ShoppingPage() {
                           type="checkbox"
                           className="w-5 h-5 rounded accent-[#d8a7b5]"
                         />
-                        <span className="flex-1 text-[#4a3f44] group-has-[:checked]:line-through group-has-[:checked]:opacity-50">
-                          {item.name}
-                        </span>
+                        <div className="flex-1 min-w-0 group-has-[:checked]:line-through group-has-[:checked]:opacity-50">
+                          <span className="text-[#4a3f44]">{item.name}</span>
+                          {item.amounts.length > 0 && (
+                            <span className="text-xs text-[#7b6870] ml-2">
+                              ({item.amounts.join(" + ")})
+                            </span>
+                          )}
+                        </div>
                         {item.count > 1 && (
-                          <span className="text-xs px-2 py-0.5 rounded-full bg-[#fdf2f5] text-[#b98fa1]">
+                          <span className="text-xs px-2 py-0.5 rounded-full bg-[#fdf2f5] text-[#b98fa1] shrink-0">
                             ×{item.count} meals
                           </span>
                         )}
