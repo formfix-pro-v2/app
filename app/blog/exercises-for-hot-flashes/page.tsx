@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import BlogJsonLd from "@/components/BlogJsonLd";
 
 export const metadata: Metadata = {
   title: "5 Gentle Exercises That Help Reduce Hot Flashes",
@@ -140,6 +141,7 @@ export default function HotFlashArticle() {
           Take Free Assessment
         </Link>
       </div>
+      <BlogJsonLd title="5 Gentle Exercises That Help Reduce Hot Flashes" description="Evidence-based breathing and movement techniques that help regulate body temperature and reduce hot flash frequency during menopause." slug="exercises-for-hot-flashes" datePublished="2025-01-15" />
     </main>
   );
 }

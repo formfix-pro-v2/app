@@ -12,22 +12,33 @@
 
 :root {
   --bg-base: #ede0e3;
-  --rose: #c4909e;
-  --rose-light: #e8d2d8;
-  --rose-dark: #7a4a5a;
-  --text-main: #3d2b32;
-  --text-muted: #6b5660;
-  --line: rgba(180, 150, 165, 0.4);
-  --card-bg: rgba(235, 220, 225, 0.75);
-  --card-hover: rgba(235, 220, 225, 0.9);
-  --accent: #c4909e;
-  --accent-glow: rgba(196, 144, 158, 0.25);
+  --rose: #b87d8e;
+  --rose-light: #e2c8d0;
+  --rose-dark: #6b3a4d;
+  --text-main: #2e1f26;
+  --text-muted: #5a4550;
+  --text-subtle: #7a6570;
+  --line: rgba(160, 130, 145, 0.35);
+  --card-bg: rgba(240, 228, 232, 0.82);
+  --card-hover: rgba(240, 228, 232, 0.95);
+  --accent: #b87d8e;
+  --accent-glow: rgba(184, 125, 142, 0.25);
 }
 
 html.dark {
   --bg-base: #0f0e18;
   --rose: #c9a0f0;
   --rose-light: #1a1528;
+  --rose-dark: #e8c560;
+  --text-main: #edeaf5;
+  --text-muted: #b0adc0;
+  --text-subtle: #8a87a0;
+  --line: rgba(140, 130, 180, 0.15);
+  --card-bg: rgba(22, 20, 38, 0.90);
+  --card-hover: rgba(28, 25, 48, 0.95);
+  --accent: #c9a0f0;
+  --accent-glow: rgba(201, 160, 240, 0.2);
+}
   --rose-dark: #e8c560;
   --text-main: #e8e6f0;
   --text-muted: #9a96ad;
@@ -126,6 +137,24 @@ html.dark {
     color: var(--text-muted);
   }
 }
+
+/* =======================================================
+   READABILITY — pojačan kontrast za muted boje
+   Ove boje su previše svetle na svetloj pozadini
+======================================================= */
+
+/* #b98fa1 → tamnija varijanta za bolju čitljivost */
+.text-\[\#b98fa1\] { color: #8f6878 !important; }
+.text-\[\#b98fa1\]\/60 { color: rgba(143, 104, 120, 0.7) !important; }
+
+/* #7b6870 → malo tamnija */
+.text-\[\#7b6870\] { color: #5e4d55 !important; }
+
+/* #d8a7b5 kao tekst boja → tamnija za čitljivost */
+.text-\[\#d8a7b5\] { color: #a87888 !important; }
+.text-\[\#d6a7b1\] { color: #a87888 !important; }
+
+/* Accent boje kao pozadina ostaju iste, samo tekst je tamniji */
 
 /* =======================================================
    GLOBAL SPACING OVERRIDES
@@ -289,19 +318,23 @@ html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark 
   color: #edeaf5 !important;
 }
 
-/* Remap hardcoded light colors to dark equivalents */
+/* Remap hardcoded light colors to dark equivalents — pojačan kontrast */
 html.dark .text-\[\#4a3f44\] { color: #edeaf5 !important; }
-html.dark .text-\[\#6f5a62\] { color: #b0adc0 !important; }
-html.dark .text-\[\#7b6870\] { color: #9a96ad !important; }
-html.dark .text-\[\#3d2b32\] { color: #e5e3f0 !important; }
-html.dark .text-\[\#8f5d6f\] { color: #c9a0f0 !important; }
-html.dark .text-\[\#7f5665\] { color: #c9a0f0 !important; }
+html.dark .text-\[\#6f5a62\] { color: #c0bdd0 !important; }
+html.dark .text-\[\#7b6870\] { color: #b0adc0 !important; }
+html.dark .text-\[\#3d2b32\] { color: #e8e5f2 !important; }
+html.dark .text-\[\#8f5d6f\] { color: #d0b0f0 !important; }
+html.dark .text-\[\#7f5665\] { color: #d0b0f0 !important; }
+html.dark .text-\[\#2e1f26\] { color: #edeaf5 !important; }
+html.dark .text-\[\#5a4550\] { color: #b0adc0 !important; }
 
 /* Accent colors → ljubičasta umesto roza */
 html.dark .text-\[\#d8a7b5\] { color: #c9a0f0 !important; }
-html.dark .text-\[\#b98fa1\] { color: #a890c8 !important; }
+html.dark .text-\[\#b98fa1\] { color: #b8a0d8 !important; }
 html.dark .text-\[\#d6a7b1\] { color: #c9a0f0 !important; }
-html.dark .text-\[\#b38d98\] { color: #a890c8 !important; }
+html.dark .text-\[\#b38d98\] { color: #b8a0d8 !important; }
+html.dark .text-\[\#b87d8e\] { color: #c9a0f0 !important; }
+html.dark .text-\[\#c4909e\] { color: #c9a0f0 !important; }
 
 /* Accent backgrounds → tamna ljubičasta */
 html.dark .bg-\[\#d8a7b5\] { background-color: #7c4fbf !important; }

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import BlogJsonLd from "@/components/BlogJsonLd";
 
 export const metadata: Metadata = {
   title: "Hormone-Friendly Meals Under €6 Per Day",
@@ -71,6 +72,7 @@ export default function MealPlanArticle() {
         <p className="text-[#7b6870] mb-6 text-sm">Different every day, tailored to your body and budget.</p>
         <Link href="/quiz" className="btn-primary">Take Free Assessment</Link>
       </div>
+      <BlogJsonLd title="Hormone-Friendly Meals Under €6 Per Day" description="Budget-friendly meal planning for menopause with anti-inflammatory recipes, shopping tips and weekly meal prep guide." slug="menopause-meal-plan-budget" datePublished="2025-01-20" />
     </main>
   );
 }

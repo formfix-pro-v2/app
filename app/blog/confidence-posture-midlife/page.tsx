@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import BlogJsonLd from "@/components/BlogJsonLd";
 
 export const metadata: Metadata = {
   title: "How Better Posture Changed My Confidence at 52",
@@ -65,6 +66,7 @@ export default function PostureArticle() {
         <p className="text-[#7b6870] mb-6 text-sm">Our program includes posture exercises in your daily routine automatically.</p>
         <Link href="/quiz" className="btn-primary">Take Free Assessment</Link>
       </div>
+      <BlogJsonLd title="How Better Posture Changed My Confidence at 52" description="The link between posture, mood and self-image in midlife. Plus a 5-minute daily routine that makes a visible difference." slug="confidence-posture-midlife" datePublished="2025-03-01" />
     </main>
   );
 }

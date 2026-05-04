@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import BlogJsonLd from "@/components/BlogJsonLd";
 
 export const metadata: Metadata = {
   title: "Why Your Joints Hurt More After 40 (And What Helps)",
@@ -78,6 +79,7 @@ export default function JointPainArticle() {
         <p className="text-[#7b6870] mb-6 text-sm">Tell us about your joint pain and we&apos;ll build a gentle plan around it.</p>
         <Link href="/quiz" className="btn-primary">Take Free Assessment</Link>
       </div>
+      <BlogJsonLd title="Why Your Joints Hurt More After 40 (And What Helps)" description="The hormone-joint connection explained, plus anti-inflammatory foods and mobility exercises that bring real relief during menopause." slug="joint-pain-menopause" datePublished="2025-02-20" />
     </main>
   );
 }

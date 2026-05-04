@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import BlogJsonLd from "@/components/BlogJsonLd";
 
 export const metadata: Metadata = {
   title: "Pelvic Floor Exercises: A Beginner's Guide for Women 40+",
@@ -66,6 +67,7 @@ export default function PelvicFloorArticle() {
         <p className="text-[#7b6870] mb-6 text-sm">The Elite plan includes a complete pelvic floor recovery system.</p>
         <Link href="/quiz" className="btn-primary">Take Free Assessment</Link>
       </div>
+      <BlogJsonLd title="Pelvic Floor Exercises: A Beginner's Guide for Women 40+" description="Why your pelvic floor weakens during menopause and 3 simple exercises you can do anywhere to strengthen it safely." slug="pelvic-floor-beginners" datePublished="2025-02-10" />
     </main>
   );
 }

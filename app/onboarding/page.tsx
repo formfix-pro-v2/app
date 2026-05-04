@@ -3,31 +3,29 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { pushSingle } from "@/lib/sync";
+import { createClient } from "@/lib/supabase/client";
 
 export default function OnboardingPage() {
   const [step, setStep] = useState(0);
   const [plan, setPlan] = useState("free");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const syncedRef = useRef(false);
 
   useEffect(() => {
     const savedPlan = localStorage.getItem("plan");
     if (savedPlan) setPlan(savedPlan);
 
-    // Sync quiz data to Supabase when onboarding loads
-    if (!syncedRef.current) {
-      syncedRef.current = true;
-      syncQuizData();
-    }
+    // Proveri da li je korisnik ulogovan
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setIsLoggedIn(!!user);
+      // Sync quiz data samo ako je ulogovan
+      if (user && !syncedRef.current) {
+        syncedRef.current = true;
+        pushSingle("profile").catch(() => {});
+      }
+    });
   }, []);
-
-  async function syncQuizData() {
-    try {
-      // Push profile (includes quiz_data) to server
-      await pushSingle("profile");
-    } catch {
-      // Silently fail — local data is the fallback
-    }
-  }
 
   const steps = [
     {
@@ -107,16 +105,22 @@ export default function OnboardingPage() {
         <section className="soft-card p-8 text-center">
           <h2 className="text-3xl text-[#4a3f44] mb-2">You&apos;re All Set!</h2>
           <p className="text-[#7b6870] text-sm mb-6">
-            Your personalized program is ready. Start with your results overview
-            or jump straight to the dashboard.
+            Your personalized program is ready.
+            {!isLoggedIn && " Create a free account to save your progress across devices."}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/results" className="btn-primary px-8">
               View My Results
             </Link>
-            <Link href="/dashboard" className="btn-outline px-8">
-              Go to Dashboard
-            </Link>
+            {isLoggedIn ? (
+              <Link href="/dashboard" className="btn-outline px-8">
+                Go to Dashboard
+              </Link>
+            ) : (
+              <Link href="/login?redirect=/dashboard" className="btn-outline px-8">
+                Sign In to Dashboard
+              </Link>
+            )}
           </div>
           {plan === "free" && (
             <p className="text-xs text-[#b98fa1] mt-4">

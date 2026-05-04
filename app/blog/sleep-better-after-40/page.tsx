@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import BlogJsonLd from "@/components/BlogJsonLd";
 
 export const metadata: Metadata = {
   title: "The Evening Routine That Fixed My Menopause Insomnia",
@@ -70,6 +71,12 @@ export default function SleepArticle() {
         <p className="text-[#7b6870] mb-6 text-sm">Tell us about your sleep and we&apos;ll build a plan around it.</p>
         <Link href="/quiz" className="btn-primary">Take Free Assessment</Link>
       </div>
+      <BlogJsonLd
+        title="The Evening Routine That Fixed My Menopause Insomnia"
+        description="A 15-minute wind-down routine combining breathing, stretches and one habit change that dramatically improves sleep during menopause."
+        slug="sleep-better-after-40"
+        datePublished="2025-02-01"
+      />
     </main>
   );
 }
