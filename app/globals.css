@@ -39,15 +39,6 @@ html.dark {
   --accent: #c9a0f0;
   --accent-glow: rgba(201, 160, 240, 0.2);
 }
-  --rose-dark: #e8c560;
-  --text-main: #e8e6f0;
-  --text-muted: #9a96ad;
-  --line: rgba(140, 130, 180, 0.15);
-  --card-bg: rgba(22, 20, 35, 0.88);
-  --card-hover: rgba(28, 25, 45, 0.95);
-  --accent: #c9a0f0;
-  --accent-glow: rgba(201, 160, 240, 0.2);
-}
 
 @layer base {
   body {
