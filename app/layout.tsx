@@ -1,21 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import PageTransition from "@/components/PageTransition";
-
-// Lazy-loaded client components — not needed for first paint
-const BottomNav = dynamic(() => import("@/components/BottomNav"), { ssr: false });
-const InstallPrompt = dynamic(() => import("@/components/InstallPrompt"), { ssr: false });
-const ServiceWorkerRegister = dynamic(() => import("@/components/ServiceWorkerRegister"), { ssr: false });
-const CookieConsent = dynamic(() => import("@/components/CookieConsent"), { ssr: false });
-const NotificationPrompt = dynamic(() => import("@/components/NotificationPrompt"), { ssr: false });
-const SplashScreen = dynamic(() => import("@/components/SplashScreen"), { ssr: false });
-const DragScroll = dynamic(() => import("@/components/DragScroll"), { ssr: false });
-const SocialProof = dynamic(() => import("@/components/SocialProof"), { ssr: false });
-const SyncProvider = dynamic(() => import("@/components/SyncProvider"), { ssr: false });
-const OfflineIndicator = dynamic(() => import("@/components/OfflineIndicator"), { ssr: false });
+import ClientShell from "@/components/ClientShell";
 
 export const metadata: Metadata = {
   title: {
@@ -77,7 +65,6 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Veronica Method" />
-        {/* Analytics - Plausible (privacy-friendly, no cookies needed) */}
         {process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN && (
           <script
             defer
@@ -117,7 +104,6 @@ export default function RootLayout({
         />
       </head>
       <body className="text-[#3d2b32]">
-        {/* Skip to content for keyboard users */}
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[#d8a7b5] focus:text-white focus:text-sm"
@@ -125,7 +111,6 @@ export default function RootLayout({
           Skip to content
         </a>
         <div className="min-h-screen relative flex flex-col">
-          {/* Subtle gradient background */}
           <div
             className="fixed inset-0 -z-20"
             style={{
@@ -133,8 +118,6 @@ export default function RootLayout({
                 "linear-gradient(180deg, #f2e4e8 0%, #f0dde3 50%, #ede0df 100%)",
             }}
           />
-
-          {/* Soft glow accents */}
           <div
             className="fixed inset-0 -z-10 opacity-60"
             style={{
@@ -142,8 +125,6 @@ export default function RootLayout({
                 "radial-gradient(circle at 90% 5%, rgba(214,167,177,.18), transparent 15%), radial-gradient(circle at 5% 85%, rgba(185,143,161,.15), transparent 18%)",
             }}
           />
-
-          {/* Decorative blur - smaller */}
           <div className="fixed top-10 -left-16 w-48 h-48 rounded-full bg-[#e4c5cf] blur-3xl opacity-25 -z-10" />
           <div className="fixed bottom-10 -right-16 w-56 h-56 rounded-full bg-[#dbb8c4] blur-3xl opacity-25 -z-10" />
 
@@ -156,16 +137,7 @@ export default function RootLayout({
           </main>
 
           <Footer />
-          <BottomNav />
-          <InstallPrompt />
-          <ServiceWorkerRegister />
-          <CookieConsent />
-          <NotificationPrompt />
-          <SplashScreen />
-          <DragScroll />
-          <SocialProof />
-          <SyncProvider />
-          <OfflineIndicator />
+          <ClientShell />
         </div>
       </body>
     </html>
