@@ -7,26 +7,47 @@ export default function StreakFreeze() {
   const [frozen, setFrozen] = useState(false);
 
   useEffect(() => {
-    // Check if user missed yesterday
     try {
-      const history = JSON.parse(localStorage.getItem("checkinHistory") || "[]");
-      if (history.length < 2) return;
+      const history: Array<{ date: string; streakFreeze?: boolean }> = JSON.parse(
+        localStorage.getItem("checkinHistory") || "[]"
+      );
 
-      const yesterday = new Date();
+      // Nema istorije → korisnik tek počeo, nema šta da se zamrzne
+      if (history.length === 0) return;
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const yesterday = new Date(today);
       yesterday.setDate(yesterday.getDate() - 1);
       const yesterdayStr = yesterday.toISOString().split("T")[0];
 
-      const hasYesterday = history.some(
-        (e: { date: string }) => e.date.startsWith(yesterdayStr)
-      );
+      const twoDaysAgo = new Date(today);
+      twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
 
+      // Da li postoji entry za juče?
+      const hasYesterday = history.some((e) => e.date.split("T")[0] === yesterdayStr);
+
+      // Ako ima juče → streak je ok, ne treba freeze
+      if (hasYesterday) return;
+
+      // Da li je korisnik uopšte bio aktivan PRE juče?
+      // Ako nema nijedan entry stariji od juče, znači da je tek počeo — nema šta da se zamrzne
+      const hasOlderActivity = history.some((e) => {
+        const entryDate = new Date(e.date.split("T")[0]);
+        entryDate.setHours(0, 0, 0, 0);
+        return entryDate < yesterday;
+      });
+
+      if (!hasOlderActivity) return;
+
+      // Proveri da li je već koristio freeze ove nedelje
       const lastFreeze = localStorage.getItem("lastStreakFreeze");
       const thisWeek = getWeekNumber(new Date());
-      const frozenThisWeek = lastFreeze === String(thisWeek);
+      if (lastFreeze === String(thisWeek)) return;
 
-      if (!hasYesterday && !frozenThisWeek) {
-        setShow(true);
-      }
+      // Korisnik je bio aktivan ranije, propustio juče, nije koristio freeze → prikaži
+      setShow(true);
     } catch { /* ignore */ }
   }, []);
 
@@ -34,7 +55,7 @@ export default function StreakFreeze() {
     const thisWeek = getWeekNumber(new Date());
     localStorage.setItem("lastStreakFreeze", String(thisWeek));
 
-    // Add a fake entry for yesterday to preserve streak
+    // Dodaj freeze entry za juče da sačuva streak
     try {
       const history = JSON.parse(localStorage.getItem("checkinHistory") || "[]");
       const yesterday = new Date();
@@ -63,7 +84,7 @@ export default function StreakFreeze() {
         <div className="flex-1">
           {frozen ? (
             <p className="text-sm text-green-600 font-medium">
-              ✨ Streak frozen! Your {localStorage.getItem("streak") || "0"}-day streak is safe.
+              ✨ Streak frozen! Your streak is safe.
             </p>
           ) : (
             <>
