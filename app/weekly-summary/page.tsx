@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import ShareButton from "@/components/ShareButton";
 
 type WeekData = {
   sessionsCompleted: number;
@@ -139,6 +140,7 @@ export default function WeeklySummaryPage() {
         <Link href="/dashboard" className="btn-primary">Dashboard</Link>
         <Link href="/progress" className="btn-outline">Full Progress</Link>
         <Link href="/journal" className="btn-outline">Journal</Link>
+        <ShareButton text={`Week ${week} done! ${data.sessionsCompleted} sessions completed 🧘‍♀️ #VeronicaMethod`} />
       </div>
     </main>
   );

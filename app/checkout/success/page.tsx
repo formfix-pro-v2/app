@@ -10,6 +10,7 @@ function SuccessContent() {
   const params = useSearchParams();
   const [plan, setPlan] = useState("Glow");
   const [activated, setActivated] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(true);
 
   useEffect(() => {
     const planParam = params.get("plan") as MembershipPlan | null;
@@ -23,10 +24,34 @@ function SuccessContent() {
         setActivated(true);
       });
     }
+
+    // Sakrij confetti posle 4 sekunde
+    const timer = setTimeout(() => setShowConfetti(false), 4000);
+    return () => clearTimeout(timer);
   }, [params, activated]);
 
   return (
-    <main className="max-w-5xl mx-auto px-6 py-16">
+    <main className="max-w-5xl mx-auto px-6 py-16 relative">
+      {/* Confetti animacija */}
+      {showConfetti && (
+        <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden" aria-hidden="true">
+          {Array.from({ length: 40 }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute animate-[confettiFall_3s_ease-in_forwards]"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `-${Math.random() * 20}%`,
+                animationDelay: `${Math.random() * 2}s`,
+                fontSize: `${12 + Math.random() * 16}px`,
+              }}
+            >
+              {["🌸", "✨", "💜", "🎉", "⭐", "💫"][i % 6]}
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* CONFIRMATION */}
       <section className="soft-card p-12 text-center mb-8 border-2 border-[#fdf2f5]">
         <div className="text-6xl mb-6">🌸</div>

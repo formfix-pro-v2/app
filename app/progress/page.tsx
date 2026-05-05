@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import ShareButton from "@/components/ShareButton";
 import {
   getUnlockedAchievements,
   getNextAchievements,
@@ -456,6 +457,7 @@ export default function ProgressPage() {
         <Link href="/session" className="btn-outline">
           Start Session
         </Link>
+        <ShareButton text={`Day ${day} of my wellness journey! Streak: ${stats.currentStreak} 🔥 #VeronicaMethod`} />
       </section>
     </main>
   );
