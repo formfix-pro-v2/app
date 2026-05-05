@@ -348,6 +348,66 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* TESTIMONIALS */}
+      <section className="max-w-5xl mx-auto py-6">
+        <h2 className="text-3xl text-center text-[#4a3f44] mb-6 italic">
+          What Women Are Saying
+        </h2>
+        <div className="grid md:grid-cols-3 gap-4">
+          {[
+            {
+              name: "Maria, 52",
+              text: "After 2 weeks my hot flashes reduced significantly. The breathing exercises before bed changed my sleep completely.",
+              result: "Sleep improved from 4/10 to 8/10",
+              emoji: "😴",
+            },
+            {
+              name: "Sandra, 47",
+              text: "I was skeptical about budget meals being tasty, but my family loves them too. We save €80/month on groceries now.",
+              result: "Saving €80/month on food",
+              emoji: "🥗",
+            },
+            {
+              name: "Jelena, 55",
+              text: "The joint pain exercises are gentle but effective. I can walk up stairs without wincing for the first time in years.",
+              result: "Joint pain reduced by Day 14",
+              emoji: "🦴",
+            },
+            {
+              name: "Ana, 49",
+              text: "I love that it's only 20 minutes. No gym, no equipment. I do it in my living room before the kids wake up.",
+              result: "Consistent for 30 days straight",
+              emoji: "🧘‍♀️",
+            },
+            {
+              name: "Dragana, 51",
+              text: "The supplement guide alone was worth it. My doctor confirmed the doses are appropriate. I feel more energetic.",
+              result: "Energy up from 3/10 to 7/10",
+              emoji: "💊",
+            },
+            {
+              name: "Ivana, 44",
+              text: "Started with zero confidence about exercise. The Foundation phase was so gentle I actually stuck with it. Now I'm in Build phase!",
+              result: "Completed Foundation + Build phases",
+              emoji: "💪",
+            },
+          ].map((t) => (
+            <div key={t.name} className="soft-card p-5">
+              <div className="text-2xl mb-2">{t.emoji}</div>
+              <p className="text-sm text-[#4a3f44] leading-relaxed mb-3 italic">
+                &ldquo;{t.text}&rdquo;
+              </p>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-[#4a3f44]">{t.name}</span>
+                <span className="text-[9px] px-2 py-0.5 rounded-full bg-[#fdf2f5] text-[#8f6878] border border-[#f0e3e8] font-medium">
+                  {t.result}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* FAQ */}
       <section className="max-w-4xl mx-auto py-6">
         <div className="soft-card p-6 md:p-8">

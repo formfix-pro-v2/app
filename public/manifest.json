@@ -1,12 +1,37 @@
 {
-  "name": "Veronica Method",
+  "name": "Veronica Method — Menopause Wellness",
   "short_name": "Veronica",
-  "description": "The Complete Menopause Program — exercises, nutrition & supplements",
+  "description": "Personalized exercises, budget meal plans & supplement guide for women 40+",
   "start_url": "/dashboard",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#fffcfd",
-  "theme_color": "#d8a7b5",
+  "background_color": "#ede0e3",
+  "theme_color": "#b87d8e",
   "orientation": "portrait",
+  "categories": ["health", "fitness", "lifestyle"],
+  "lang": "en",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Start Session",
+      "short_name": "Session",
+      "url": "/session",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Daily Check-In",
+      "short_name": "Check-In",
+      "url": "/checkin",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Meal Plan",
+      "short_name": "Meals",
+      "url": "/nutrition",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
   "icons": [
     {
       "src": "/icon-192.png",
