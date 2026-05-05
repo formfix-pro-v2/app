@@ -114,8 +114,8 @@ export default function Header() {
               </svg>
             </a>
 
-            {/* Language switcher hidden until all pages are translated */}
-            {/* <LanguageSwitcher /> */}
+            {/* Language switcher */}
+            <LanguageSwitcher />
 
             {user ? (
               premium && badgeText ? (

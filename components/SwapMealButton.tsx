@@ -41,7 +41,7 @@ export default function SwapMealButton({
     <button
       onClick={handleSwap}
       disabled={swapping}
-      className="text-[10px] text-[#8f6878] hover:text-[#6b3a4d] transition-colors disabled:opacity-50 flex items-center gap-1"
+      className="no-print text-[10px] text-[#8f6878] hover:text-[#6b3a4d] transition-colors disabled:opacity-50 flex items-center gap-1"
       title="Get a different meal"
       aria-label={`Swap ${slot} meal`}
     >

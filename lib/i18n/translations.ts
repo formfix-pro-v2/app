@@ -93,6 +93,8 @@ const sr: Record<string, string> = {
   "Finish Position": "Završni položaj",
   "Skip": "Preskoči",
   "Next Exercise": "Sledeća vežba",
+  "Next": "Sledeće",
+  "Previous": "Prethodno",
   "Finish Session": "Završi sesiju",
   "Up Next": "Sledeće",
   "Last exercise — you're almost done!": "Poslednja vežba — skoro ste gotovi!",

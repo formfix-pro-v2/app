@@ -20,13 +20,12 @@ export function useTranslation() {
     localStorage.setItem(STORAGE_KEY, newLocale);
   }, []);
 
-  // t("Hello") → returns "Zdravo" if locale=sr, or "Hello" if en or not found
   const t = useCallback(
     (text: string): string => {
-      // Language switcher is hidden — always return English
-      return text;
+      if (locale === "en") return text;
+      return translations[locale]?.[text] || text;
     },
-    []
+    [locale]
   );
 
   return { t, locale, setLocale };

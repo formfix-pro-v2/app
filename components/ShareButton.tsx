@@ -43,7 +43,7 @@ export default function ShareButton({ text, url }: { text: string; url?: string 
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-full mt-2 z-50 bg-white rounded-2xl shadow-xl border border-[#f0e3e8] overflow-hidden min-w-[180px]">
+          <div className="absolute right-0 top-full mt-2 z-50 bg-white dark:bg-[#1a1528] rounded-2xl shadow-xl border border-[#f0e3e8] dark:border-[rgba(140,130,180,0.15)] overflow-hidden min-w-[180px]">
             <a
               href={`https://wa.me/?text=${encodedText}%20${encodedUrl}`}
               target="_blank"

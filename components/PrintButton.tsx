@@ -130,6 +130,7 @@ export default function PrintButton({
             /* keep visible but remove interactivity styling */
           }
           button { display: none; }
+          .no-print { display: none !important; }
           input[type="checkbox"] {
             width: 14px;
             height: 14px;

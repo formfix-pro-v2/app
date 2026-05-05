@@ -24,7 +24,7 @@ export default function FavoriteButton({
   return (
     <button
       onClick={handleToggle}
-      className="p-1.5 rounded-lg hover:bg-[#fdf2f5] transition-colors"
+      className="no-print p-1.5 rounded-lg hover:bg-[#fdf2f5] transition-colors"
       aria-label={fav ? "Remove from favorites" : "Add to favorites"}
       title={fav ? "Remove from favorites" : "Add to favorites"}
     >
