@@ -29,10 +29,21 @@ export async function GET(request: Request) {
             const createdAt = new Date(profile.created_at).getTime();
             const now = Date.now();
             if (now - createdAt < 60_000) {
+              // Pošalji welcome email
               const email = welcomeEmail();
-              sendEmail({ to: user.email, ...email }).catch(() => {
-                // Ne blokiramo redirect ako email ne uspe
-              });
+              sendEmail({ to: user.email, ...email }).catch(() => {});
+
+              // Registruj referral ako postoji kod u localStorage (prosleđen kroz cookie/query)
+              const refCode = searchParams.get("ref");
+              if (refCode) {
+                try {
+                  await fetch(`${origin}/api/referrals`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ referral_code: refCode }),
+                  });
+                } catch { /* ne blokiramo */ }
+              }
             }
           }
         }

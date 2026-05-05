@@ -10,6 +10,7 @@ import StreakFreeze from "@/components/StreakFreeze";
 import MilestoneCelebration from "@/components/MilestoneCelebration";
 import OnboardingTutorial from "@/components/OnboardingTutorial";
 import FavoriteButton from "@/components/FavoriteButton";
+import SwapMealButton from "@/components/SwapMealButton";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { playComplete } from "@/lib/sounds";
 import SectionErrorBoundary from "@/components/SectionErrorBoundary";
@@ -257,6 +258,9 @@ export default function DashboardPage() {
     return getDayMealPlan(day, nutrition.calories, data.symptoms || [], data.goal || "tone");
   }, [nutrition, day, data.symptoms, data.goal]);
 
+  // State za zamenjene obroke
+  const [swappedMeals, setSwappedMeals] = useState<Record<string, import("@/lib/nutrition").Meal>>({});
+
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
     if (hour < 12) return "Good morning";
@@ -467,7 +471,9 @@ export default function DashboardPage() {
 
         {/* Meals */}
         <div className="grid md:grid-cols-2 gap-4">
-          {mealPlan.meals.map(({ slot, meal }, i) => {
+          {mealPlan.meals.map(({ slot, meal: originalMeal }, i) => {
+            // Koristi swapped obrok ako postoji
+            const meal = swappedMeals[slot] || originalMeal;
             // Premium korisnici vide sve obroke bez ograničenja
             const isFree = !isPremium;
             const freeDayLimit = 7;
@@ -494,6 +500,14 @@ export default function DashboardPage() {
                     {slotLabels[slot]}
                   </span>
                   <div className="flex items-center gap-2">
+                    <SwapMealButton
+                      slot={slot}
+                      day={day}
+                      calories={nutrition.calories}
+                      symptoms={data.symptoms || []}
+                      goal={data.goal || "tone"}
+                      onSwap={(newMeal) => setSwappedMeals((prev) => ({ ...prev, [slot]: newMeal }))}
+                    />
                     <FavoriteButton type="meal" name={meal.title} />
                     <span className="text-sm font-semibold text-[#4a3f44]">
                       €{meal.price.toFixed(2)}
